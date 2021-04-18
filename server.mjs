@@ -1,0 +1,69 @@
+
+
+import Express         from 'express';
+import ExpHandlebars   from 'express-handlebars';
+import ExpSession      from 'express-session';
+import BodyParser      from 'body-parser';
+import CookieParser    from 'cookie-parser';
+
+import MethodOverrides from 'method-override';
+import Path            from 'path';
+
+const Server = Express();
+const Port   = process.env.PORT || 3000;
+
+/**
+ * Template Engine
+ * You may choose to use Nunjucks if you want to recycle everything from your old project.
+ * Strongly recommended. However, do note the minor differences in syntax. :)
+ * Trust me it saves your time more.
+ * https://www.npmjs.com/package/express-nunjucks
+ */
+Server.set('views',       'templates');
+Server.set('view engine', 'handlebars');
+Server.engine('handlebars', ExpHandlebars({
+	defaultLayout: 'main'
+}));
+Server.use(Express.static('public'));
+
+/**
+ * Form body parsers etc
+ */
+Server.use(BodyParser.urlencoded( { extended: false }));
+Server.use(BodyParser.json());
+Server.use(CookieParser());
+Server.use(MethodOverrides('_method'));
+
+
+//-----------------------------------------
+
+/**
+ * TODO: Setup global contexts here. Basically stuff your variables in locals
+ */
+Server.use(function (req, res, next) {
+	res.locals.user = req.user || null;
+	next();
+});
+
+
+import Routes from './routes/main.mjs'
+Server.use("/", Routes);
+
+/**
+ * DEBUG USAGE
+ * Use this to check your routes
+ * Prints all the routes registered into the application
+**/
+import { ListRoutes } from './utils/routes.mjs'
+console.log(`=====Registered Routes=====`);
+ListRoutes(Server._router).forEach(route => {
+	console.log(`${route.method.padStart(8)} | /${route.path}`);
+});
+console.log(`===========================`);
+
+/**
+ * Start the server in infinite loop
+ */
+Server.listen(Port, function() {
+	console.log(`Server listening at port ${Port}`);
+});
