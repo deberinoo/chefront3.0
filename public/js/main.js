@@ -19,4 +19,7 @@
  */
 window.addEventListener("load", function (event) {
 	console.log("HTML Initialized");
+	$('[data-toggle=confirmation]').confirmation({
+		rootSelector: '[data-toggle=confirmation]',
+	});
 });

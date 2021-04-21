@@ -24,7 +24,9 @@ Server.set('view engine', 'handlebars');	//	Let express know what template engin
 Server.engine('handlebars', ExpHandlebars({
 	defaultLayout: 'main'
 }));
-Server.use(Express.static('public'));		//	Let express know where to access static files
+//	Let express know where to access static files
+//	Host them at locahost/public
+Server.use("/public", Express.static('public'));
 
 /**
  * Form body parsers etc
