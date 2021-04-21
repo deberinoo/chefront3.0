@@ -37,6 +37,16 @@ Server.use(CookieParser());
 Server.use(MethodOverrides('_method'));
 
 
+/**
+ * Express Session
+ */
+ Server.use(ExpSession({
+	name:   'example-app',
+	secret: 'random-secret',
+	resave:  false,
+	saveUninitialized: false
+}));
+
 //-----------------------------------------
 
 /**
