@@ -19,12 +19,12 @@ const Port   = process.env.PORT || 3000;
  * Trust me it saves your time more.
  * https://www.npmjs.com/package/express-nunjucks
  */
-Server.set('views',       'templates');
-Server.set('view engine', 'handlebars');
+Server.set('views',       'templates');		//	Let express know where to find HTML templates
+Server.set('view engine', 'handlebars');	//	Let express know what template engine to use
 Server.engine('handlebars', ExpHandlebars({
 	defaultLayout: 'main'
 }));
-Server.use(Express.static('public'));
+Server.use(Express.static('public'));		//	Let express know where to access static files
 
 /**
  * Form body parsers etc

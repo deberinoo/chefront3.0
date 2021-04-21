@@ -17,6 +17,11 @@ To use nodemon:
 npm run dev
 ```
 
+Dynamic files are accessed via the path `/dynamic/<path>`
+Statics files are accessed via the path `/public/<path>`
+HTML templates are placed in templates to make 1-1 resemblance to Flask.
+As such you should know what to do yourself.
+
 ## Perquisites
 
 You are expected to already have familiarity with

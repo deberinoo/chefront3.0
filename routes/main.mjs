@@ -18,7 +18,7 @@ router.use("/auth", RouterAuth);
 // ---------------- 
 //	TODO:	Common URL paths here
 router.get("/",      async function(req, res) {
-	console.log("About page accessed");
+	console.log("Home page accessed");
 	return res.render('index', {
 		title: "Hello  Not Today"
 	});
