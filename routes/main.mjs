@@ -1,4 +1,5 @@
-import { Router } from 'express';
+import { Router }       from 'express';
+import { flashMessage } from '../utils/flashmsg.mjs'
 
 const router = Router();
 export default router;
@@ -26,8 +27,20 @@ router.get("/",      async function(req, res) {
 
 router.get("/about", async function(req, res) {
 	console.log("About page accessed");
+	flashMessage(res, 'success', 'This is an important message', 'fas fa-sign-in-alt',        true);
+	flashMessage(res, 'danger',  'Unauthorised access',          'fas fa-exclamation-circle', false);
+
 	return res.render('about', {
 		author: "The awesome programmer",
-		values: [1, 2, 3, 4, 5, 6]
+		values: [1, 2, 3, 4, 5, 6],
+		success_msg: "Yayayaya",
+		errors: [
+			{ text: "Error 1" },
+			{ text: "Error 2" },
+			{ text: "Error 3" },
+			{ text: "Error 4" },
+			{ text: "Error 5" },
+			{ text: "Error 6" }
+		]
 	});
 });

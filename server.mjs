@@ -9,6 +9,12 @@ import CookieParser    from 'cookie-parser';
 import MethodOverrides from 'method-override';
 import Path            from 'path';
 
+import Flash           from 'connect-flash';
+import FlashMessenger  from 'flash-messenger';
+
+import Handlebars      from 'handlebars';
+import { allowInsecurePrototypeAccess } from '@handlebars/allow-prototype-access';
+
 const Server = Express();
 const Port   = process.env.PORT || 3000;
 
@@ -22,6 +28,7 @@ const Port   = process.env.PORT || 3000;
 Server.set('views',       'templates');		//	Let express know where to find HTML templates
 Server.set('view engine', 'handlebars');	//	Let express know what template engine to use
 Server.engine('handlebars', ExpHandlebars({
+	handlebars:     allowInsecurePrototypeAccess(Handlebars),
 	defaultLayout: 'main'
 }));
 //	Let express know where to access static files
@@ -46,6 +53,12 @@ Server.use(MethodOverrides('_method'));
 	resave:  false,
 	saveUninitialized: false
 }));
+
+/**
+ * Flash Messenger (OPTIONAL)
+ */
+Server.use(Flash());
+Server.use(FlashMessenger.middleware);
 
 //-----------------------------------------
 

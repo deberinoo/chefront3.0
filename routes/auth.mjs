@@ -10,5 +10,4 @@ router.get("/login",      async function(req, res) {
 router.get("/register", async function(req, res) {
 	console.log("Register page accessed");
 	return res.render('auth/register');
-})
-
+});
