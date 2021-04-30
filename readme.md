@@ -36,3 +36,15 @@ Otherwise you shouldn't be doing this module. Please repeat your Year 1.
 ## Disclaimer
 
 No support would be given to Apple users. You only have yourselves to blame.
+
+
+## Intellisense support
+
+By default VSCode already have intellisense support. However, the Typescript server used for
+this isn't updated for `.mjs` extensions. Do refer to
+https://github.com/microsoft/TypeScript/pull/40068#issuecomment-674380499 for the fix.
+
+This repository already contains the fix and setup using `settings.json`. It installs to
+the local directory as developer dependencies.
+
+For more support of typing intellisense, lookup `@types` and install with `-D`
