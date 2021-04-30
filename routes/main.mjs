@@ -16,9 +16,12 @@ import RouterAuth from './auth.mjs'
 router.use("/auth", RouterAuth);
 
 
+router.get("/", async function (req, res) {
+	return res.redirect("/home");
+});
 // ---------------- 
 //	TODO:	Common URL paths here
-router.get("/",      async function(req, res) {
+router.get("/home",      async function(req, res) {
 	console.log("Home page accessed");
 	return res.render('index', {
 		title: "Hello  Not Today"
