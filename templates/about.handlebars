@@ -1,58 +1,48 @@
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"></script>
+<title>Chefront - About</title>
 
-<h1>About</h1>
-<p>This is a Node/Express app for jotting notes on video collection</p>
-<p>Version: 1.0.0</p>
-<p>Created by: {{author}}</p>
+<!-- Start of Hero section -->
+<section id="home" class="py-1 active pr-5">
+	<div class="bg-holder d-none d-md-block"
+		style="background-image:url(public/img/illustrations/pizza.png);background-position:right 100px bottom 50px;background-size:contain;">
+	</div>
+	<div class="container position-relative">
+		<div class="row align-items-center min-vh-75 my-lg-8 h-24">
+			<div class="col-md-7 col-lg-6 text-center text-md-start py-8 px-5">
+				<h1 class="ml-4 mb-4 display-1 lh-sm">About <br class="d-block d-lg-none d-xl-block" />Chefront
+				</h1>
+			</div>
+		</div>
+	</div>
+</section>
+<!-- End of Hero section -->
 
-
-<div class="container">
-
-	<canvas id="myChart" width="400" height="400"></canvas>
-
-</div>
-
-
-<script>
-	var ctx = document.getElementById('myChart').getContext('2d');
-	var myChart = new Chart(ctx, {
-		type: 'bar',
-		data: {
-			labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-			datasets: [{
-				label: '# of Votes',
-				data: [
-					{{#each values}}
-						{{ this}},
-					{{/each}}
-					],
-	backgroundColor: [
-		'rgba(255, 99, 132, 0.2)',
-		'rgba(54, 162, 235, 0.2)',
-		'rgba(255, 206, 86, 0.2)',
-		'rgba(75, 192, 192, 0.2)',
-		'rgba(153, 102, 255, 0.2)',
-		'rgba(255, 159, 64, 0.2)'
-	],
-		borderColor: [
-			'rgba(255, 99, 132, 1)',
-			'rgba(54, 162, 235, 1)',
-			'rgba(255, 206, 86, 1)',
-			'rgba(75, 192, 192, 1)',
-			'rgba(153, 102, 255, 1)',
-			'rgba(255, 159, 64, 1)'
-		],
-			borderWidth: 1
-        }]
-    },
-	options: {
-		scales: {
-			yAxes: [{
-				ticks: {
-					beginAtZero: true
-				}
-			}]
-		}
-	}
-});
-</script>
+<!-- Start of Section: About -->
+<section id="about" class="">
+	<div class="container">
+		<div class="row flex-center mb-5">
+			<div class="col-lg-7 text-center">
+				<h1 class="fw-bold fs-md-3 fs-lg-4 fs-xl-5">What is Chefront?</h1>
+				<hr class="mx-auto text-danger my-4" style="height:3px; width:70px;" />
+				<p class="mx-auto">Chefront is a website that encourages people to dine in at off peak hours and
+					gives smaller and lesser known restaurants more exposure.</p>
+			</div>
+		</div>
+		<div class="row flex-center mb-5">
+			<div class="col-lg-7 text-center">
+				<h1 class="fw-bold fs-md-3 fs-lg-4 fs-xl-5">Our Mission</h1>
+				<hr class="mx-auto text-danger my-4" style="height:3px; width:70px;" />
+				<p class="mx-auto">Our mission is to connect empty tables with empty stomachs by offering time-based
+					discounts to everyone.</p>
+			</div>
+		</div>
+		<div class="row flex-center mb-5">
+			<div class="col-lg-7 text-center">
+				<h1 class="fw-bold fs-md-3 fs-lg-4 fs-xl-5">Who are we?</h1>
+				<hr class="mx-auto text-danger my-4" style="height:3px; width:70px;" />
+				<p class="mx-auto">We're a group of passionate and driven individuals who has to complete this site for
+					our school project.</p>
+			</div>
+		</div>
+	</div>
+</section>
+<!-- End of Section: About -->

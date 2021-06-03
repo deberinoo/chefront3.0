@@ -1,7 +1,311 @@
-<div class="jumbotron text-center">
-	<div class="container">
-		<h1 class="display-4">{{title}}</h1>
-		<p class="lead">Your personal video jotter</p>
+<title>Chefront</title>
+
+<!-- Start of Hero section -->
+<section id="home" class="py-0 active">
+	<div class="container position-relative">
+		<div class="row align-items-center min-vh-75 my-lg-8">
+			<div class="col-lg-6 text-center text-lg-start py-8">
+				<h1 class="mb-4 display-1 lh-sm">Book your next <br class="d-block d-lg-none d-xl-block" />best deal
+				</h1>
+				<p class="mt-4 mb-5 fs-1 lh-base">Enjoy real-time deals of up to 50% at every restaurant, every day for
+					free!</p>
+				<div class="input-group-3 justify-content-center justify-content-lg-start d-flex">
+					<form method="post" id="search">
+						<input type="text" class="textbox" placeholder="Search for a restaurant, location, or cuisine!">
+						<button class='button btn btn-default input-group-btn' type='submit' value='submit'>
+							<i class="fa fa-search" aria-hidden="true"></i>
+						</button>
+					</form>
+				</div>
+			</div>
+			<img src="public/img/illustrations/hero.jpg" class="ml-auto align-right d-none d-lg-block"
+				style="width: 35vw; height:35vw;" />
+		</div>
 	</div>
-	<br>
-</div>
+</section>
+<!-- End of Hero section -->
+
+<!-- Start of Section 1: Categories -->
+<section id="categories">
+	<div class="container">
+		<div class="row flex-center mb-5">
+			<div class="col-lg-8 text-center">
+				<h1 class="fw-bold fs-md-3 fs-lg-4 fs-xl-5">Categories</h1>
+				<hr class="mx-auto text-danger my-4" style="height:3px; width:70px;" />
+				<p class="mx-auto fs-1">Select your favourite cuisines and start reserving now!</p>
+			</div>
+		</div>
+		<div class="row h-100 flex-center">
+			<div class="row flex-lg-center">
+				<div class="col-md-12">
+					<div class="carousel slide" id="carouselCategory" data-bs-touch="false" data-bs-interval="false">
+						<div class="carousel-inner">
+							<div class="carousel-item active" data-bs-interval="1000">
+								<div class="row h-100">
+									<div class="col-6 col-sm-4 col-xl-2 mb-3 hover-top px-2">
+										<div class="card h-100 w-100 text-white"><a class="stretched-link"
+												href="!#"><img class="img-fluid"
+													src="public/img/homepage/categories/chinese.jpg" alt="" /></a>
+											<div class="card-img-overlay d-flex align-items-end bg-dark-gradient">
+												<h5 class="text-white fs-1">Chinese</h5>
+											</div>
+										</div>
+									</div>
+									<div class="col-6 col-sm-4 col-xl-2 mb-3 hover-top px-2">
+										<div class="card h-100 w-100 text-white"><a class="stretched-link"
+												href="!#"><img class="img-fluid"
+													src="public/img/homepage/categories/jap.jpg" alt="" /></a>
+											<div class="card-img-overlay d-flex align-items-end bg-dark-gradient">
+												<h5 class="text-white fs-1">Japanese</h5>
+											</div>
+										</div>
+									</div>
+									<div class="col-6 col-sm-4 col-xl-2 mb-3 hover-top px-2">
+										<div class="card h-100 w-100 text-white">
+											<a class="stretched-link" href="!#">
+												<img class="img-fluid" src="public/img/homepage/categories/muslim.jpg"
+													alt="" />
+											</a>
+											<div class="card-img-overlay d-flex align-items-end bg-dark-gradient">
+												<h5 class="text-white fs-1">Muslim</h5>
+											</div>
+										</div>
+									</div>
+									<div class="col-6 col-sm-4 col-xl-2 mb-3 hover-top px-2">
+										<div class="card h-100 w-100 text-white"><a class="stretched-link"
+												href="!#"><img class="img-fluid"
+													src="public/img/homepage/categories/mexican.jpg" alt="" /></a>
+											<div class="card-img-overlay d-flex align-items-end bg-dark-gradient">
+												<h5 class="text-white fs-1">Mexican</h5>
+											</div>
+										</div>
+									</div>
+									<div class="col-6 col-sm-4 col-xl-2 mb-3 hover-top px-2">
+										<div class="card h-100 w-100 text-white"><a class="stretched-link"
+												href="!#"><img class="img-fluid"
+													src="public/img/homepage/categories/italian2.jpg" alt="" /></a>
+											<div class="card-img-overlay d-flex align-items-end bg-dark-gradient">
+												<h5 class="text-white fs-1">Italian</h5>
+											</div>
+										</div>
+									</div>
+									<div class="col-6 col-sm-4 col-xl-2 mb-3 hover-top px-2">
+										<div class="card h-100 w-100 text-white"><a class="stretched-link"
+												href="!#"><img class="img-fluid"
+													src="public/img/homepage/categories/korean.jpg" alt="" /></a>
+											<div class="card-img-overlay d-flex align-items-end bg-dark-gradient">
+												<h5 class="text-white fs-1">Korean</h5>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="carousel-item" data-bs-interval="2000">
+								<div class="row h-100">
+									<div class="col-6 col-sm-4 col-xl-2 mb-3 hover-top px-2">
+										<div class="card h-100 w-100 text-white"><a class="stretched-link"
+												href="!#"><img class="img-fluid"
+													src="public/img/homepage/categories/indian.jpg" alt="" /></a>
+											<div class="card-img-overlay d-flex align-items-end bg-dark-gradient">
+												<h5 class="text-white fs-1">Indian</h5>
+											</div>
+										</div>
+									</div>
+									<div class="col-6 col-sm-4 col-xl-2 mb-3 hover-top px-2">
+										<div class="card h-100 w-100 text-white"><a class="stretched-link"
+												href="!#"><img class="img-fluid"
+													src="public/img/homepage/categories/vietnam.jpg" alt="" /></a>
+											<div class="card-img-overlay d-flex align-items-end bg-dark-gradient">
+												<h5 class="text-white fs-1">Vietnam</h5>
+											</div>
+										</div>
+									</div>
+									<div class="col-6 col-sm-4 col-xl-2 mb-3 hover-top px-2">
+										<div class="card h-100 w-100 text-white"><a class="stretched-link"
+												href="!#"><img class="img-fluid"
+													src="public/img/homepage/categories/thai.jpg" alt="" /></a>
+											<div class="card-img-overlay d-flex align-items-end bg-dark-gradient">
+												<h5 class="text-white fs-1">Thailand</h5>
+											</div>
+										</div>
+									</div>
+									<div class="col-6 col-sm-4 col-xl-2 mb-3 hover-top px-2">
+										<div class="card h-100 w-100 text-white"><a class="stretched-link"
+												href="!#"><img class="img-fluid"
+													src="public/img/homepage/categories/spanish.jpg" alt="" /></a>
+											<div class="card-img-overlay d-flex align-items-end bg-dark-gradient">
+												<h5 class="text-white fs-1">Spanish</h5>
+											</div>
+										</div>
+									</div>
+									<div class="col-6 col-sm-4 col-xl-2 mb-3 hover-top px-2">
+										<div class="card h-100 w-100 text-white"><a class="stretched-link"
+												href="!#"><img class="img-fluid"
+													src="public/img/homepage/categories/turkish.jpg" alt="" /></a>
+											<div class="card-img-overlay d-flex align-items-end bg-dark-gradient">
+												<h5 class="text-white fs-1">Turkish</h5>
+											</div>
+										</div>
+									</div>
+									<div class="col-6 col-sm-4 col-xl-2 mb-3 hover-top px-2">
+										<div class="card h-100 w-100 text-white"><a class="stretched-link"
+												href="!#"><img class="img-fluid"
+													src="public/img/homepage/categories/taiwanese.jpg" alt="" /></a>
+											<div class="card-img-overlay d-flex align-items-end bg-dark-gradient">
+												<h5 class="text-white fs-1">Taiwanese</h5>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row mt-4">
+							<div class="col-12 position-relative">
+								<a class="carousel-control-prev z-index-2" href="#carouselCategory" role="button"
+									data-slide="prev">
+									<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+									<span class="sr-only">Previous</span>
+								</a>
+								<a class="carousel-control-next z-index-2" href="#carouselCategory" role="button"
+									data-slide="next">
+									<span class="carousel-control-next-icon" aria-hidden="true"></span>
+									<span class="sr-only">Next</span>
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<!-- End of Section 1: Categories -->
+
+<!-- Start of Section 2: Restaurants -->
+<section id="restaurants">
+	<div class="container">
+		<div class="row flex-md-center">
+			<div class="col-md-11 col-lg-4 px-4 px-md-3 px-lg-0 px-xl-2 order-lg-1">
+				<h1 class="fw-bold fs-md-3 fs-xl-5">What are you craving for today?</h1>
+				<hr class="text-danger my-4 my-lg-3 my-xl-4" style="height:3px; width:70px;" />
+				<p class="lh-lg">At Chefront, we want people to discover places to eat, and save with irresistable
+					dining deals at up to 50% off.
+					Check out the offers that we have, just for you!
+				</p>
+				<a class="btn btn-lg btn-danger hover-top" href="#" role="button">Explore</a>
+			</div>
+			<div class="col-lg-8 order-lg-0 order-1 px-4 px-md-3 py-8 py-md-3">
+				<div class="carousel slide" id="carouselExampleControls" data-ride="carousel">
+					<div class="carousel-inner">
+						<div class="carousel-item active">
+							<div class="row h-100">
+								<div class="col-md-4 mb-3 mb-md-0">
+									<div class="card h-100 text-white hover-top"><img class="img-fluid h-100"
+											src="public/img/homepage/featured/healthy.jpg" alt="" />
+										<div
+											class="card-img-overlay ps-0 d-flex flex-column justify-content-between bg-dark-gradient">
+											<div class="pt-3"><span class="badge bg-danger"><strike>$8</strike>
+													$4</span></div>
+											<div class="ps-3 d-flex justify-content-between align-items-center">
+												<h5 class="text-white">Joe & Dough</h5>
+												<h6 class="text-600">Avocado and Egg Toast</h6>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-4 mb-3 mb-md-0">
+									<div class="card h-100 text-white hover-top"><img class="img-fluid h-100"
+											src="public/img/homepage/featured/italian.jpg" alt="" />
+										<div
+											class="card-img-overlay ps-0 d-flex flex-column justify-content-between bg-dark-gradient">
+											<div class="pt-3"><span class="badge bg-danger"><strike>$15</strike>
+													$7.50</span></div>
+											<div class="ps-3 d-flex justify-content-between align-items-center">
+												<h5 class="text-white">The Assembly Ground</h5>
+												<h6 class="text-600">Truffle Ravioli</h6>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-4 mb-3 mb-md-0">
+									<div class="card h-100 text-white hover-top"><img class="img-fluid h-100"
+											src="public/img/homepage/featured/japanese.jpg" alt="" />
+										<div
+											class="card-img-overlay ps-0 d-flex flex-column justify-content-between bg-dark-gradient">
+											<div class="pt-3"><span class="badge bg-danger"><strike>$60</strike>
+													$30</span></div>
+											<div class="ps-3 d-flex justify-content-between align-items-center">
+												<h5 class="text-white">Shin Minori</h5>
+												<h6 class="text-600">Lunch Buffet</h6>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="carousel-item">
+							<div class="row h-100">
+								<div class="col-md-4 mb-3 mb-md-0">
+									<div class="card h-100 text-white hover-top"><img class="img-fluid h-100"
+											src="public/img/homepage/featured/acai.jpg" alt="" />
+										<div
+											class="card-img-overlay ps-0 d-flex flex-column justify-content-between bg-dark-gradient">
+											<div class="pt-3"><span class="badge bg-danger"><strike>$8.50</strike>
+													$4.25</span></div>
+											<div class="ps-3 d-flex justify-content-between align-items-center">
+												<h5 class="text-white">An Acai Affair</h5>
+												<h6 class="text-600">Summer Fling</h6>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-4 mb-3 mb-md-0">
+									<div class="card h-100 text-white hover-top"><img class="img-fluid h-100"
+											src="public/img/homepage/featured/burger.jpg" alt="" />
+										<div
+											class="card-img-overlay ps-0 d-flex flex-column justify-content-between bg-dark-gradient">
+											<div class="pt-3"><span class="badge bg-danger"><strike>$14</strike>
+													$7</span></div>
+											<div class="ps-3 d-flex justify-content-between align-items-center">
+												<h5 class="text-white">Shake Shack</h5>
+												<h6 class="text-600">ShackBurger Set</h6>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-4 mb-3 mb-md-0">
+									<div class="card h-100 text-white hover-top"><img class="img-fluid h-100"
+											src="public/img/homepage/featured/prata.jpg" alt="" />
+										<div
+											class="card-img-overlay ps-0 d-flex flex-column justify-content-between bg-dark-gradient">
+											<div class="pt-3"><span class="badge bg-danger"><strike>$9</strike>
+													$4.50</span></div>
+											<div class="ps-3 d-flex justify-content-between align-items-center">
+												<h5 class="text-white">Springleaf Prata</h5>
+												<h6 class="text-600">Plain Prata Set</h6>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="position-relative mt-4">
+						<a class="carousel-control-prev" href="#carouselExampleControls" role="button"
+							data-slide="prev">
+							<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+							<span class="sr-only">Previous</span>
+						</a>
+						<a class="carousel-control-next" href="#carouselExampleControls" role="button"
+							data-slide="next">
+							<span class="carousel-control-next-icon" aria-hidden="true"></span>
+							<span class="sr-only">Next</span>
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+<!-- End of Section 2: Restaurants -->

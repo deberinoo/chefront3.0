@@ -1,5 +1,6 @@
 import { Router }       from 'express';
-import { flashMessage } from '../utils/flashmsg.mjs'
+import { flashMessage } from '../utils/flashmsg.mjs';
+// import { Feedback } from '../models/Feedback.mjs';
 
 const router = Router();
 export default router;
@@ -11,39 +12,48 @@ router.get("/dynamic/:path", async function (req, res) {
 });
 
 // ---------------- 
-//	TODO: Attach additional routers here
+//	Additional routers
 import RouterAuth from './auth.mjs'
 router.use("/auth", RouterAuth);
 
+import RouterProfile from './user.mjs'
+router.use("/u", RouterProfile);
+
+import RouterAdmin from './user.mjs'
+router.use("/admin", RouterAdmin);
 
 router.get("/", async function (req, res) {
 	return res.redirect("/home");
 });
+
 // ---------------- 
-//	TODO:	Common URL paths here
+//	Common URL paths
 router.get("/home",      async function(req, res) {
-	console.log("Home page accessed");
-	return res.render('index', {
-		title: "Hello  Not Today"
-	});
+	return res.render('index');
+});
+
+router.get("/error", async function(req, res) {
+	return res.render('404.html')
 });
 
 router.get("/about", async function(req, res) {
-	console.log("About page accessed");
-	flashMessage(res, 'success', 'This is an important message', 'fas fa-sign-in-alt',        true);
-	flashMessage(res, 'danger',  'Unauthorised access',          'fas fa-exclamation-circle', false);
+	return res.render('about');
+});
 
-	return res.render('about', {
-		author: "The awesome programmer",
-		values: [1, 2, 3, 4, 5, 6],
-		success_msg: "Yayayaya",
-		errors: [
-			{ text: "Error 1" },
-			{ text: "Error 2" },
-			{ text: "Error 3" },
-			{ text: "Error 4" },
-			{ text: "Error 5" },
-			{ text: "Error 6" }
-		]
-	});
+router.get("/categories", async function(req, res) {
+	return res.render('categories');
+});
+
+router.get("/contact", async function(req, res) {
+	return res.render('contact');
+});
+
+router.get("/payment", async function(req, res) {
+	return res.render('payment');
+});
+
+// ---------------- 
+// Error page routing
+router.use(function (req, res, next) {
+	res.status(404).render('404.handlebars')
 });

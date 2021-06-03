@@ -1,0 +1,79 @@
+<title>Chefront - Reservation Status</title>
+
+<link rel="stylesheet" href="/public/css/profile.css">
+
+<section>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-lg-10 col-xl-8 mx-auto">
+                <h2 class="h3 mb-4 page-title">Reservation Status</h2>
+                <div class="my-4">
+                    <ul class="nav nav-tabs mb-4" id="myTab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link" id="home-tab" href="/u/userBusiness" role="tab"
+                                aria-controls="home" aria-selected="false">Business Profile</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button"
+                                aria-haspopup="true" aria-expanded="false">Outlets</a>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="/u/create-outlet">Create new outlet</a>
+                                <a class="dropdown-item" href="/u/view-outlets">View existing outlets</a>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button"
+                                aria-haspopup="true" aria-expanded="false">Discount slots</a>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="#">Create new slot</a>
+                                <a class="dropdown-item" href="#">View existing slots</a>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" id="home-tab" href="/u/reservation-status" role="tab"
+                                aria-controls="home" aria-selected="false">View reservation status</a>
+                        </li>
+                    </ul>
+                    <table class="table">
+                        <thead class="thead-dark">
+                          <tr>
+                            <th scope="col"></th>
+                            <th scope="col">Customer Name</th>
+                            <th scope="col">Reservation ID</th>
+                            <th scope="col">Timing</th>
+                            <th scope="col">Discount</th>
+                            <th scope="col">Attended?</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <th scope="row">1</th>
+                            <td>Mark</td>
+                            <td>74NMP3</td>
+                            <td>4.00pm</td>
+                            <td>50%</td>
+                            <td><input type="checkbox" checked data-on="No" data-off="Yes" data-toggle="toggle" data-onstyle="outline-danger" data-offstyle="outline-success"></td>
+                          </tr>
+                          <tr>
+                            <th scope="row">2</th>
+                            <td>Mark</td>
+                            <td>74NMP3</td>
+                            <td>4.00pm</td>
+                            <td>50%</td>
+                            <td><input type="checkbox" checked data-on="No" data-off="Yes" data-toggle="toggle" data-onstyle="outline-danger" data-offstyle="outline-success"></td>
+                          </tr>
+                          <tr>
+                            <th scope="row">3</th>
+                            <td>Mark</td>
+                            <td>74NMP3</td>
+                            <td>4.00pm</td>
+                            <td>50%</td>
+                            <td><input type="checkbox" checked data-on="No" data-off="Yes" data-toggle="toggle" data-onstyle="outline-danger" data-offstyle="outline-success"></td>
+                          </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

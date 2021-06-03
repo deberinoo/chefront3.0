@@ -1,0 +1,73 @@
+<title>Chefront - Customer User</title>
+
+<link rel="stylesheet" href="/public/css/profile.css">
+
+<section>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-lg-10 col-xl-8 mx-auto">
+                <h2 class="h3 mb-4 page-title">Profile Settings</h2>
+                <div class="my-4">
+                    <ul class="nav nav-tabs mb-4" id="myTab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="home-tab" href="/u/userCustomer" role="tab"
+                                aria-controls="home" aria-selected="false">Profile</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="home-tab" href="/u/my-reservations" role="tab"
+                                aria-controls="home" aria-selected="false">Reservations</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="home-tab" href="#home" role="tab"
+                                aria-controls="home" aria-selected="false">Favourites</a>
+                        </li>
+                    </ul>
+                    <form action="/auth/validateCustomer" method="post" class="col-12">
+                        <div class="row mt-5 align-items-center">
+                            <div class="col-md-3 text-center mb-5">
+                                <div class="avatar avatar-xl">
+                                    <img src="../../public/img/illustrations/user.png" alt="..."
+                                        class="avatar-img rounded-circle" />
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="row align-items-center">
+                                    <div class="col-md-7">
+                                        <h4 class="mb-1">Customer Name</h4>
+                                    </div>
+                                </div>
+                                <div class="row mb-4">
+                                    <div class="col-md-12">                                       
+                                        <p class="small mb-0 text-muted">Phone Number</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr class="my-4" />
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="firstname">First name</label>
+                                <input type="text" id="firstname" readonly class="form-control-plaintext text-dark" value="First name" />
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="lastname">Last name</label>
+                                <input type="text" id="lastname" readonly class="form-control-plaintext text-dark" value="Last name" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputEmail4">Email</label>
+                            <input type="email" id="inputEmail4" readonly class="form-control-plaintext text-dark" value="Email" />
+                        </div>
+                        <div class="form-group">
+                            <label for="inputAddress5">Phone Number</label>
+                            <input type="text" id="inputAddress5" readonly class="form-control-plaintext text-dark" value="Phone number" />
+                        </div>
+                        <a class="btn btn-danger mt-3" href="../u/edit/userCustomer">
+                            Edit Profile
+                        </a>                    
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

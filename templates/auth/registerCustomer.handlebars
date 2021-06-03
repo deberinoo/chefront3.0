@@ -1,0 +1,87 @@
+<title>Chefront - Register Customer</title>
+
+<link rel="stylesheet" href="/public/css/login.css">
+
+<section>
+	<div class="container-fluid">
+		<div class="row no-gutter">
+			<div class="col-md-6 d-none d-md-flex bg-image"></div>
+			<div class="col-md-6">
+				<div class="login d-flex align-items-center py-5">
+					<div class="container">
+						<div class="row">
+							<div class="col-lg-10 col-xl-7 mx-auto">
+								<h3 class="display-4 mb-4">Create an account</h3>
+								<form action="/auth/successCustomer" method="post">
+									<div class="form-group mb-3">
+										<input 
+											id="firstName" 
+											type="text" 
+											placeholder="First name" required="" autofocus="" 
+											minlength="2" maxlength="30" 
+											pattern="[A-Za-z]+"
+											title="First name should contain characters only"
+											class="form-control rounded-pill shadow-sm px-4 text-dark"
+											name="FirstName"
+										>
+									</div>
+									<div class="form-group mb-3">
+										<input 
+											id="lastName" 
+											type="text" 
+											placeholder="Last name" required="" autofocus="" 
+											minlength="2" maxlength="30" 
+											pattern="[A-Za-z]+"
+											title="Last name should contain characters only"
+											class="form-control rounded-pill shadow-sm px-4 text-dark"
+											name="LastName"
+											>
+											
+									</div>
+									<div class="form-group mb-3">
+										<input 
+											id="phoneNumber" 
+											type="text" 
+											placeholder="Phone number" required="" autofocus="" 
+											pattern="[0-9]{8}"
+											title="Phone number should contain only eight numbers"
+											class="form-control rounded-pill shadow-sm px-4 text-dark"
+											name="Contact"
+											>
+									</div>
+									<div class="form-group mb-3">
+										<input 
+											id="inputEmail" 
+											type="email" 
+											placeholder="Email address" required="" autofocus="" 
+											pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+											title="Enter a valid email address (eg. john@example.com)"
+											class="form-control rounded-pill shadow-sm px-4 text-dark"
+											name="Email"
+											>
+									</div>
+									<div class="form-group mb-3">
+										<input id="inputPassword" type="password" placeholder="Password" required=""
+											class="form-control rounded-pill shadow-sm px-4 text-dark" name="InputPassword" >
+									</div>
+									<div class="form-group mb-3">
+										<input id="confirmPassword" type="password" placeholder="Confirm password"
+											required="" pattern=".{8,}"
+											title="Password should contain eight or more characters"
+											class="form-control rounded-pill shadow-sm px-4 text-dark" name="ConfirmPassword" >
+									</div>
+									<div class="custom-control custom-checkbox mb-3">
+										<input id="customCheck1" type="checkbox" checked class="custom-control-input">
+										<label for="customCheck1" class="custom-control-label">Remember password</label>
+									</div>
+									<button type="submit"
+										class="btn custom-btn btn-danger btn-block mb-2 rounded-pill shadow-sm">Sign up</button>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>

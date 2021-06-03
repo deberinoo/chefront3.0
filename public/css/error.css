@@ -1,0 +1,10 @@
+.login,
+.image {
+  min-height: 80vh;
+}
+
+.bg-image {
+  background-image: url('../img/illustrations/404.png');
+  background-size: cover;
+  background-position: center center;
+}

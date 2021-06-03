@@ -1,43 +1,44 @@
-<nav class="navbar navbar-expand-sm navbar-dark bg-primary mb-3">
+<nav id="navbar-example" class="navbar navbar-expand-lg fixed-top py-3 backdrop" style="background-color: white;">
 	<div class="container">
-		<a class="navbar-brand" href="/">Video Jotter</a>
-		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav"
-				  aria-expanded="false"
-				  aria-label="Toggle navigation">
-			<span class="navbar-toggler-icon"></span>
+		<a class="navbar-brand d-flex align-items-center fw-bold fs-2" href="/">
+			<img class="d-inline-block align-top img-fluid" src="../../public/img/illustrations/logo.png" alt=""
+				width="50" />
+			<span class="text-danger fs-4 ps-2">Chefront</span>
+		</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+			aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon">
+				<i class="fa fa-bars" style="color:#dd4444; font-size:28px;" aria-hidden="true"></i>
+			</span>
 		</button>
-		<div class="collapse navbar-collapse" id="navbarNav">
-			<ul class="navbar-nav">
-				<li class="nav-item">
-					<a class="nav-link" href="/">Home</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="/about">About</a>
-				</li>
+		<div class="collapse navbar-collapse border-top border-lg-0 mt-4 mt-lg-0" id="navbarSupportedContent">
+			<ul class="navbar-nav ms-auto pt-2 pt-lg-0">
+				<li><a class="nav-link" href="/">Home</a></li>
+				<li><a class="nav-link" href="/about">About</a></li>
+				<li><a class="nav-link" href="/categories">Categories</a></li>
+				<li><a class="nav-link" href="#">Restaurants</a></li>
 			</ul>
-			<ul class="navbar-nav ml-auto">
-				{{#if user}}
-					<li class="nav-item dropdown">
-						<a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" id="navbarDropdownMenuLink">Video
-							Jots</a>
-						<div class="dropdown-menu">
-							<a href="/video/list" class="dropdown-item">Videos</a>
-							<a href="/video/add"  class="dropdown-item">Add Video</a>
+			<div class="ps-lg-5">
+				<div class="dropdown">
+					{{#if user}}
+						<button class="btn btn-lg btn-outline-danger dropdown-toggle" type="button" id="dropdownMenuButton"
+							data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							name
+						</button>
+						<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+							<a class="dropdown-item" href="#">Profile</a>
+							<a class="dropdown-item" href="#">Reservations</a>
+							<a class="dropdown-item" href="#">Favourites</a>
+							<div class="dropdown-divider"></div>
+							<a class="dropdown-item" href="#">Sign out</a>
 						</div>
-					</li>
-					<li class="nav-item">
-						<a href="/auth/logout" class="nav-link">Logout</a>
-					</li>
-				{{else}}
-					<li class="nav-item">
-						{{!-- main.js router(/login)--}}
-						<a href="/auth/login" class="nav-link">Login</a>
-					</li>
-					<li class="nav-item">
-						<a href="/auth/register" class="nav-link">Register</a>
-					</li>
-				{{/if}}
-			</ul>
+					{{else}}
+						<a href="/auth/login">
+							<button class="btn btn-lg btn-outline-danger order-0">Sign In</button>
+						</a>
+					{{/if}}
+				</div>
+			</div>
 		</div>
 	</div>
 </nav>

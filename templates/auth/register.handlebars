@@ -1,27 +1,30 @@
-<div class="row">
-	<div class="col-md-6 mx-auto">
-		<div class="card card-body">
-			<img class="logo" src="/public/img/logo.png">
-			<h3 class="text-center">Account Register</h3>
-			<form action="/auth/register" method="post">
-				<div class="form-group">
-					<label for="name">Name</label>
-					<input type="text" class="form-control" name="name" value="{{name}}" required>
+<title>Chefront - Register</title>
+
+<link rel="stylesheet" href="/public/css/login.css">
+
+<section>
+	<div class="container-fluid">
+		<div class="row no-gutter">
+			<div class="col-md-6 d-none d-md-flex bg-image"></div>
+			<div class="col-md-6">
+				<div class="login d-flex align-items-center py-5">
+					<div class="container">
+						<div class="row">
+							<div class="col-lg-10 col-xl-7 mx-auto">
+								<h3 class="display-4 mb-4">Select an account to create:</h3>
+								<a href="registerCustomer">
+									<button
+										class="btn btn-danger btn-block mb-2 rounded-pill shadow-sm">Customer</button>
+								</a>
+								<a href="registerBusiness">
+									<button
+										class="btn btn-danger btn-block mb-2 rounded-pill shadow-sm">Business</button>
+								</a>
+							</div>
+						</div>
+					</div>
 				</div>
-				<div class="form-group">
-					<label for="email">Email</label>
-					<input type="email" name="email" class="form-control" value="{{email}}" required>
-				</div>
-				<div class="form-group">
-					<label for="password">Password</label>
-					<input type="password" name="password" class="form-control" value="{{password}}" required>
-				</div>
-				<div class="form-group">
-					<label for="password2">Confirm Password</label>
-					<input type="password" name="password2" class="form-control" value="{{password2}}" required>
-				</div>
-				<button type="submit" class="btn btn-primary">Submit</button>
-			</form>
+			</div>
 		</div>
 	</div>
-</div>
+</section>
