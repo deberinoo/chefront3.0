@@ -42,6 +42,6 @@ export class CustomerUser extends Model {
     set last_name(last_name) { return this.setDataValue("last_name", last_name); }
     set contact(contact) { return this.setDataValue("contact", contact); }
     set password(password) { return this.setDataValue("password", password); }
-    get dateCreated(dateCreated) { return this.setDataValue("dateCreated",dateCreated); }
-    get dateUpdated(dateUpdated) { return this.setDataValue("dateUpdated",dateUpdated); }
+    set dateCreated(dateCreated) { return this.setDataValue("dateCreated",dateCreated); }
+    set dateUpdated(dateUpdated) { return this.setDataValue("dateUpdated",dateUpdated); }
 }
