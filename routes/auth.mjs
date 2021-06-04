@@ -1,7 +1,8 @@
-import { Router }       from 'express';
-import { flashMessage } from '../utils/flashmsg.mjs'
 const router = Router();
 export default router;
+
+import { Router }       from 'express';
+import { flashMessage } from '../utils/flashmsg.mjs'
 
 router.get("/login",      async function(req, res) {
 	return res.render('auth/login');
