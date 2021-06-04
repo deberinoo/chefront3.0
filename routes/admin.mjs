@@ -16,10 +16,8 @@ router.get("/customerUsers", async function(req, res) {
             }
         }
     });
-
 	return res.render('admin/retrieve_customerUsers', {user: user});
 })
-
 
 router.get("/businessUsers", async function(req, res) {
     const business = await BusinessUser.findAll({
@@ -29,6 +27,6 @@ router.get("/businessUsers", async function(req, res) {
             }
         }
     });
-
 	return res.render('admin/retrieve_businessUsers', {business: business});
 })
+
