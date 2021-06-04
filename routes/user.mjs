@@ -23,7 +23,7 @@ router.get("/create-outlet",      async function(req, res) {
 });
 
 router.post("/successOutlets", async function(req,res) {
-/*    let errors = [];
+    let errors = [];
     
     let { BusinessName, Location, Address, Postalcode, Price, Contact, Description } = req.body;
 
@@ -40,7 +40,7 @@ router.post("/successOutlets", async function(req,res) {
         console.log(`Outlet created: ${outlets.location}`);
         res.render('user/business/retrieve_outletsBusiness.html');
         console.log("New outlet created");
-*/
+
 });
 
 router.get("/view-outlets",      async function(req, res) {
