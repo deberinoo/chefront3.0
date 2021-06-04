@@ -1,0 +1,47 @@
+<title>Chefront - Retrieve Business Users</title>
+
+<link rel="stylesheet" href="/public/css/profile.css">
+
+<section>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-lg-10 col-xl-8 mx-auto">
+                <h2 class="h3 mb-4 page-title">Retrieve Business Users</h2>
+                <div class="my-4">
+                    <ul class="nav nav-tabs mb-4" id="myTab" role="tablist">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link active dropdown-toggle" data-toggle="dropdown" href="#" role="button"
+                                aria-haspopup="true" aria-expanded="false">Users</a>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="/admin/customerUsers">View Customers</a>
+                                <a class="dropdown-item" href="/admin/businessUsers">View Businesses</a>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="home-tab" href="#" role="tab"
+                                aria-controls="home" aria-selected="false">View feedbacks</a>
+                        </li>
+                    </ul>
+                    <table class="table table-bordered table-hover">
+                        <thead class="thead-dark">
+                            <tr>
+                              <th scope="col">Name</th>
+                              <th scope="col">Address</th>
+                              <th scope="col">Contact</th>
+                              <th scope="col">Email</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                              <tr>
+                                  <td>{{ business.business_name }}</td>
+                                  <td>{{ business.address }}</td>
+                                  <td>{{ business.contact }}</td>
+                                  <td>{{ business.email }}</td>
+                              </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
