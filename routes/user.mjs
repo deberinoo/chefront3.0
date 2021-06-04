@@ -2,8 +2,8 @@ const router = Router();
 export default router;
 
 import { Router }       from 'express';
-//import { CustomerUser, UserRole } from '../models/Customer.mjs';
-//import { Outlets, OutletsRole } from '../models/Outlets.mjs';
+import { CustomerUser, UserRole } from '../models/Customer.mjs';
+import { Outlets, OutletsRole } from '../models/Outlets.mjs';
 
 import ORM             from 'sequelize';
 const { Sequelize, DataTypes, Model, Op } = ORM;

@@ -66,16 +66,16 @@ catch (error) {
 }
 
  //	Import models
- //import { CustomerUser, UserRole } from './models/Customer.mjs';
+ import { CustomerUser, UserRole } from './models/Customer.mjs';
  import { BusinessUser, BusinessRole } from './models/Business.mjs';
- //import { Outlets, OutletsRole } from './models/Outlets.mjs';
- //import { Feedback } from './models/Feedback.mjs'
+ import { Outlets, OutletsRole } from './models/Outlets.mjs';
+ import { Feedback } from './models/Feedback.mjs'
 
  //	Initialise models
- //CustomerUser.initialize(Database);
+ CustomerUser.initialize(Database);
  BusinessUser.initialize(Database);
- //Outlets.initialize(Database);
- //Feedback.initialize(Database);
+ Outlets.initialize(Database);
+ Feedback.initialize(Database);
 
  //	Sync your database
  Database.sync({ drop: false });	//	drop is true => clear tables, recreate

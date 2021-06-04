@@ -32,12 +32,14 @@
                             </tr>
                         </thead>
                         <tbody>
+                            {{#each business}}
                               <tr>
-                                  <td>{{ business.business_name }}</td>
-                                  <td>{{ business.address }}</td>
-                                  <td>{{ business.contact }}</td>
-                                  <td>{{ business.email }}</td>
+                                  <td>{{ business_name }}</td>
+                                  <td>{{ address }}</td>
+                                  <td>{{ contact }}</td>
+                                  <td>{{ email }}</td>
                               </tr>
+                            {{/each}}
                         </tbody>
                     </table>
                 </div>
