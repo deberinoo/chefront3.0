@@ -28,3 +28,4 @@ export class Feedback extends Model {
     get read() { return this.getDataValue("read"); }
 
     set name(name) { return this.setDataValue("name", name); }
+}
