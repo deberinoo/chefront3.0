@@ -1,8 +1,7 @@
-
-
 import Express         from 'express';
 import ExpHandlebars   from 'express-handlebars';
 import ExpSession      from 'express-session';
+import ExpSessionStore from 'express-mysql-session'
 import BodyParser      from 'body-parser';
 import CookieParser    from 'cookie-parser';
 
@@ -15,16 +14,75 @@ import FlashMessenger  from 'flash-messenger';
 import Handlebars      from 'handlebars';
 import { allowInsecurePrototypeAccess } from '@handlebars/allow-prototype-access';
 
+import ORM 			from 'sequelize'
+
 const Server = Express();
 const Port   = process.env.PORT || 3000;
+const { Sequelize, DataTypes, Model, Op } = ORM
 
-/**
- * Template Engine
- * You may choose to use Nunjucks if you want to recycle everything from your old project.
- * Strongly recommended. However, do note the minor differences in syntax. :)
- * Trust me it saves your time more.
- * https://www.npmjs.com/package/express-nunjucks
- */
+
+// Initialise database
+const Config = {
+	host: 'chefront.chm47uk9tay8.ap-southeast-1.rds.amazonaws.com',
+	database: 'chefront',
+	username: 'headchef',
+	password: 'chefront2.0',
+	port: 3306
+}
+
+export const SessionStore = new ExpSessionStore({
+	host : Config.host,
+	port : Config.port,
+	user : Config.username,
+	password : Config.password,
+	database : Config.database,
+	clearExpired : true,
+	checkExpirationInterval : 900000,
+	expiration : 900000
+})
+
+export const Database = new Sequelize(
+	Config.database, Config.username, Config.password, {
+	port:     Config.port,
+	host:     Config.host,      // Name or IP address of MySQL server
+	dialect: 'mysql',           // Tells sequelize that MySQL is used
+	operatorsAliases: false,
+	define: {
+		timestamps: false       // Don't create timestamp fields in database
+	},
+	pool: {                     // Database system params, don't need to know
+		max: 5,
+		min: 0,
+		acquire: 30000,
+		idle: 10000
+	}
+});
+
+try {
+	await Database.authenticate();
+}
+catch (error) {
+	console.error(`Error connecting to database`);
+}
+
+ //	Import models
+ //import { CustomerUser, UserRole } from './models/Customer.mjs';
+ import { BusinessUser, BusinessRole } from './models/Business.mjs';
+ //import { Outlets, OutletsRole } from './models/Outlets.mjs';
+ //import { Feedback } from './models/Feedback.mjs'
+
+ //	Initialise models
+ //CustomerUser.initialize(Database);
+ BusinessUser.initialize(Database);
+ //Outlets.initialize(Database);
+ //Feedback.initialize(Database);
+
+ //	Sync your database
+ Database.sync({ drop: false });	//	drop is true => clear tables, recreate
+ 
+ //------------ Init completed
+console.log(`Database connection successful`);
+
 Server.set('views',       'templates');		//	Let express know where to find HTML templates
 Server.set('view engine', 'handlebars');	//	Let express know what template engine to use
 Server.engine('handlebars', ExpHandlebars({

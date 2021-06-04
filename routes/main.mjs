@@ -1,9 +1,9 @@
+const router = Router();
+export default router;
+
 import { Router }       from 'express';
 import { flashMessage } from '../utils/flashmsg.mjs';
 // import { Feedback } from '../models/Feedback.mjs';
-
-const router = Router();
-export default router;
 
 // ---------------- 
 //	Serves dynamic files from the dynamic folder
@@ -19,7 +19,7 @@ router.use("/auth", RouterAuth);
 import RouterProfile from './user.mjs'
 router.use("/u", RouterProfile);
 
-import RouterAdmin from './user.mjs'
+import RouterAdmin from './admin.mjs'
 router.use("/admin", RouterAdmin);
 
 router.get("/", async function (req, res) {
