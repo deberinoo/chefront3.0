@@ -45,7 +45,25 @@ router.get("/categories", async function(req, res) {
 });
 
 router.get("/contact", async function(req, res) {
+	console.log("Contact Us page accessed");
 	return res.render('contact');
+});
+
+router.post("/successContact", async function(req,res) {
+	console.log("Feedback successfully submitted");
+	let errors = [];
+	let { Name, Email, Phone, Message, Read } = req.body;
+
+	//CREATE
+	const feedbacks = await Feedback.create({
+		"name" : Name,
+		"email" : Email,
+		"phone" : Phone,
+		"message" : Message,
+		"read" : Read
+	});
+	console.log('Feedback submitted');
+	res.render('index.html');
 });
 
 router.get("/payment", async function(req, res) {
