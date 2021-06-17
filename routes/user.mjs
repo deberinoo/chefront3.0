@@ -11,15 +11,15 @@ const { Sequelize, DataTypes, Model, Op } = ORM;
 // ---------------- 
 // Business User routing
 router.get("/userBusiness",      async function(req, res) {
-	return res.render('user/business/userBusiness.html');
+	return res.render('user/business/userBusiness');
 });
 
 router.get("/edit/userBusiness",      async function(req, res) {
-	return res.render('user/business/update_userBusiness.html');
+	return res.render('user/business/update_userBusiness');
 });
 
 router.get("/create-outlet",      async function(req, res) {
-	return res.render('user/business/create_outletBusiness.html');
+	return res.render('user/business/create_outlet');
 });
 
 router.post("/successOutlets", async function(req,res) {
@@ -38,13 +38,13 @@ router.post("/successOutlets", async function(req,res) {
             "description": Description
         });
         console.log(`Outlet created: ${outlets.location}`);
-        res.render('user/business/retrieve_outletsBusiness.html');
+        res.render('user/business/retrieve_outlets');
         console.log("New outlet created");
 
 });
 
 router.get("/view-outlets",      async function(req, res) {
-/*	const outlets_created_today = await Outlets.findAll({
+const outlets_created_today = await Outlets.findAll({
         where: {
             "location": {
                 [Op.ne]:"null"
@@ -56,12 +56,11 @@ router.get("/view-outlets",      async function(req, res) {
     var location = outlets_created_today.location;
     outlets_created_today.forEach (o => console.log(`Outlets location ${o.location}`));
 	console.log("Retrieve Outlets accessed");
-*/
-	return res.render('user/business/retrieve_outletsBusiness.html',{outlets_created_today: outlets_created_today});
+	return res.render('user/business/retrieve_outlets',{outlets_created_today: outlets_created_today});
 });
 
 router.get("/reservation-status",      async function(req, res) {
-	return res.render('user/business/retrieve_reservationBusiness.html');
+	return res.render('user/business/retrieve_reservationBusiness');
 });
 
 // ---------------- 	
@@ -75,13 +74,13 @@ router.get("/userCustomer",      async function(req, res) {
         }
     });
 */
-	return res.render('user/customer/userCustomer.html');
+	return res.render('user/customer/userCustomer');
 });
 
 router.get("/edit/userCustomer",      async function(req, res) {
-	return res.render('user/customer/update_userCustomer.html');
+	return res.render('user/customer/update_userCustomer');
 });
 
 router.get("/my-reservations",      async function(req, res) {
-	return res.render('user/customer/reservationCustomer.html');
+	return res.render('user/customer/reservationCustomer');
 });
