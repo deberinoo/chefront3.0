@@ -4,6 +4,7 @@ export default router;
 import { Router }       from 'express';
 import { flashMessage } from '../utils/flashmsg.mjs'
 import { BusinessUser, BusinessRole } from '../models/Business.mjs';
+import { CustomerUser } from '../models/Customer.mjs';
 
 router.get("/login",      async function(req, res) {
 	return res.render('auth/login');
