@@ -7363,7 +7363,7 @@
   }
   
   .fixed-top {
-	position: fixed;
+	position: sticky;
 	top: 0;
 	right: 0;
 	left: 0;
@@ -17038,9 +17038,8 @@
   
   section {
 	position: relative;
-	top: auto;
-	padding-bottom: 1rem;
-  }
+	margin-top: -65px;
+}
   
   @media (min-width: 992px) {
 	section {

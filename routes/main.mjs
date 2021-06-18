@@ -1,9 +1,9 @@
-const router = Router();
-export default router;
-
 import { Router }       from 'express';
 import { flashMessage } from '../utils/flashmsg.mjs';
 // import { Feedback } from '../models/Feedback.mjs';
+
+const router = Router();
+export default router;
 
 // ---------------- 
 //	Serves dynamic files from the dynamic folder

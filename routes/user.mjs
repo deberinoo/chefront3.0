@@ -1,6 +1,3 @@
-const router = Router();
-export default router;
-
 import { Router }       from 'express';
 import { CustomerUser, UserRole } from '../models/Customer.mjs';
 import { Outlets, OutletsRole } from '../models/Outlets.mjs';
@@ -8,21 +5,32 @@ import { Outlets, OutletsRole } from '../models/Outlets.mjs';
 import ORM             from 'sequelize';
 const { Sequelize, DataTypes, Model, Op } = ORM;
 
+const router = Router();
+export default router;
+
 // ---------------- 
 // Business User routing
-router.get("/userBusiness",      async function(req, res) {
-	return res.render('user/business/userBusiness.html');
-});
+router.get("/userBusiness",          user_business_page);
+router.get("/edit/userBusiness",     edit_user_business_page);
+router.get("/create-outlet",         create_outlet_page);
+router.post("/create-outlets",       create_outlet_process);
+router.get("/view-outlets",          view_outlets_page);
+router.get("/reservation-status",    view_reservation_status_page);
 
-router.get("/edit/userBusiness",      async function(req, res) {
-	return res.render('user/business/update_userBusiness.html');
-});
 
-router.get("/create-outlet",      async function(req, res) {
-	return res.render('user/business/create_outletBusiness.html');
-});
+async function user_business_page(req, res) {
+	return res.render('user/business/userBusiness');
+};
 
-router.post("/successOutlets", async function(req,res) {
+async function edit_user_business_page(req, res) {
+	return res.render('user/business/update_userBusiness');
+};
+
+async function create_outlet_page(req, res) {
+	return res.render('user/business/create_outlet');
+};
+
+async function create_outlet_process(req, res) {
     let errors = [];
     
     let { BusinessName, Location, Address, Postalcode, Price, Contact, Description } = req.body;
@@ -37,14 +45,11 @@ router.post("/successOutlets", async function(req,res) {
             "contact":  Contact,
             "description": Description
         });
-        console.log(`Outlet created: ${outlets.location}`);
-        res.render('user/business/retrieve_outletsBusiness.html');
-        console.log("New outlet created");
+        res.render('user/business/retrieve_outletsBusiness');
+};
 
-});
-
-router.get("/view-outlets",      async function(req, res) {
-/*	const outlets_created_today = await Outlets.findAll({
+async function view_outlets_page(req, res) {
+    /*	const outlets_created_today = await Outlets.findAll({
         where: {
             "location": {
                 [Op.ne]:"null"
@@ -57,17 +62,22 @@ router.get("/view-outlets",      async function(req, res) {
     outlets_created_today.forEach (o => console.log(`Outlets location ${o.location}`));
 	console.log("Retrieve Outlets accessed");
 */
-	return res.render('user/business/retrieve_outletsBusiness.html',{outlets_created_today: outlets_created_today});
-});
+	return res.render('user/business/retrieve_outletsBusiness',{outlets_created_today: outlets_created_today});
+};
 
-router.get("/reservation-status",      async function(req, res) {
-	return res.render('user/business/retrieve_reservationBusiness.html');
-});
+async function view_reservation_status_page(req, res) {
+	return res.render('user/business/retrieve_reservationBusiness');
+};
 
 // ---------------- 	
 // Customer user routing
-router.get("/userCustomer",      async function(req, res) {
-/*	const current_user = await ModelUser.findOne({
+
+router.get("/userCustomer",             user_customer_page);
+router.get("/edit/userCustomer",        edit_user_customer_page);
+router.get("/my-reservations",          view_reservations_page);
+
+async function user_customer_page(req, res) {
+    /*	const current_user = await ModelUser.findOne({
         where: {
             "email": {
                 [Op.eq]: "email"
@@ -76,12 +86,12 @@ router.get("/userCustomer",      async function(req, res) {
     });
 */
 	return res.render('user/customer/userCustomer.html');
-});
+};
 
-router.get("/edit/userCustomer",      async function(req, res) {
+async function edit_user_customer_page(req, res) {
 	return res.render('user/customer/update_userCustomer.html');
-});
+};
 
-router.get("/my-reservations",      async function(req, res) {
+async function view_reservations_page(req, res) {
 	return res.render('user/customer/reservationCustomer.html');
-});
+};

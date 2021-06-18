@@ -37,9 +37,10 @@
 <body>
 	<main class="main" id="top">
 		{{> navbar}}
-		<div id="mainContent" data-spy="scroll" style="position:relative; height:100vh; overflow-y:scroll;"
-			data-target="#navbar-example" data-offset="10">
-			{{> flashmsg}}
+		<div id="mainContent" style="position:relative; height:100vh;">
+			<div class="container">
+				{{> flashmsg}}
+			</div>
 			{{> msg}}
 			{{> error}}
 			{{{body}}}

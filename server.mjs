@@ -112,6 +112,14 @@ Server.use(MethodOverrides('_method'));
 	saveUninitialized: false
 }));
 
+
+/**
+ * Initialize passport
+ **/
+import { initialize_passport } from './utils/passport.mjs';
+initialize_passport(Server);
+
+
 /**
  * Flash Messenger (OPTIONAL)
  */
