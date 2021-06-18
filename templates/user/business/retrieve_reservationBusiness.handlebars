@@ -1,6 +1,8 @@
 <title>Chefront - Reservation Status</title>
 
 <link rel="stylesheet" href="/public/css/profile.css">
+<script src="https://unpkg.com/bootstrap-table@1.18.3/dist/bootstrap-table.min.js"></script>
+
 
 <section>
     <div class="container">
@@ -34,15 +36,21 @@
                                 aria-controls="home" aria-selected="false">View reservation status</a>
                         </li>
                     </ul>
-                    <table class="table">
+                    <table
+                        id="table"
+                        data-toggle="table"
+                        data-width = "50px" 
+                        data-pagination="true"
+                        data-page-size="10"
+                        data-search="true">
                         <thead class="thead-dark">
                           <tr>
-                            <th scope="col"></th>
-                            <th scope="col">Customer Name</th>
-                            <th scope="col">Reservation ID</th>
-                            <th scope="col">Timing</th>
-                            <th scope="col">Discount</th>
-                            <th scope="col">Attended?</th>
+                            
+                            <th scope="col" data-sortable="true">Customer Name</th>
+                            <th scope="col" data-sortable="true">Reservation ID</th>
+                            <th scope="col" data-sortable="true">Timing</th>
+                            <th scope="col" data-sortable="true">Discount</th>
+                            <th scope="col" data-sortable="true">Attended?</th>
                           </tr>
                         </thead>
                         <tbody>

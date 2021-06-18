@@ -1,6 +1,8 @@
 <title>Chefront - Retrieve Business Users</title>
 
 <link rel="stylesheet" href="/public/css/profile.css">
+<script src="https://unpkg.com/bootstrap-table@1.18.3/dist/bootstrap-table.min.js"></script>
+
 
 <section>
     <div class="container">
@@ -22,13 +24,19 @@
                                 aria-controls="home" aria-selected="false">View feedback</a>
                         </li>
                     </ul>
-                    <table class="table table-bordered table-hover">
-                        <thead class="thead-dark">
+                    <table
+                        id="table"
+                        data-toggle="table"
+                        data-width = "50px" 
+                        data-pagination="true"
+                        data-page-size="10"
+                        data-search="true">
+                        <thead>
                             <tr>
-                              <th scope="col">Name</th>
-                              <th scope="col">Address</th>
-                              <th scope="col">Contact</th>
-                              <th scope="col">Email</th>
+                              <th scope="col" data-sortable="true">Name</th>
+                              <th scope="col" data-sortable="true">Address</th>
+                              <th scope="col" data-sortable="true">Contact</th>
+                              <th scope="col" data-sortable="true">Email</th>
                             </tr>
                         </thead>
                         <tbody>

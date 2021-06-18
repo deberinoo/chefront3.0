@@ -1,6 +1,7 @@
 import { Router }       from 'express';
 import { flashMessage } from '../utils/flashmsg.mjs'
 import { BusinessUser, BusinessRole } from '../models/Business.mjs';
+import { CustomerUser } from '../models/Customer.mjs';
 
 import Passport         from 'passport';
 import Hash             from 'hash.js';

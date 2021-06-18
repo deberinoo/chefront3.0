@@ -2536,7 +2536,7 @@
 	font-size: 1rem;
 	font-weight: 400;
 	line-height: 1.5;
-	color: #f5f7fa;
+	color: #000000;
 	background-color: transparent;
 	background-clip: padding-box;
 	border: 1px solid #d7d6da;
@@ -2572,7 +2572,7 @@
   }
   
   .form-control:focus {
-	color: #f5f7fa;
+	color: #000000;
 	background-color: transparent;
 	border-color: #9cc2f9;
 	outline: 0;
