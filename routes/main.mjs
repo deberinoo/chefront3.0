@@ -1,9 +1,9 @@
-const router = Router();
-export default router;
-
 import { Router }       from 'express';
 import { flashMessage } from '../utils/flashmsg.mjs';
-// import { Feedback } from '../models/Feedback.mjs';
+import { Feedback } from '../models/Feedback.mjs';
+
+const router = Router();
+export default router;
 
 // ---------------- 
 //	Serves dynamic files from the dynamic folder
@@ -73,5 +73,5 @@ router.get("/payment", async function(req, res) {
 // ---------------- 
 // Error page routing
 router.use(function (req, res, next) {
-	res.status(404).render('404.handlebars')
+	res.status(404).render('404')
 });

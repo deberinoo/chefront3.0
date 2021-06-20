@@ -33,7 +33,4 @@ export class BusinessUser extends Model {
     get role() { return this.getDataValue("role"); }
     get uuid() { return this.getDataValue("uuid"); }
     get email() { return this.getDataValue("email"); }
-    get name() { return this.getDataValue("name"); }
-
-    set name(name) { return this.setDataValue("name", name); }
 }

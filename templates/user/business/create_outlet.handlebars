@@ -35,58 +35,60 @@
                         </li>
                     </ul>
                     <form action="/u/successOutlets" method="post">
-                        <div class="form-group row">
-                            <label for="staticBusinessName" class="col-sm-2 col-form-label">Outlet Name</label>
-                            <div class="col-sm-10">
-                                <input type="text" readonly class="form-control-plaintext" id="staticBusinessName"
-                                    value="Kentucky Fried Chicken" name="BusinessName">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="location" class="col-sm-2 col-form-label">Location</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control text-dark" id="location"
-                                    placeholder="Nearest MRT Station" name="Location">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="address" class="col-sm-2 col-form-label">Address</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control text-dark" id="address"
-                                    placeholder="125A Fernvale Rd #21-191" name="Address">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="postalCode" class="col-sm-2 col-form-label">Postal Code</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control text-dark" id="postalCode" placeholder="791059"
-                                    name="Postalcode">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="price" class="col-sm-2 col-form-label">Price</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control text-dark" id="price" placeholder="$" name="Price">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="contact" class="col-sm-2 col-form-label">Contact</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control text-dark" id="contact"
-                                    placeholder="+65 9665 9281" name="Contact">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="description" class="col-sm-2 col-form-label">Description</label>
-                            <div class="col-sm-10">
-                                <textarea class="form-control text-dark" id="description" rows="5" maxlength="300"
-                                    placeholder="Enter outlet description" name="Description"></textarea>
-                                <div id="word-count">
-                                    <span id="current">0</span>
-                                    <span id="maximum">/ 300</span>
+                        {{#if user}}
+                            <div class="form-group row">
+                                <label for="staticBusinessName" class="col-sm-2 col-form-label">Outlet Name</label>
+                                <div class="col-sm-10">
+                                    <input type="text" readonly class="form-control-plaintext" id="staticBusinessName"
+                                        value="{{user.business_name}}" name="BusinessName">
                                 </div>
                             </div>
-                        </div>
+                            <div class="form-group row">
+                                <label for="location" class="col-sm-2 col-form-label">Location</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control text-dark" id="location"
+                                        placeholder="Nearest MRT Station" name="Location">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="address" class="col-sm-2 col-form-label">Address</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control text-dark" id="address"
+                                        placeholder="125A Fernvale Rd #21-191" name="Address">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="postalCode" class="col-sm-2 col-form-label">Postal Code</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control text-dark" id="postalCode" placeholder="791059"
+                                        name="Postalcode">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="price" class="col-sm-2 col-form-label">Price</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control text-dark" id="price" placeholder="$" name="Price">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="contact" class="col-sm-2 col-form-label">Contact</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control text-dark" id="contact"
+                                        placeholder="+65 9665 9281" name="Contact">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="description" class="col-sm-2 col-form-label">Description</label>
+                                <div class="col-sm-10">
+                                    <textarea class="form-control text-dark" id="description" rows="5" maxlength="300"
+                                        placeholder="Enter outlet description" name="Description"></textarea>
+                                    <div id="word-count">
+                                        <span id="current">0</span>
+                                        <span id="maximum">/ 300</span>
+                                    </div>
+                                </div>
+                            </div>
+                        {{/if}}
                         <button type="submit" class="btn btn-danger btn-block col-sm-10 rounded-pill shadow-sm" style="margin-left: 125px;">Create</button>
                     </form>
                 </div>

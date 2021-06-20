@@ -2536,7 +2536,7 @@
 	font-size: 1rem;
 	font-weight: 400;
 	line-height: 1.5;
-	color: #f5f7fa;
+	color: #000000;
 	background-color: transparent;
 	background-clip: padding-box;
 	border: 1px solid #d7d6da;
@@ -2572,7 +2572,7 @@
   }
   
   .form-control:focus {
-	color: #f5f7fa;
+	color: #000000;
 	background-color: transparent;
 	border-color: #9cc2f9;
 	outline: 0;
@@ -7363,7 +7363,7 @@
   }
   
   .fixed-top {
-	position: fixed;
+	position: sticky;
 	top: 0;
 	right: 0;
 	left: 0;
@@ -17038,9 +17038,8 @@
   
   section {
 	position: relative;
-	top: auto;
-	padding-bottom: 1rem;
-  }
+	margin-top: -65px;
+}
   
   @media (min-width: 992px) {
 	section {

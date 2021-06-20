@@ -126,9 +126,12 @@ Server.use(ExpSession({
 }));
 
 
-// Initilize Passport middleware
-Server.use(passport.initialize());
-Server.use(passport.session());
+/**
+ * Initialize passport
+ **/
+import { initialize_passport } from './utils/passport.mjs';
+initialize_passport(Server);
+
 
 /**
  * Flash Messenger (OPTIONAL)
