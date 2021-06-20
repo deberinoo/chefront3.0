@@ -27,10 +27,6 @@ import { Outlets, OutletsRole } from './models/Outlets.mjs';
 import { CustomerUser, UserRole } from './models/Customer.mjs';
 import { Feedback } from './models/Feedback.mjs'
 
-// Passport Config
-import { authenticate } from './config/passport.mjs';
-authenticate.localStrategy(passport);
-
 
 const Server = Express();
 const Port = process.env.PORT || 3000;
