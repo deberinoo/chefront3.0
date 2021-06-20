@@ -3,6 +3,7 @@ import { CustomerUser, UserRole } from '../models/Customer.mjs';
 import { Outlets, OutletsRole } from '../models/Outlets.mjs';
 
 import ORM             from 'sequelize';
+import { BusinessUser } from '../models/Business.mjs';
 const { Sequelize, DataTypes, Model, Op } = ORM;
 
 const router = Router();
@@ -10,12 +11,13 @@ export default router;
 
 // ---------------- 
 // Business User routing
-router.get("/userBusiness",          user_business_page);
-router.get("/edit/userBusiness",     edit_user_business_page);
-router.get("/create-outlet",         create_outlet_page);
-router.post("/create-outlets",       create_outlet_process);
-router.get("/view-outlets",          view_outlets_page);
-router.get("/reservation-status",    view_reservation_status_page);
+router.get("/userBusiness",                 user_business_page);
+router.get("/edit/:business_name",          edit_user_business_page);
+router.put("/saveEditedUser/:business_name",save_edit_user_business);
+router.get("/create-outlet",                create_outlet_page);
+router.post("/create-outlets",              create_outlet_process);
+router.get("/view-outlets",                 view_outlets_page);
+router.get("/reservation-status",           view_reservation_status_page);
 
 
 async function user_business_page(req, res) {
@@ -23,7 +25,28 @@ async function user_business_page(req, res) {
 };
 
 async function edit_user_business_page(req, res) {
-	return res.render('user/business/update_userBusiness');
+    const user = BusinessUser.findOne({
+        where: {
+            business_name: req.params.business_name
+        }
+        }).then((user) => {
+            res.render('user/business/update_userBusiness', {
+            user // passes user object to handlebar
+        });
+        }).catch(err => console.log(err)); // To catch no user ID
+};
+
+async function save_edit_user_business(req, res) {
+    user.update({
+        // Set variables here to save to the videos table
+    }, {
+        where: {
+            business_name: req.params.business_name
+        }
+        }).then(() => {
+        res.redirect('/user/business/userBusiness');
+    }).catch(err => console.log(err));
+    
 };
 
 async function create_outlet_page(req, res) {

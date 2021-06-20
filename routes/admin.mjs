@@ -11,7 +11,7 @@ export default router;
 
 router.get("/customerUsers",     view_customer_users_page);
 router.get("/businessUsers",     view_business_users_page);
-router.get("/viewFeedback",     view_feedback_page)
+router.get("/feedback",          view_feedback_page)
 
 async function view_customer_users_page(req, res) {
     const user = await CustomerUser.findAll({

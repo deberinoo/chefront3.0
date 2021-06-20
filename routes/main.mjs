@@ -33,7 +33,7 @@ router.get("/home",      async function(req, res) {
 });
 
 router.get("/error", async function(req, res) {
-	return res.render('404.html')
+	return res.render('404')
 });
 
 router.get("/about", async function(req, res) {
@@ -63,7 +63,7 @@ router.post("/successContact", async function(req,res) {
 		"read" : Read
 	});
 	console.log('Feedback submitted');
-	res.render('index.html');
+	res.render('index');
 });
 
 router.get("/payment", async function(req, res) {
@@ -73,5 +73,5 @@ router.get("/payment", async function(req, res) {
 // ---------------- 
 // Error page routing
 router.use(function (req, res, next) {
-	res.status(404).render('404.handlebars')
+	res.status(404).render('404')
 });

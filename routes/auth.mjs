@@ -52,7 +52,7 @@ async function login_process(req, res, next) {
 	}
 	
 	return Passport.authenticate('local', {
-		successRedirect: "/home",
+		successRedirect: "/u/userBusiness",
 		failureRedirect: "/auth/login",
 		failureFlash:    true
 	})(req, res, next);

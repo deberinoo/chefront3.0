@@ -15,16 +15,17 @@
                             <a class="nav-link active dropdown-toggle" data-toggle="dropdown" href="#" role="button"
                                 aria-haspopup="true" aria-expanded="false">Users</a>
                             <div class="dropdown-menu">
-                                <a class="dropdown-item" href="/admin/customerUsers">View Customers</a>
                                 <a class="dropdown-item" href="/admin/businessUsers">View Businesses</a>
+                                <a class="dropdown-item" href="/admin/customerUsers">View Customers</a>
                             </div>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="home-tab" href="#" role="tab"
+                            <a class="nav-link" id="home-tab" href="/admin/feedback" role="tab"
                                 aria-controls="home" aria-selected="false">View feedback</a>
                         </li>
                     </ul>
-                    <table
+                </div>
+                <table
                         id="table"
                         data-toggle="table"
                         data-width = "50px" 
@@ -50,7 +51,6 @@
                               {{/each}}
                         </tbody>
                     </table>
-                </div>
             </div>
         </div>
     </div>
