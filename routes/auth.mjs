@@ -2,6 +2,10 @@ import { Router }       from 'express';
 import { flashMessage } from '../utils/flashmsg.mjs'
 import { BusinessUser, BusinessRole } from '../models/Business.mjs';
 import { CustomerUser } from '../models/Customer.mjs';
+import passport from 'passport';
+import bcrypt from 'bcryptjs';
+
+
 
 import Passport         from 'passport';
 import Hash             from 'hash.js';
@@ -150,19 +154,44 @@ async function register_customer_process(req, res) {
     }
 
     if (errors.length > 0) {
-        res.render('auth/registerCustomer', {
-        });
+        console.log("Here")
+        res.render('auth/registerCustomer');
     } 
     
     else {
-        const user = await CustomerUser.create({
-            "first_name":  FirstName,
-            "last_name":  LastName,
-            "contact":  Contact,
-            "email":    Email,
-            "password":  InputPassword
-        });
-        res.render('user/customer/userCustomer');
+        // If all is well, checks if user is already registered
+		CustomerUser.findOne({
+			where: {Email}
+		})
+		.then(user => {
+			if(user) {
+				// If user is found, that means email given has already been registered
+				//req.flash('error_msg', user.name + ' already registered');
+                console.log("here")
+				res.render('auth/registerCustomer')
+			} else {
+				// Generate salt hashed password
+				bcrypt.genSalt(10, (err, salt) => {
+					bcrypt.hash(InputPassword, salt, (err, hash) => {
+						if(err) throw err;
+						InputPassword = hash;
+						// Create new user record
+						CustomerUser.create({
+                            "first_name":  FirstName,
+                            "last_name":  LastName,
+                            "contact":  Contact,
+                            "email":    Email,
+                            "password":  InputPassword
+						})
+						.then(user => {
+							res.render('auth/login');
+						})
+						.catch(err => console.log(err));
+					})
+				});
+				
+			}
+		});
 	}
 };
 

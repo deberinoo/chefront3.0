@@ -1,23 +1,39 @@
-import Express         from 'express';
-import ExpHandlebars   from 'express-handlebars';
-import ExpSession      from 'express-session';
+import Express from 'express';
+import ExpHandlebars from 'express-handlebars';
+import ExpSession from 'express-session';
 import ExpSessionStore from 'express-mysql-session'
-import BodyParser      from 'body-parser';
-import CookieParser    from 'cookie-parser';
+import BodyParser from 'body-parser';
+import CookieParser from 'cookie-parser';
 
 import MethodOverrides from 'method-override';
-import Path            from 'path';
+import Path from 'path';
 
-import Flash           from 'connect-flash';
-import FlashMessenger  from 'flash-messenger';
+import Flash from 'connect-flash';
+import FlashMessenger from 'flash-messenger';
 
-import Handlebars      from 'handlebars';
+import Handlebars from 'handlebars';
 import { allowInsecurePrototypeAccess } from '@handlebars/allow-prototype-access';
 
-import ORM 			from 'sequelize'
+import ORM from 'sequelize'
+import MySQLStore from 'express-mysql-session';
+import passport from 'passport';
+
+import LocalStrategy from 'passport-local';
+import bcrypt from 'bcryptjs';
+
+//	Import models
+import { BusinessUser, BusinessRole } from './models/Business.mjs';
+import { Outlets, OutletsRole } from './models/Outlets.mjs';
+import { CustomerUser, UserRole } from './models/Customer.mjs';
+import { Feedback } from './models/Feedback.mjs'
+
+// Passport Config
+import { authenticate } from './config/passport.mjs';
+authenticate.localStrategy(passport);
+
 
 const Server = Express();
-const Port   = process.env.PORT || 3000;
+const Port = process.env.PORT || 3000;
 const { Sequelize, DataTypes, Model, Op } = ORM
 
 import methodOverride from 'method-override';
@@ -34,20 +50,20 @@ const Config = {
 }
 
 export const SessionStore = new ExpSessionStore({
-	host : Config.host,
-	port : Config.port,
-	user : Config.username,
-	password : Config.password,
-	database : Config.database,
-	clearExpired : true,
-	checkExpirationInterval : 900000,
-	expiration : 900000
+	host: Config.host,
+	port: Config.port,
+	user: Config.username,
+	password: Config.password,
+	database: Config.database,
+	clearExpired: true,
+	checkExpirationInterval: 900000,
+	expiration: 900000
 })
 
 export const Database = new Sequelize(
 	Config.database, Config.username, Config.password, {
-	port:     Config.port,
-	host:     Config.host,      // Name or IP address of MySQL server
+	port: Config.port,
+	host: Config.host,      // Name or IP address of MySQL server
 	dialect: 'mysql',           // Tells sequelize that MySQL is used
 	operatorsAliases: false,
 	define: {
@@ -61,6 +77,8 @@ export const Database = new Sequelize(
 	}
 });
 
+ 
+
 try {
 	await Database.authenticate();
 }
@@ -68,28 +86,22 @@ catch (error) {
 	console.error(`Error connecting to database`);
 }
 
- //	Import models
- import { CustomerUser, UserRole } from './models/Customer.mjs';
- import { BusinessUser, BusinessRole } from './models/Business.mjs';
- import { Outlets, OutletsRole } from './models/Outlets.mjs';
- import { Feedback } from './models/Feedback.mjs'
+//	Initialise models
+CustomerUser.initialize(Database);
+BusinessUser.initialize(Database);
+Outlets.initialize(Database);
+Feedback.initialize(Database);
 
- //	Initialise models
- CustomerUser.initialize(Database);
- BusinessUser.initialize(Database);
- Outlets.initialize(Database);
- Feedback.initialize(Database);
+//	Sync your database
+Database.sync({ drop: false });	//	drop is true => clear tables, recreate
 
- //	Sync your database
- Database.sync({ drop: false });	//	drop is true => clear tables, recreate
- 
- //------------ Init completed
+//------------ Init completed
 console.log(`Database connection successful`);
 
-Server.set('views',       'templates');		//	Let express know where to find HTML templates
+Server.set('views', 'templates');		//	Let express know where to find HTML templates
 Server.set('view engine', 'handlebars');	//	Let express know what template engine to use
 Server.engine('handlebars', ExpHandlebars({
-	handlebars:     allowInsecurePrototypeAccess(Handlebars),
+	handlebars: allowInsecurePrototypeAccess(Handlebars),
 	defaultLayout: 'main'
 }));
 //	Let express know where to access static files
@@ -99,19 +111,20 @@ Server.use("/public", Express.static('public'));
 /**
  * Form body parsers etc
  */
-Server.use(BodyParser.urlencoded( { extended: false }));
+Server.use(BodyParser.urlencoded({ extended: false }));
 Server.use(BodyParser.json());
 Server.use(CookieParser());
 Server.use(MethodOverrides('_method'));
 
 
+
 /**
  * Express Session
  */
- Server.use(ExpSession({
-	name:   'example-app',
+Server.use(ExpSession({
+	name: 'example-app',
 	secret: 'random-secret',
-	resave:  false,
+	resave: false,
 	saveUninitialized: false
 }));
 
@@ -158,6 +171,6 @@ console.log(`===========================`);
 /**
  * Start the server in infinite loop
  */
-Server.listen(Port, function() {
+Server.listen(Port, function () {
 	console.log(`Server listening at port ${Port}`);
 });
