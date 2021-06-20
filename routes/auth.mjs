@@ -5,58 +5,33 @@ import { Router }       from 'express';
 import { flashMessage } from '../utils/flashmsg.mjs'
 import { BusinessUser, BusinessRole } from '../models/Business.mjs';
 import { CustomerUser } from '../models/Customer.mjs';
+import passport from 'passport';
+import bcrypt from 'bcryptjs';
+
+
 
 router.get("/login",      async function(req, res) {
 	return res.render('auth/login');
 });
 
-router.post("/login", async function (req, res) {
-	console.log("login contents received");
-	console.log(req.body);
+router.post("/login", async function (req, res,next ) {
 
-	let errors = [];
-	if (errors.length > 0) {
-		flashMessage(res, 'error', 'Invalid Credentials!', 'fas fa-sign-in-alt', true);
-		return res.redirect(req.originalUrl);
-	}
-	else {
-		flashMessage(res, 'success', 'Successfully login!', 'fas fa-sign-in-alt', true);
-		return res.redirect("/home");
-	}
+    passport.authenticate('local', {
+		successRedirect: '/user/customer/userCustomer',           // Route to /video/listVideos URL
+		failureRedirect: '/auth/login',					// Route to /login URL
+		failureFlash: true
+		/*
+		* Setting the failureFlash option to true instructs Passport to flash an  error message
+		* using the message given by the strategy's verify callback, if any. When a failure occurs
+		* passport passes the message object as error
+		* */
+	})(req, res, next);
+   
+	return res.render('user/customer/userCustomer.html');
 });
 
 router.get("/register", async function(req, res) {
 	return res.render('auth/register');
-});
-
-router.post("/register", async function (req, res) {
-	console.log("Register contents received");
-	console.log(req.body);
-	let errors = [];
-
-	const regexEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-	if (req.body.password != req.body.password2) {
-		errors = errors.concat({ text: "Password do not match !"});
-	}
-
-	if (!regexEmail.test(req.body.email)) {
-		errors = errors.concat({text: "Invalid Email address!"});
-	}
-
-	if (req.body.name == undefined || req.body.name.length < 4) {
-		errors = errors.concat({text: "Invalid Name"});
-	}
-
-	if (errors.length > 0) {
-		console.error(`There are ${errors.length} errors in the form`);
-		return res.render('auth/register', {
-			errors: errors
-		});
-	}
-	else {
-		flashMessage(res, 'success', 'Successfully created an account. Please login', 'fas fa-sign-in-alt', true);
-		return res.redirect("/auth/login");
-	}
 });
 
 router.get("/registerBusiness", async function(req, res) {
@@ -112,19 +87,43 @@ router.post("/successCustomer", async function(req,res) {
     }
 
     if (errors.length > 0) {
-        res.render('auth/registerCustomer', {
-        });
+        console.log("Here")
+        res.render('auth/registerCustomer');
     } 
     
     else {
-        const user = await CustomerUser.create({
-            "first_name":  FirstName,
-            "last_name":  LastName,
-            "contact":  Contact,
-            "email":    Email,
-            "password":  InputPassword
-        });
-        res.render('user/customer/userCustomer');
-        console.log("New user created")
+        // If all is well, checks if user is already registered
+		CustomerUser.findOne({
+			where: {Email}
+		})
+		.then(user => {
+			if(user) {
+				// If user is found, that means email given has already been registered
+				//req.flash('error_msg', user.name + ' already registered');
+                console.log("here")
+				res.render('auth/registerCustomer')
+			} else {
+				// Generate salt hashed password
+				bcrypt.genSalt(10, (err, salt) => {
+					bcrypt.hash(InputPassword, salt, (err, hash) => {
+						if(err) throw err;
+						InputPassword = hash;
+						// Create new user record
+						CustomerUser.create({
+                            "first_name":  FirstName,
+                            "last_name":  LastName,
+                            "contact":  Contact,
+                            "email":    Email,
+                            "password":  InputPassword
+						})
+						.then(user => {
+							res.render('auth/login');
+						})
+						.catch(err => console.log(err));
+					})
+				});
+				
+			}
+		});
 	}
 });
