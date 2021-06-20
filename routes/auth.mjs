@@ -154,7 +154,6 @@ async function register_customer_process(req, res) {
     }
 
     if (errors.length > 0) {
-        console.log("Here")
         res.render('auth/registerCustomer');
     } 
     
@@ -167,7 +166,6 @@ async function register_customer_process(req, res) {
 			if(user) {
 				// If user is found, that means email given has already been registered
 				//req.flash('error_msg', user.name + ' already registered');
-                console.log("here")
 				res.render('auth/registerCustomer')
 			} else {
 				// Generate salt hashed password
