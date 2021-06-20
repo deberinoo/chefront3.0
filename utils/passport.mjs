@@ -44,8 +44,8 @@ const LocalStrategy = new Strategy ({
 			where: {
 				Email:    email,
 				Password: Hash.sha256().update(password).digest('hex')
-		}
-	});
+			}
+		});
 
 		if (user == null) {
 			throw new Error ("Invalid Credentials");

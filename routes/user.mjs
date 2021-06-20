@@ -2,6 +2,7 @@ import { Router }       from 'express';
 import { CustomerUser, UserRole } from '../models/Customer.mjs';
 import { Outlets, OutletsRole } from '../models/Outlets.mjs';
 
+import Passport         from 'passport';
 import ORM             from 'sequelize';
 import { BusinessUser } from '../models/Business.mjs';
 const { Sequelize, DataTypes, Model, Op } = ORM;
@@ -11,23 +12,28 @@ export default router;
 
 // ---------------- 
 // Business User routing
-router.get("/userBusiness",                 user_business_page);
+router.get("/:business_name",               user_business_page);
 router.get("/edit/:business_name",          edit_user_business_page);
-router.put("/saveEditedUser/:business_name",save_edit_user_business);
-router.get("/create-outlet",                create_outlet_page);
+router.put("/saveUser/:business_name",      save_edit_user_business);
+router.get("/:business_name/create-outlet",                create_outlet_page);
 router.post("/create-outlets",              create_outlet_process);
 router.get("/view-outlets",                 view_outlets_page);
 router.get("/reservation-status",           view_reservation_status_page);
 
 
 async function user_business_page(req, res) {
+    const user = BusinessUser.findOne({
+        where: {
+            "uuid": req.params.uuid
+        }
+    })
 	return res.render('user/business/userBusiness');
 };
 
 async function edit_user_business_page(req, res) {
     const user = BusinessUser.findOne({
         where: {
-            business_name: req.params.business_name
+            "uuid": req.params.uuid
         }
         }).then((user) => {
             res.render('user/business/update_userBusiness', {
@@ -37,14 +43,17 @@ async function edit_user_business_page(req, res) {
 };
 
 async function save_edit_user_business(req, res) {
-    user.update({
-        // Set variables here to save to the videos table
+    const user = BusinessUser.update({
+        "business_name": req.params.BusinessName,
+        "email": req.params.email,
+        "address": req.params.address,
+        "contact": req.params.contact
     }, {
         where: {
-            business_name: req.params.business_name
+            "uuid": req.params.uuid
         }
         }).then(() => {
-        res.redirect('/user/business/userBusiness');
+        res.redirect('/u/{{}}/');
     }).catch(err => console.log(err));
     
 };

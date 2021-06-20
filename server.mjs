@@ -20,6 +20,9 @@ const Server = Express();
 const Port   = process.env.PORT || 3000;
 const { Sequelize, DataTypes, Model, Op } = ORM
 
+import methodOverride from 'method-override';
+// Method override middleware to use other HTTP methods such as PUT and DELETE
+Server.use(methodOverride('_method'));
 
 // Initialise database
 const Config = {

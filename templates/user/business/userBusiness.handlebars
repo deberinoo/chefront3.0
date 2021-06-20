@@ -17,7 +17,7 @@
                             <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button"
                                 aria-haspopup="true" aria-expanded="false">Outlets</a>
                             <div class="dropdown-menu">
-                                <a class="dropdown-item" href="/u/create-outlet">Create new outlet</a>
+                                <a class="dropdown-item" href="/u/{{user.business_name}}/create-outlet">Create new outlet</a>
                                 <a class="dropdown-item" href="/u/view-outlets">View existing outlets</a>
                             </div>
                         </li>
@@ -76,7 +76,7 @@
                                 <input type="text" readonly class="form-control-plaintext text-dark" id="inputAddress5" value="{{user.contact}}" placeholder="" />
                             </div>
                         {{/if}}
-                        <a class="btn btn-danger mt-3" href="../u/edit/userBusiness">
+                        <a class="btn btn-danger mt-3" href="../u/edit/{{user.business_name}}">
                             Edit Profile
                         </a>
                     </form>

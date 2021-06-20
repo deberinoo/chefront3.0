@@ -35,7 +35,7 @@ async function login_page(req, res) {
 
 async function login_process(req, res, next) {
     let { Email, Password } = req.body;
-	
+
 	let errors = [];
 	try {
 		if (! regexEmail.test(Email)) {
@@ -50,9 +50,16 @@ async function login_process(req, res, next) {
 		console.error(error);
 		return res.render('auth/login', { errors: errors });
 	}
-	
+
+	const user = await BusinessUser.findOne({
+        where: {
+            "email": Email,
+			"password": Hash.sha256().update(Password).digest('hex')
+        }
+	});
+
 	return Passport.authenticate('local', {
-		successRedirect: "/u/userBusiness",
+		successRedirect: "/u/" + user.business_name,
 		failureRedirect: "/auth/login",
 		failureFlash:    true
 	})(req, res, next);
@@ -80,7 +87,7 @@ async function register_business_process(req, res) {
 			errors = errors.concat({ text: "Invalid email address!" });
 		}
 		else {
-			const user = await ModelUser.findOne({where: {email: Email}});
+			const user = await BusinessUser.findOne({where: {email: Email}});
 			if (user != null) {
 				errors = errors.concat({ text: "This email cannot be used!" });
 			}
