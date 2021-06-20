@@ -22,38 +22,40 @@ router.get("/reservation-status",           view_reservation_status_page);
 
 
 async function user_business_page(req, res) {
-    const user = BusinessUser.findOne({
+    BusinessUser.findOne({
         where: {
-            "uuid": req.params.uuid
+            "business_name": req.params.business_name
         }
     })
 	return res.render('user/business/userBusiness');
 };
 
 async function edit_user_business_page(req, res) {
-    const user = BusinessUser.findOne({
+    BusinessUser.findOne({
         where: {
-            "uuid": req.params.uuid
+            "business_name": req.params.business_name
         }
-        }).then((user) => {
-            res.render('user/business/update_userBusiness', {
+    }).then((user) => {
+        res.render('user/business/update_userBusiness', {
             user // passes user object to handlebar
         });
-        }).catch(err => console.log(err)); // To catch no user ID
+    }).catch(err => console.log(err)); // To catch no user ID
 };
 
 async function save_edit_user_business(req, res) {
-    const user = BusinessUser.update({
-        "business_name": req.params.BusinessName,
-        "email": req.params.email,
-        "address": req.params.address,
-        "contact": req.params.contact
+    let { BusinessName, Email, Address, Contact } = req.body;
+
+    BusinessUser.update({
+        business_name: BusinessName,
+        email: Email,
+        address: Address,
+        contact: Contact
     }, {
         where: {
-            "uuid": req.params.uuid
+            business_name: req.params.business_name
         }
         }).then(() => {
-        res.redirect('/u/{{}}/');
+            res.redirect(`/u/${BusinessName}`);
     }).catch(err => console.log(err));
     
 };
