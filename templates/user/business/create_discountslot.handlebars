@@ -1,4 +1,4 @@
-<title>Chefront - Create Outlet</title>
+<title>Chefront - Create Discount Slot</title>
 
 <link rel="stylesheet" href="/public/css/profile.css">
 
@@ -6,7 +6,7 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-12 col-lg-10 col-xl-8 mx-auto">
-                <h2 class="h3 mb-4 page-title">Create New Outlet</h2>
+                <h2 class="h3 mb-4 page-title">Create New Business Outlet</h2>
                 <div class="my-4">
                     <ul class="nav nav-tabs mb-4" id="myTab" role="tablist">
                         <li class="nav-item">
@@ -14,7 +14,7 @@
                                 aria-controls="home" aria-selected="false">Business Profile</a>
                         </li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link active dropdown-toggle" data-toggle="dropdown" href="#" role="button"
+                            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button"
                                 aria-haspopup="true" aria-expanded="false">Outlets</a>
                             <div class="dropdown-menu">
                                 <a class="dropdown-item" href="/u/{{user.business_name}}/create-outlet">Create new outlet</a>
@@ -22,7 +22,7 @@
                             </div>
                         </li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button"
+                            <a class="nav-link active dropdown-toggle" data-toggle="dropdown" href="#" role="button"
                                 aria-haspopup="true" aria-expanded="false">Discount slots</a>
                             <div class="dropdown-menu">
                                 <a class="dropdown-item" href="/u/{{user.business_name}}/create-discount-slot">Create new slot</a>
@@ -34,7 +34,7 @@
                                 aria-controls="home" aria-selected="false">View reservation status</a>
                         </li>
                     </ul>
-                    <form action="/u/{{user.business_name}}/create-outlet" method="post">
+                    <form action="/u/{{user.business_name}}/create-discount-slot" method="post">
                         {{#if user}}
                             <div class="form-group row">
                                 <label for="staticBusinessName" class="col-sm-2 col-form-label">Outlet Name</label>
@@ -51,41 +51,16 @@
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label for="address" class="col-sm-2 col-form-label">Address</label>
+                                <label for="price" class="col-sm-2 col-form-label">Time</label>
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control text-dark" id="address"
-                                        placeholder="125A Fernvale Rd #21-191" name="Address">
+                                    <input type="text" class="form-control text-dark" id="time" placeholder="" name="Time">
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label for="postalCode" class="col-sm-2 col-form-label">Postal Code</label>
+                                <label for="contact" class="col-sm-2 col-form-label">Discount</label>
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control text-dark" id="postalCode" placeholder="791059"
-                                        name="Postalcode">
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label for="price" class="col-sm-2 col-form-label">Price</label>
-                                <div class="col-sm-10">
-                                    <input type="text" class="form-control text-dark" id="price" placeholder="$" name="Price">
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label for="contact" class="col-sm-2 col-form-label">Contact</label>
-                                <div class="col-sm-10">
-                                    <input type="text" class="form-control text-dark" id="contact"
-                                        placeholder="+65 9665 9281" name="Contact">
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label for="description" class="col-sm-2 col-form-label">Description</label>
-                                <div class="col-sm-10">
-                                    <textarea class="form-control text-dark" id="description" rows="5" maxlength="300"
-                                        placeholder="Enter outlet description" name="Description"></textarea>
-                                    <div id="word-count">
-                                        <span id="current">0</span>
-                                        <span id="maximum">/ 300</span>
-                                    </div>
+                                    <input type="text" class="form-control text-dark" id="discount"
+                                        placeholder="" name="Discount">
                                 </div>
                             </div>
                         {{/if}}
@@ -96,15 +71,3 @@
         </div>
     </div>
 </section>
-
-<script>
-    $('textarea').keyup(function () {
-
-        var characterCount = $(this).val().length,
-            current = $('#current'),
-            maximum = $('#maximum'),
-            wordCount = $('#word-count');
-
-        current.text(characterCount);
-    });
-</script>

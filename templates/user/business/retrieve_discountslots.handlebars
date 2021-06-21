@@ -1,15 +1,14 @@
-<title>Chefront - Reservation Status</title>
+<title>Chefront - View Discount Slots</title>
 
 <link rel="stylesheet" href="/public/css/profile.css">
 <script src="https://unpkg.com/bootstrap-table@1.18.3/dist/bootstrap-table.min.js"></script>
-<link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
+
 
 <section>
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-12 col-lg-10 col-xl-8 mx-auto">
-                <h2 class="h3 mb-4 page-title">Reservation Status</h2>
+                <h2 class="h3 mb-4 page-title">Business Outlets</h2>
                 <div class="my-4">
                     <ul class="nav nav-tabs mb-4" id="myTab" role="tablist">
                         <li class="nav-item">
@@ -25,7 +24,7 @@
                             </div>
                         </li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button"
+                            <a class="nav-link active dropdown-toggle" data-toggle="dropdown" href="#" role="button"
                                 aria-haspopup="true" aria-expanded="false">Discount slots</a>
                             <div class="dropdown-menu">
                                 <a class="dropdown-item" href="/u/{{user.business_name}}/create-discount-slot">Create new slot</a>
@@ -33,7 +32,7 @@
                             </div>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active" id="home-tab" href="/u/{{user.business_name}}/reservation-status" role="tab"
+                            <a class="nav-link" id="home-tab" href="/u/{{user.business_name}}/reservation-status" role="tab"
                                 aria-controls="home" aria-selected="false">View reservation status</a>
                         </li>
                     </ul>
@@ -45,40 +44,22 @@
                         data-page-size="10"
                         data-search="true">
                         <thead class="thead-dark">
-                          <tr>
-                            <th scope="col" data-sortable="true">Customer Name</th>
-                            <th scope="col" data-sortable="true">Reservation ID</th>
-                            <th scope="col" data-sortable="true">Timing</th>
-                            <th scope="col" data-sortable="true">Discount</th>
-                            <th scope="col" data-sortable="true">Attended?</th>
-                            <th></th>
-                          </tr>
+                            <tr>
+                              <th scope="col" data-sortable="true">Location</th>
+                              <th scope="col" data-sortable="true">Time</th>
+                              <th scope="col" data-sortable="true">Discount</th>
+                              <th scope="col" data-sortable="true">Expired</th>
+                            </tr>
                         </thead>
                         <tbody>
-                          <tr>
-                            <th scope="row">1</th>
-                            <td>Mark</td>
-                            <td>74NMP3</td>
-                            <td>4.00pm</td>
-                            <td>50%</td>
-                            <td><input type="checkbox" checked data-on="No" data-off="Yes" data-toggle="toggle" data-onstyle="outline-danger" data-offstyle="outline-success"></td>
-                          </tr>
-                          <tr>
-                            <th scope="row">2</th>
-                            <td>Mark</td>
-                            <td>74NMP3</td>
-                            <td>4.00pm</td>
-                            <td>50%</td>
-                            <td><input type="checkbox" checked data-on="No" data-off="Yes" data-toggle="toggle" data-onstyle="outline-danger" data-offstyle="outline-success"></td>
-                          </tr>
-                          <tr>
-                            <th scope="row">3</th>
-                            <td>Mark</td>
-                            <td>74NMP3</td>
-                            <td>4.00pm</td>
-                            <td>50%</td>
-                            <td><input type="checkbox" checked data-on="No" data-off="Yes" data-toggle="toggle" data-onstyle="outline-danger" data-offstyle="outline-success"></td>
-                          </tr>
+                            {{#each discountslot}}
+                              <tr>
+                                  <td>{{ location }}</td>
+                                  <td>{{ time }}</td>
+                                  <td>{{ discount }}</td>
+                                  <td>{{ expired }}</td>
+                              </tr>
+                            {{/each}}
                         </tbody>
                     </table>
                 </div>
@@ -86,7 +67,3 @@
         </div>
     </div>
 </section>
-
-<script>
-    $("#table").bootstrapTable("hideLoading");
-</script>
