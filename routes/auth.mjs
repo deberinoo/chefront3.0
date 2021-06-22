@@ -1,7 +1,8 @@
 import { Router }       from 'express';
 import { flashMessage } from '../utils/flashmsg.mjs'
-import { BusinessUser, BusinessRole } from '../models/Business.mjs';
+import { BusinessUser } from '../models/Business.mjs';
 import { CustomerUser } from '../models/Customer.mjs';
+import { User } from '../models/Users.mjs'
 import passport from 'passport';
 import bcrypt from 'bcryptjs';
 
@@ -125,7 +126,7 @@ async function register_business_process(req, res) {
 			errors = errors.concat({ text: "Invalid email address!" });
 		}
 		else {
-			const user = await BusinessUser.findOne({where: {email: Email}});
+			const user = await User.findOne({where: {email: Email}});
 			if (user != null) {
 				errors = errors.concat({ text: "This email cannot be used!" });
 			}
@@ -150,12 +151,15 @@ async function register_business_process(req, res) {
 
 	//	Create new user, now that all the test above passed
 	try {
+		User.create({
+			"email" : Email
+		})
         const user = await BusinessUser.create({
             "business_name":  BusinessName,
             "address":  Address,
             "contact":  Contact,
             "email":    Email,
-            "password": Hash.sha256().update(InputPassword).digest('hex')
+            "password": Hash.sha256().update(InputPassword).digest('hex'),
         });
         res.render('user/business/userBusiness');
         console.log("New user created")
@@ -176,54 +180,70 @@ async function register_customer_page(req, res) {
 }
 
 async function register_customer_process(req, res) {
-    let errors = [];
-
+	let errors = [];
+    
     let { FirstName, LastName, Contact, Email, InputPassword, ConfirmPassword } = req.body;
 
-    if (InputPassword !== ConfirmPassword) {
-        errors.push({ text: 'password do not match!' });
-    }
-    if (InputPassword.length < 4) {
-        errors.push({ text: 'password must be at least 4 characters!' });
-    }
+	try {
+		if (! regexName.test(FirstName)) {
+			errors = errors.concat({ text: "Invalid name provided! It must be minimum 3 characters and starts with a alphabet." });
+		}
 
-    if (errors.length > 0) {
-        res.render('auth/registerCustomer');
-    } 
-    
-    else {
-        // If all is well, checks if user is already registered
-		CustomerUser.findOne({
-			where: {Email}
-		})
-		.then(user => {
-			if(user) {
-				// If user is found, that means email given has already been registered
-				//req.flash('error_msg', user.name + ' already registered');
-				res.render('auth/registerCustomer')
-			} else {
-				// Generate salt hashed password
-				bcrypt.genSalt(10, (err, salt) => {
-					bcrypt.hash(InputPassword, salt, (err, hash) => {
-						if(err) throw err;
-						InputPassword = hash;
-						// Create new user record
-						CustomerUser.create({
-                            "first_name":  FirstName,
-                            "last_name":  LastName,
-                            "contact":  Contact,
-                            "email":    Email,
-                            "password":  InputPassword
-						})
-						.then(user => {
-							res.render('auth/login');
-						})
-						.catch(err => console.log(err));
-					})
-				});
-				
+		if (! regexName.test(LastName)) {
+			errors = errors.concat({ text: "Invalid name provided! It must be minimum 3 characters and starts with a alphabet." });
+		}
+
+		if (! regexEmail.test(Email)) {
+			errors = errors.concat({ text: "Invalid email address!" });
+		}
+
+		else {
+			const user = await User.findOne({where: {email: Email}});
+			if (user != null) {
+				errors = errors.concat({ text: "This email cannot be used!" });
 			}
-		});
+		}
+
+		if (! regexPwd.test(InputPassword)) {
+			errors = errors.concat({ text: "Password requires minimum eight characters, at least one uppercase letter, one lowercase letter and one number!" });
+		}
+		else if (InputPassword !== ConfirmPassword) {
+			errors = errors.concat({ text: "Password do not match!" });
+		}
+
+		if (errors.length > 0) {
+			throw new Error("There are validation errors");
+		}
+	}
+	catch (error) {
+		console.error("There is errors with the registration form body.");
+		console.error(error);
+		return res.render('auth/registerCustomer', { errors: errors });
+	}
+
+	//	Create new user, now that all the test above passed
+	try {
+		User.create({
+			"email" : Email
+		})
+		CustomerUser.create({
+			"first_name":  FirstName,
+			"last_name":  LastName,
+			"contact":  Contact,
+			"email":    Email,
+			"password":  Hash.sha256().update(InputPassword).digest('hex'),
+		})
+        res.render('user/customer/userCustomer');
+        console.log("New user created")
+
+		flashMessage(res, 'success', 'Successfully created an account. Please login', 'fas fa-sign-in-alt', true);
+		return res.redirect("/auth/login");
+	}
+	catch (error) {
+		//	Else internal server error
+		console.error(`Failed to create a new user: ${Email} `);
+		console.error(error);
+		return res.status(500).end();
 	}
 };
 

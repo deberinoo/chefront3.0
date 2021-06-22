@@ -3,7 +3,7 @@ const {Sequelize, DataTypes, Model} = ORM;
 
 export class UserRole{
     static get Admin() {return "admin"}
-    static get User() {return "user"}
+    static get User() {return "customer"}
 }
 
 export class CustomerUser extends Model {
