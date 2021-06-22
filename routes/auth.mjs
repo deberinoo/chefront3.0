@@ -24,7 +24,8 @@ export default router;
  
 
 router.get("/login",     login_page);
-router.post("/login",    login_process);
+router.post("/loginCustomer",    customer_login_process);
+router.post("/loginBusiness", business_login_process)
 router.get("/logout",     logout_process);
 router.get("/register",    register_page);
 router.get("/registerBusiness",    register_business_page);
@@ -37,7 +38,32 @@ async function login_page(req, res) {
 	return res.render('auth/login');
 }
 
-async function login_process(req, res, next) {
+async function customer_login_process(req, res, next) {
+    let { Email, Password } = req.body;
+	
+	let errors = [];
+	try {
+		if (! regexEmail.test(Email)) {
+			errors = errors.concat({ text: "Invalid email address!" });
+		}
+		if (errors.length > 0) {
+			throw new Error("There are validation errors");
+		}
+	}
+	catch (error) {
+		console.error("There is errors with the login form body.");
+		console.error(error);
+		return res.render('auth/login', { errors: errors });
+	}
+	
+	return Passport.authenticate('local', {
+		successRedirect: "/u/userCustomer",
+		failureRedirect: "/auth/loginCustomer",
+		failureFlash:    true
+	})(req, res, next);
+}
+
+async function business_login_process(req, res, next) {
     let { Email, Password } = req.body;
 	
 	let errors = [];
@@ -57,7 +83,7 @@ async function login_process(req, res, next) {
 	
 	return Passport.authenticate('local', {
 		successRedirect: "/u/userBusiness",
-		failureRedirect: "/auth/login",
+		failureRedirect: "/auth/loginBusiness",
 		failureFlash:    true
 	})(req, res, next);
 }

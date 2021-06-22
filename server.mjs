@@ -125,8 +125,11 @@ Server.use(ExpSession({
 /**
  * Initialize passport
  **/
-import { initialize_passport } from './utils/passport.mjs';
-initialize_passport(Server);
+import { initialize_business_passport, initialize_customer_passport } from './utils/passport.mjs';
+initialize_business_passport(Server);
+initialize_customer_passport(Server);
+
+
 
 
 /**

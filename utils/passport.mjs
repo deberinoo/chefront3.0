@@ -2,13 +2,16 @@ import Passport 	from 'passport';
 import { Strategy } from 'passport-local';
 import Hash 		from 'hash.js';
 import { BusinessUser, BusinessRole } from '../models/Business.mjs';
+import { CustomerUser, UserRole } from '../models/Customer.mjs'; 
 
 /**
  * Initialize the passport and configure local strategy
  * @param {import('express').Express} server 
  */
 
-export function initialize_passport(server) {
+
+
+export function initialize_business_passport(server) {
 	Passport.use(LocalStrategy);
 	Passport.serializeUser(async function (user, done) {
 		return done(null, user.uuid);
@@ -22,6 +25,34 @@ export function initialize_passport(server) {
 			else {
 				return done(null, user);
 			}
+			
+		}
+		catch (error) {
+			console.error(`Failed to deserialize user ${uid}`);
+			console.error(error);
+			return done (error, false);
+		}
+	})
+
+	server.use(Passport.initialize());
+	server.use(Passport.session());
+}
+
+export function initialize_customer_passport(server) {
+	Passport.use(LocalStrategy);
+	Passport.serializeUser(async function (user, done) {
+		return done(null, user.uuid);
+	});
+	Passport.deserializeUser(async function (uid, done) {
+		try {
+			const user = await CustomerUser.findByPk(uid);
+			if (user == null) {
+				throw new Error ("Invalid user id");
+			}
+			else {
+				return done(null, user);
+			}
+			
 		}
 		catch (error) {
 			console.error(`Failed to deserialize user ${uid}`);
