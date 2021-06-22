@@ -1,4 +1,4 @@
-<title>Chefront - Edit Business User</title>
+<title>Chefront - Edit Profile</title>
 
 <link rel="stylesheet" href="/public/css/profile.css">
 
@@ -10,100 +10,103 @@
                 <div class="my-4">
                     <ul class="nav nav-tabs mb-4" id="myTab" role="tablist">
                         <li class="nav-item">
-                            <a class="nav-link active" id="home-tab" href="/u/userBusiness" role="tab"
+                            <a class="nav-link active" id="home-tab" href="/u/{{user.business_name}}" role="tab"
                                 aria-controls="home" aria-selected="false">Business Profile</a>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button"
                                 aria-haspopup="true" aria-expanded="false">Outlets</a>
                             <div class="dropdown-menu">
-                                <a class="dropdown-item" href="/u/create-outlet">Create new outlet</a>
-                                <a class="dropdown-item" href="/u/view-outlets">View existing outlets</a>
+                                <a class="dropdown-item" href="/u/{{user.business_name}}/create-outlet">Create new outlet</a>
+                                <a class="dropdown-item" href="/u/{{user.business_name}}/view-outlets">View existing outlets</a>
                             </div>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button"
                                 aria-haspopup="true" aria-expanded="false">Discount slots</a>
                             <div class="dropdown-menu">
-                                <a class="dropdown-item" href="#">Create new slot</a>
-                                <a class="dropdown-item" href="#">View existing slots</a>
+                                <a class="dropdown-item" href="/u/{{user.business_name}}/create-discount-slot">Create new slot</a>
+                                <a class="dropdown-item" href="/u/{{user.business_name}}/view-discount-slots">View existing slots</a>
                             </div>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="home-tab" href="/u/reservation-status" role="tab"
+                            <a class="nav-link" id="home-tab" href="/u/{{user.business_name}}/reservation-status" role="tab"
                                 aria-controls="home" aria-selected="false">View reservation status</a>
                         </li>
                     </ul>
-                    <form class="col-12" action="/user/saveEditedUser/{{user.id}}?_method=PUT" method="post">
-                        <div class="row mt-5 align-items-center">
-                            <div class="col-md-3 text-center mb-5">
-                                <div class="avatar avatar-xl">
-                                    <img src="../../public/img/illustrations/user.png" alt="..."
-                                        class="avatar-img rounded-circle" />
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="row align-items-center">
-                                    <div class="col-md-7">
-                                        <h4 class="mb-1">{{user.business_name}}</h4>
+                    <form class="col-12" action="/u/saveUser/{{user.business_name}}?_method=PUT" method="post">
+                        <input type="hidden" name="_method" value="PUT">
+                        {{#if user}}
+                            <div class="row mt-5 align-items-center">
+                                <div class="col-md-3 text-center mb-5">
+                                    <div class="avatar avatar-xl">
+                                        <img src="../../public/img/illustrations/user.png" alt="..."
+                                            class="avatar-img rounded-circle" />
                                     </div>
                                 </div>
-                                <div class="row mb-4">
-                                    <div class="col-md-12">
-                                        <p class="small mb-0 text-muted">{{user.email}}</p>
-                                        <p class="small mb-0 text-muted">{{user.address}}</p>
-                                        <p class="small mb-0 text-muted">{{user.contact}}</p>
+                                <div class="col">
+                                    <div class="row align-items-center">
+                                        <div class="col-md-7">
+                                            <h4 class="mb-1">{{user.business_name}}</h4>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-4">
+                                        <div class="col-md-12">
+                                            <p class="small mb-0 text-muted">{{user.email}}</p>
+                                            <p class="small mb-0 text-muted">{{user.address}}</p>
+                                            <p class="small mb-0 text-muted">{{user.contact}}</p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <hr class="my-4" />
-                        <div class="form-group">
-                            <label for="inputEmail4">Business Name</label>
-                            <input type="text hidden" name="_method" class="form-control text-dark" id="businessName" values="{{user.business_name}}" />
-                        </div>
-                        <div class="form-group">
-                            <label for="inputEmail4">Email</label>
-                            <input type="email hidden" name="_method" class="form-control text-dark" id="inputEmail4" values="{{user.email}}"/>
-                        </div>
-                        <div class="form-group">
-                            <label for="inputAddress5">Address</label>
-                            <input type="text hidden" name="_method" class="form-control text-dark" id="inputAddress5" values="{{user.address}}"/>
-                        </div>
-                        <div class="form-group">
-                            <label for="inputAddress5">Contact Number</label>
-                            <input type="text hidden" name="_method" class="form-control text-dark" id="inputAddress5" values="{{user.contact}}"/>
-                        </div>
-                        <hr class="my-4" />
-                        <div class="row mb-4">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="inputPassword4">Old Password</label>
-                                    <input type="password" class="form-control text-dark" id="inputPassword5" />
+                            <hr class="my-4" />
+                            <div class="form-group">
+                                <label for="inputEmail4">Business Name</label>
+                                <input type="text" name="BusinessName" class="form-control text-dark" id="businessName" value="{{user.business_name}}" />
+                            </div>
+                            <div class="form-group">
+                                <label for="inputEmail4">Email</label>
+                                <input type="email" name="Email" class="form-control text-dark" id="inputEmail4" value="{{user.email}}"/>
+                            </div>
+                            <div class="form-group">
+                                <label for="inputAddress5">Address</label>
+                                <input type="text" name="Address" class="form-control text-dark" id="inputAddress5" value="{{user.address}}"/>
+                            </div>
+                            <div class="form-group">
+                                <label for="inputAddress5">Contact Number</label>
+                                <input type="text" name="Contact" class="form-control text-dark" id="inputAddress5" value="{{user.contact}}"/>
+                            </div>
+                            <hr class="my-4" />
+                            <div class="row mb-4">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="inputPassword4">Old Password</label>
+                                        <input type="password" class="form-control text-dark" id="inputPassword5" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputPassword5">New Password</label>
+                                        <input type="password" class="form-control text-dark" id="inputPassword5" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputPassword6">Confirm Password</label>
+                                        <input type="password" class="form-control text-dark" id="inputPassword6" />
+                                    </div>
                                 </div>
-                                <div class="form-group">
-                                    <label for="inputPassword5">New Password</label>
-                                    <input type="password" class="form-control text-dark" id="inputPassword5" />
-                                </div>
-                                <div class="form-group">
-                                    <label for="inputPassword6">Confirm Password</label>
-                                    <input type="password" class="form-control text-dark" id="inputPassword6" />
+                                <div class="col-md-6">
+                                    <p class="mb-2">Password requirements</p>
+                                    <p class="small text-muted mb-2">To create a new password, you have to meet all of the
+                                        following requirements:</p>
+                                    <ul class="small text-muted pl-4 mb-0">
+                                        <li>Minimum 8 character</li>
+                                        <li>At least one special character</li>
+                                        <li>At least one number</li>
+                                        <li>Can’t be the same as a previous password</li>
+                                    </ul>
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <p class="mb-2">Password requirements</p>
-                                <p class="small text-muted mb-2">To create a new password, you have to meet all of the
-                                    following requirements:</p>
-                                <ul class="small text-muted pl-4 mb-0">
-                                    <li>Minimum 8 character</li>
-                                    <li>At least one special character</li>
-                                    <li>At least one number</li>
-                                    <li>Can’t be the same as a previous password</li>
-                                </ul>
-                            </div>
-                        </div>
-                        <a href="/u/userBusiness"><button type="button" class="btn btn-outline-danger mr-3">Cancel</button></a>   
-                        <button type="submit" class="btn btn-danger">Save Changes</button>
+                            <a href="/u/userBusiness"><button type="button" class="btn btn-outline-danger mr-3">Cancel</button></a>   
+                            <button type="submit" class="btn btn-danger">Save Changes</button>
+                        {{/if}}
                     </form>
                 </div>
             </div>

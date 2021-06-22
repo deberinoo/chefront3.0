@@ -1,4 +1,4 @@
-<title>Chefront - Business Outlets</title>
+<title>Chefront - View Outlets</title>
 
 <link rel="stylesheet" href="/public/css/profile.css">
 <script src="https://unpkg.com/bootstrap-table@1.18.3/dist/bootstrap-table.min.js"></script>
@@ -12,27 +12,27 @@
                 <div class="my-4">
                     <ul class="nav nav-tabs mb-4" id="myTab" role="tablist">
                         <li class="nav-item">
-                            <a class="nav-link" id="home-tab" href="/u/userBusiness" role="tab"
+                            <a class="nav-link" id="home-tab" href="/u/{{user.business_name}}" role="tab"
                                 aria-controls="home" aria-selected="false">Business Profile</a>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link active dropdown-toggle" data-toggle="dropdown" href="#" role="button"
                                 aria-haspopup="true" aria-expanded="false">Outlets</a>
                             <div class="dropdown-menu">
-                                <a class="dropdown-item" href="/u/create-outlet">Create new outlet</a>
-                                <a class="dropdown-item" href="/u/view-outlets">View existing outlets</a>
+                                <a class="dropdown-item" href="/u/{{user.business_name}}/create-outlet">Create new outlet</a>
+                                <a class="dropdown-item" href="/u/{{user.business_name}}/view-outlets">View existing outlets</a>
                             </div>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button"
                                 aria-haspopup="true" aria-expanded="false">Discount slots</a>
                             <div class="dropdown-menu">
-                                <a class="dropdown-item" href="#">Create new slot</a>
-                                <a class="dropdown-item" href="#">View existing slots</a>
+                                <a class="dropdown-item" href="/u/{{user.business_name}}/create-discount-slot">Create new slot</a>
+                                <a class="dropdown-item" href="/u/{{user.business_name}}/view-discount-slots">View existing slots</a>
                             </div>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="home-tab" href="/u/reservation-status" role="tab"
+                            <a class="nav-link" id="home-tab" href="/u/{{user.business_name}}/reservation-status" role="tab"
                                 aria-controls="home" aria-selected="false">View reservation status</a>
                         </li>
                     </ul>
@@ -43,7 +43,7 @@
                         data-pagination="true"
                         data-page-size="10"
                         data-search="true">
-                        <thead>
+                        <thead class="thead-dark">
                             <tr>
                               <th scope="col" data-sortable="true">Location</th>
                               <th scope="col" data-sortable="true">Address</th>
@@ -54,7 +54,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {{#each outlets_created_today}}
+                            {{#each outlet}}
                               <tr>
                                   <td>{{ location }}</td>
                                   <td>{{ address }}</td>

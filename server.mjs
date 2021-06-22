@@ -32,6 +32,9 @@ const Server = Express();
 const Port = process.env.PORT || 3000;
 const { Sequelize, DataTypes, Model, Op } = ORM
 
+import methodOverride from 'method-override';
+// Method override middleware to use other HTTP methods such as PUT and DELETE
+Server.use(methodOverride('_method'));
 
 // Initialise database
 const Config = {
@@ -70,8 +73,6 @@ export const Database = new Sequelize(
 	}
 });
 
- 
-
 try {
 	await Database.authenticate();
 }
@@ -82,6 +83,7 @@ catch (error) {
 //	Initialise models
 CustomerUser.initialize(Database);
 BusinessUser.initialize(Database);
+DiscountSlot.initialize(Database);
 Outlets.initialize(Database);
 Feedback.initialize(Database);
 
@@ -158,6 +160,7 @@ Server.use("/", Routes);
  * Prints all the routes registered into the application
 **/
 import { ListRoutes } from './utils/routes.mjs'
+import { DiscountSlot } from './models/DiscountSlot.mjs';
 console.log(`=====Registered Routes=====`);
 ListRoutes(Server._router).forEach(route => {
 	console.log(`${route.method.padStart(8)} | /${route.path}`);
