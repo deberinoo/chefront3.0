@@ -24,6 +24,8 @@ export default router;
  
 
 router.get("/login",     login_page);
+router.get("/loginCustomer",    customer_login_page);
+router.get("/loginBusiness", business_login_page)
 router.post("/loginCustomer",    customer_login_process);
 router.post("/loginBusiness", business_login_process)
 router.get("/logout",     logout_process);
@@ -36,6 +38,12 @@ router.post("/registerCustomer",     register_customer_process);
 
 async function login_page(req, res) {
 	return res.render('auth/login');
+}
+async function customer_login_page(req, res) {
+	return res.render('auth/loginCustomer');
+}
+async function business_login_page(req, res) {
+	return res.render('auth/loginBusiness');
 }
 
 async function customer_login_process(req, res, next) {
