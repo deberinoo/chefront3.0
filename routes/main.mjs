@@ -70,6 +70,10 @@ router.get("/payment", async function(req, res) {
 	return res.render('payment');
 });
 
+router.get("/restaurant", async function(req, res) {
+	return res.render('restaurant');
+});
+
 // ---------------- 
 // Error page routing
 router.use(function (req, res, next) {
