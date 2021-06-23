@@ -14,16 +14,18 @@ export default router;
 
 // ---------------- 
 // Business User routing
-router.get("/:business_name",                       user_business_page);
-router.get("/edit/:business_name",                  edit_user_business_page);
-router.put("/saveUser/:business_name",              save_edit_user_business);
-router.get("/:business_name/create-discount-slot",  create_discount_slot_page);
-router.post("/:business_name/create-discount-slot", create_discount_slot_process);
-router.get("/:business_name/view-discount-slots",   view_discount_slots_page);
-router.get("/:business_name/create-outlet",         create_outlet_page);
-router.post("/:business_name/create-outlet",        create_outlet_process);
-router.get("/view-outlets",                         view_outlets_page);
-router.get("/reservation-status",                   view_reservation_status_page);
+router.get("/:business_name",                         user_business_page);
+router.get("/edit/:business_name",                    edit_user_business_page);
+router.put("/saveUser/:business_name",                save_edit_user_business);
+router.get("/:business_name/create-discount-slot",    create_discount_slot_page);
+router.post("/:business_name/create-discount-slot",   create_discount_slot_process);
+router.get("/:business_name/view-discount-slots",     view_discount_slots_page);
+router.get("/:business_name/create-outlet",           create_outlet_page);
+router.post("/:business_name/create-outlet",          create_outlet_process);
+router.get("/:business_name/view-outlets",            view_outlets_page);
+router.get("/:business_name/edit/:postal_code",       edit_outlets_page);
+router.put("/:business_name/saveOutlet/:postal_code", save_edit_outlet);
+router.get("/reservation-status",                     view_reservation_status_page);
 
 
 async function user_business_page(req, res) {
@@ -111,23 +113,55 @@ async function create_outlet_process(req, res) {
         "contact":  Contact,
         "description": Description
     });
-    res.render('user/business/retrieve_outletsBusiness');
+    res.redirect(`/u/${BusinessName}/view-outlets`);
 };
 
 async function view_outlets_page(req, res) {
-    /*	const outlet = await Outlets.findAll({
+    	const outlet = await Outlets.findAll({
         where: {
-            "location": {
-                [Op.ne]:"null"
+            "outlet_name": {
+                [Op.eq]: req.params.business_name
             }
         }
     });
     
     var location = outlet.location;
-    outlets_created_today.forEach (o => console.log(`Outlets location ${o.location}`));
+    outlet.forEach (o => console.log(`Outlets location ${o.location}`));
 	console.log("Retrieve Outlets accessed");
-*/
-	return res.render('user/business/retrieve_outletsBusiness',{outlet: outlet});
+	return res.render('user/business/retrieve_outlets',{outlet: outlet});
+};
+
+async function edit_outlets_page(req, res){
+   Outlets.findOne({
+        where: {
+            "outlet_name" : req.params.business_name,
+            "postal_code": req.params.postal_code
+        }
+    }).then((outlet) => {
+        res.render(`user/business/update_outlet`, {
+            outlet // passes user object to handlebar
+        });
+    }).catch(err => console.log(err)); // To catch no user ID
+};
+
+async function save_edit_outlet(req, res){
+    let { BusinessName, Location, Address, Postalcode, Price, Contact, Description } = req.body;
+
+    Outlets.update({
+        outlet_name:  BusinessName,
+        location:  Location,
+        address:  Address,
+        postal_code:  Postalcode,
+        price:  Price,
+        contact:  Contact,
+        description: Description
+    }, {
+        where: {
+            postal_code : req.params.postal_code
+        }
+        }).then(() => {
+            res.redirect(`/u/${BusinessName}/view-outlets`);
+    }).catch(err => console.log(err)); 
 };
 
 async function view_reservation_status_page(req, res) {

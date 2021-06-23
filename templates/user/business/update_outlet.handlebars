@@ -6,7 +6,7 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-12 col-lg-10 col-xl-8 mx-auto">
-                <h2 class="h3 mb-4 page-title">Create New Outlet</h2>
+                <h2 class="h3 mb-4 page-title">Update Outlet</h2>
                 <div class="my-4">
                     <ul class="nav nav-tabs mb-4" id="myTab" role="tablist">
                         <li class="nav-item">
@@ -34,7 +34,7 @@
                                 aria-controls="home" aria-selected="false">View reservation status</a>
                         </li>
                     </ul>
-                    <form action="/u/{{user.business_name}}/create-outlet" method="post">
+                    <form action="../../{{outlet.outlet_name}}/saveOutlet/{{outlet.postal_code}}?_method=PUT" method="post">
                         {{#if user}}
                             <div class="form-group row">
                                 <label for="staticBusinessName" class="col-sm-2 col-form-label">Outlet Name</label>

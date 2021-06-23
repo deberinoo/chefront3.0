@@ -37,5 +37,5 @@ section {
 }
 
 #word-count{
-    margin-left:545px;
+    position: inherit;
 }

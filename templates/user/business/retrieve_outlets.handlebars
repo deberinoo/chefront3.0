@@ -8,12 +8,12 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-12 col-lg-10 col-xl-8 mx-auto">
-                <h2 class="h3 mb-4 page-title">Business Outlets</h2>
+                <h2 class="h3 mb-4 page-title">{{user.business_name}}'s Outlets</h2>
                 <div class="my-4">
                     <ul class="nav nav-tabs mb-4" id="myTab" role="tablist">
                         <li class="nav-item">
                             <a class="nav-link" id="home-tab" href="/u/{{user.business_name}}" role="tab"
-                                aria-controls="home" aria-selected="false">Business Profile</a>
+                                aria-controls="home" aria-selected="false">{{user.business_name}} Profile</a>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link active dropdown-toggle" data-toggle="dropdown" href="#" role="button"
@@ -51,6 +51,7 @@
                               <th scope="col" data-sortable="true">Price</th>
                               <th scope="col" data-sortable="true">Contact</th>
                               <th scope="col" data-sortable="true">Description</th>
+                              <th scope="col">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -62,6 +63,10 @@
                                   <td>{{ price }}</td>
                                   <td>{{ contact }}</td>
                                   <td>{{ description}}</td>
+                                  <td>
+                                    <a href="../{{outlet_name}}/edit/{{postal_code}}"><i class="material-icons" title="Edit">&#xE254;</i></a>
+							        <a href="#deleteEmployeeModal" class="delete" data-toggle="modal"><i class="material-icons" title="Delete">&#xE872;</i></a>
+                                  </td>
                               </tr>
                             {{/each}}
                         </tbody>
@@ -71,3 +76,112 @@
         </div>
     </div>
 </section>
+
+<!-- MODAL FOR UPDATE FORM POPUP 
+    <div class="modal fade" id="update_outlet_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Update Outlet</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+          <form class="col-12" action="/u/{{user.business_name}}/save-outlet" method="post">
+            <input type="hidden" class="form-control text-dark" id="location" name="Location">
+                <div class="form-group row">
+                    <label for="location" class="col-sm-2 col-form-label">Location</label>
+                    <div class="col-sm-10">
+                        <select class="form-control text-dark form-select" id="location" name="Location">
+                            <option selected>Select closest MRT station</option>
+                            <option value="Bishan">Bishan</option>
+                            <option value="Dhoby Ghaut">Dhoby Ghaut</option>
+                            <option value="Harbourfront">Harbourfront</option>
+                            <option value="Kovan">Kovan</option>
+                            <option value="Punggol">Punggol</option>
+                            <option value="Sengkang">Sengkang</option>
+                            <option value="Serangoon">Serangoon</option>
+                            <option value="Somerset">Somerset</option>
+                            <option value="Tampines">Tampines</option>
+                            <option value="Yishun">Yishun</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group row">
+                <label for="address" class="col-sm-2 col-form-label">Address</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control text-dark" id="address" name="Address">
+                    </div>
+                </div>
+                <div class="form-group row">    
+                <label for="postalCode" class="col-sm-2 col-form-label">Postal Code</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control text-dark" id="postalCode" name="Postalcode">
+                    </div>
+                </div>
+                <div class="form-group row">
+                <label for="price" class="col-sm-2 col-form-label">Price</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control text-dark" id="price" name="Price">
+                    </div>
+                </div>
+                <div class="form-group row">
+                <label for="contact" class="col-sm-2 col-form-label">Contact</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control text-dark" id="contact" name="Contact">
+                    </div>
+                </div>
+                <div class="form-group row">
+                <label for="description" class="col-sm-2 col-form-label">Description</label>
+                    <div class="col-sm-10">
+                        <textarea class="form-control text-dark" id="description" rows="5" maxlength="300"
+                            placeholder="Enter outlet description" name="Description"></textarea>
+                        <div id="word-count">
+                            <span id="current">0</span>
+                            <span id="maximum">/ 300</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary" >Save changes</button>
+                </div>
+            </form>
+      </div>
+    </div>
+  </div>
+</div>
+-- >
+
+<script>
+    $('textarea').keyup(function () {
+
+        var characterCount = $(this).val().length,
+            current = $('#current'),
+            maximum = $('#maximum'),
+            wordCount = $('#word-count');
+
+        current.text(characterCount);
+    });
+
+   /* MODAL FORM AUTOFILL (DOES NOT WORK)
+   $('.edit_outlet_modal').click(function () {
+            debugger;
+            var currentTds = $(this).closest("tr").find("td"); // find all td of selected row
+            var cell2 = $(currentTds).eq(0).text(); // eq= cell , text = inner text
+            var cell3 = $(currentTds).eq(1).text();
+            var cell4 = $(currentTds).eq(2).text();
+            var cell5 = $(currentTds).eq(3).text();
+            var cell6 = $(currentTds).eq(4).text();
+            var cell7 = $(currentTds).eq(5).text();
+            $("#location").val(cell2);
+            $("#address").val(cell3);
+            $("#postalCode").val(cell4);
+            $("#price").val(cell5);
+            $("#contact").val(cell6);
+            $("#description").val(cell7);
+            $("#update_outlet_modal").modal('show');
+        });
+    */
+</script>
