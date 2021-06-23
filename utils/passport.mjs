@@ -11,21 +11,27 @@ import { CustomerUser } from '../models/Customer.mjs';
 
 
 
-export function initialize_business_passport(server) {
-	Passport.use(LocalStrategy);
+export function initialize_passport(server) {
+	Passport.use('local',LocalStrategy);
 	Passport.serializeUser(async function (user, done) {
 		return done(null, user.uuid);
 	});
 	Passport.deserializeUser(async function (uid, done) {
 		try {
-			const user = await BusinessUser.findByPk(uid);
-			if (user == null) {
-				throw new Error ("Invalid user id");
+			console.log("hello111");
+			const business = await BusinessUser.findByPk(uid);
+			if (business == null) {
+				const customer = await CustomerUser.findByPk(uid);
+				if (customer == null) {
+					throw new Error ("Invalid user id");
+				}
+				else {
+					return done(null, customer);
+				}
 			}
 			else {
-				return done(null, user);
+				return done(null, business);
 			}
-			
 		}
 		catch (error) {
 			console.error(`Failed to deserialize user ${uid}`);
@@ -38,32 +44,33 @@ export function initialize_business_passport(server) {
 	server.use(Passport.session());
 }
 
-export function initialize_customer_passport(server) {
-	Passport.use(LocalStrategy);
-	Passport.serializeUser(async function (user, done) {
-		return done(null, user.uuid);
-	});
-	Passport.deserializeUser(async function (uid, done) {
-		try {
-			const user = await CustomerUser.findByPk(uid);
-			if (user == null) {
-				throw new Error ("Invalid user id");
-			}
-			else {
-				return done(null, user);
-			}
+// export function initialize_customer_passport(server) {
+// 	Passport.use('customer-local',CustomerLocalStrategy);
+// 	Passport.serializeUser(async function (user, done) {
+// 		return done(null, user.uuid);
+// 	});
+// 	Passport.deserializeUser(async function (uid, done) {
+// 		try {
+// 			console.log("here");
+// 			const customer = await CustomerUser.findByPk(uid);
+// 			if (customer == null) {
+// 				throw new Error ("Invalid user id");
+// 			}
+// 			else {
+// 				return done(null, customer);
+// 			}
 			
-		}
-		catch (error) {
-			console.error(`Failed to deserialize user ${uid}`);
-			console.error(error);
-			return done (error, false);
-		}
-	})
+// 		}
+// 		catch (error) {
+// 			console.error(`Failed to deserialize user ${uid}`);
+// 			console.error(error);
+// 			return done (error, false);
+// 		}
+// 	})
 
-	server.use(Passport.initialize());
-	server.use(Passport.session());
-}
+// 	server.use(Passport.initialize());
+// 	server.use(Passport.session());
+// }
 
 const LocalStrategy = new Strategy ({
 	usernameField: "Email",
@@ -71,18 +78,28 @@ const LocalStrategy = new Strategy ({
 }, async function (email, password, done) {
 
 	try {
-		const user = await BusinessUser.findOne({
+		var user = await BusinessUser.findOne({
 			where: {
 				Email:    email,
 				Password: Hash.sha256().update(password).digest('hex')
 			}
 		});
-
 		if (user == null) {
-			throw new Error ("Invalid Credentials");
+			var user = await CustomerUser.findOne({
+			where: {
+					Email:    email,
+					Password: Hash.sha256().update(password).digest('hex')
+				}
+			});
+			if (user == null) {
+				throw new Error ("Invalid Credentials");
+			}
+			else {
+				return done(null, user);
+			}
 		}
 		else {
-			return done(null, user);
+			 return done(null, user);
 		}
 	}
 	catch (error) {
@@ -91,3 +108,30 @@ const LocalStrategy = new Strategy ({
 		return done(error, false, {message: "Invalid user credentials"});
 	}
 });
+
+// const CustomerLocalStrategy = new Strategy ({
+// 	usernameField: "Email",
+// 	passwordField: "Password"
+// }, async function (email, password, done) {
+
+// 	try {
+// 		var user = await CustomerUser.findOne({
+// 			where: {
+// 				Email:    email,
+// 				Password: Hash.sha256().update(password).digest('hex')
+// 			}
+// 		});
+// 		if (user == null) {
+// 			throw new Error ("Invalid Credentials");
+// 		}
+// 		else {
+// 			return done(null, user);
+// 		}
+// 	}
+// 	catch (error) {
+// 		console.error(`Failed to auth user ${email}`);
+// 		console.error(error);
+// 		return done(error, false, {message: "Invalid user credentials"});
+// 	}
+// });
+

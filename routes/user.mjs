@@ -25,7 +25,6 @@ router.post("/:business_name/create-outlet",        create_outlet_process);
 router.get("/view-outlets",                         view_outlets_page);
 router.get("/reservation-status",                   view_reservation_status_page);
 
-
 async function user_business_page(req, res) {
     BusinessUser.findOne({
         where: {
@@ -137,26 +136,49 @@ async function view_reservation_status_page(req, res) {
 // ---------------- 	
 // Customer user routing
 
-router.get("/userCustomer",             user_customer_page);
-router.get("/edit/userCustomer",        edit_user_customer_page);
+router.get("/customer/:user_email",             user_customer_page);
+router.get("/customer/edit/:user_email",        edit_user_customer_page);
+router.put("/customer/saveUser/:user_email",              save_edit_user_customer);
 router.get("/my-reservations",          view_reservations_page);
 
 async function user_customer_page(req, res) {
-    /*	const current_user = await ModelUser.findOne({
+    CustomerUser.findOne({
         where: {
-            "email": {
-                [Op.eq]: "email"
-            }
+            "email": req.params.user_email
         }
-    });
-*/
-	return res.render('user/customer/userCustomer.html');
+    })
+	return res.render('user/customer/userCustomer');
 };
 
 async function edit_user_customer_page(req, res) {
-	return res.render('user/customer/update_userCustomer.html');
+    CustomerUser.findOne({
+        where: {
+            "email": req.params.user_email
+        }
+    }).then((user) => {
+        res.render('user/customer/update_userCustomer', {
+            user // passes user object to handlebar
+        });
+    }).catch(err => console.log(err)); // To catch no user ID
+};
+ 
+async function save_edit_user_customer(req, res) {
+    let { FirstName, LastName, Contact, Email } = req.body;
+
+    CustomerUser.update({
+        first_name : FirstName,
+        last_name : LastName,
+        email: Email,
+        contact: Contact
+    }, {
+        where: {
+            email : req.params.user_email
+        }
+        }).then(() => {
+            res.redirect(`/u/${Email}`);
+    }).catch(err => console.log(err));  
 };
 
 async function view_reservations_page(req, res) {
-	return res.render('user/customer/reservationCustomer.html');
+	return res.render('user/customer/reservationCustomer');
 };

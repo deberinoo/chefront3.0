@@ -64,10 +64,17 @@ async function customer_login_process(req, res, next) {
 		console.error(error);
 		return res.render('auth/login', { errors: errors });
 	}
-	
+
+	const user = await CustomerUser.findOne({
+        where: {
+            "email": Email,
+			"password": Hash.sha256().update(Password).digest('hex')
+        }
+	});
+
 	return Passport.authenticate('local', {
-		successRedirect: "/u/userCustomer",
-		failureRedirect: "/auth/loginCustomer",
+		successRedirect: "/u/customer/"+ user.email,
+		failureRedirect: "/auth/loginCustome r",
 		failureFlash:    true
 	})(req, res, next);
 }
@@ -99,7 +106,7 @@ async function business_login_process(req, res, next) {
 
 	return Passport.authenticate('local', {
 		successRedirect: "/u/" + user.business_name,
-		failureRedirect: "/auth/login",
+		failureRedirect: "/auth/loginBusiness",
 		failureFlash:    true
 	})(req, res, next);
 }
