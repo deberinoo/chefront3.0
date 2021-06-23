@@ -1,11 +1,8 @@
 import { Router }       from 'express';
 import { flashMessage } from '../utils/flashmsg.mjs'
-import { BusinessUser, BusinessRole } from '../models/Business.mjs';
+import { BusinessUser } from '../models/Business.mjs';
 import { CustomerUser } from '../models/Customer.mjs';
-import passport from 'passport';
-import bcrypt from 'bcryptjs';
-
-
+import { User } from '../models/Users.mjs'
 
 import Passport         from 'passport';
 import Hash             from 'hash.js';
@@ -20,55 +17,37 @@ export default router;
  //	Min 3 character, must start with alphabet
  const regexName  = /^[a-zA-Z][a-zA-Z]{2,}$/;
  //	Min 8 character, 1 upper, 1 lower, 1 number, 1 symbol
- const regexPwd   = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+ //const regexPwd   = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
  
+ // Min 8 character, 1 letter, 1 number 
+ const regexPwd = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/
 
-router.get("/login",     login_page);
-router.get("/loginCustomer",    customer_login_page);
-router.get("/loginBusiness", business_login_page)
-router.post("/loginCustomer",    customer_login_process);
-router.post("/loginBusiness", business_login_process)
-router.get("/logout",     logout_process);
-router.get("/register",    register_page);
-router.get("/registerBusiness",    register_business_page);
+
+router.get("/login",     			login_page);
+
+router.get("/loginBusiness", 		business_login_page);
+router.post("/loginBusiness", 		business_login_process);
+router.get("/loginCustomer",    	customer_login_page);
+router.post("/loginCustomer",    	customer_login_process);
+
+router.get("/register",    			register_page);
+
+router.get("/registerBusiness",     register_business_page);
 router.post("/registerBusiness",    register_business_process);
 router.get("/registerCustomer",     register_customer_page);
-router.post("/registerCustomer",     register_customer_process);
+router.post("/registerCustomer",    register_customer_process);
 
+router.get("/logout",     			logout_process);
+
+
+// Login
 
 async function login_page(req, res) {
 	return res.render('auth/login');
 }
-async function customer_login_page(req, res) {
-	return res.render('auth/loginCustomer');
-}
+
 async function business_login_page(req, res) {
 	return res.render('auth/loginBusiness');
-}
-
-async function customer_login_process(req, res, next) {
-    let { Email, Password } = req.body;
-	
-	let errors = [];
-	try {
-		if (! regexEmail.test(Email)) {
-			errors = errors.concat({ text: "Invalid email address!" });
-		}
-		if (errors.length > 0) {
-			throw new Error("There are validation errors");
-		}
-	}
-	catch (error) {
-		console.error("There is errors with the login form body.");
-		console.error(error);
-		return res.render('auth/login', { errors: errors });
-	}
-	
-	return Passport.authenticate('local', {
-		successRedirect: "/u/userCustomer",
-		failureRedirect: "/auth/loginCustomer",
-		failureFlash:    true
-	})(req, res, next);
 }
 
 async function business_login_process(req, res, next) {
@@ -98,10 +77,48 @@ async function business_login_process(req, res, next) {
 
 	return Passport.authenticate('local', {
 		successRedirect: "/u/" + user.business_name,
-		failureRedirect: "/auth/login",
+		failureRedirect: "/auth/loginBusiness",
 		failureFlash:    true
 	})(req, res, next);
 }
+
+async function customer_login_page(req, res) {
+	return res.render('auth/loginCustomer');
+}
+
+async function customer_login_process(req, res, next) {
+    let { Email, Password } = req.body;
+	
+	let errors = [];
+	try {
+		if (! regexEmail.test(Email)) {
+			errors = errors.concat({ text: "Invalid email address!" });
+		}
+		if (errors.length > 0) {
+			throw new Error("There are validation errors");
+		}
+	}
+	catch (error) {
+		console.error("There is errors with the login form body.");
+		console.error(error);
+		return res.render('auth/login', { errors: errors });
+	}
+
+	const user = await CustomerUser.findOne({
+        where: {
+            "email": Email,
+			"password": Hash.sha256().update(Password).digest('hex')
+        }
+	});
+
+	return Passport.authenticate('local', {
+		successRedirect: "/u/customer/"+ user.email,
+		failureRedirect: "/auth/loginCustomer",
+		failureFlash:    true
+	})(req, res, next);
+}
+
+// Register
 
 async function register_page(req, res) {
 	return res.render('auth/register');
@@ -125,7 +142,7 @@ async function register_business_process(req, res) {
 			errors = errors.concat({ text: "Invalid email address!" });
 		}
 		else {
-			const user = await BusinessUser.findOne({where: {email: Email}});
+			const user = await User.findOne({where: {email: Email}});
 			if (user != null) {
 				errors = errors.concat({ text: "This email cannot be used!" });
 			}
@@ -150,18 +167,21 @@ async function register_business_process(req, res) {
 
 	//	Create new user, now that all the test above passed
 	try {
+		User.create({
+			"email" : Email
+		})
         const user = await BusinessUser.create({
             "business_name":  BusinessName,
             "address":  Address,
             "contact":  Contact,
             "email":    Email,
-            "password": Hash.sha256().update(InputPassword).digest('hex')
+            "password": Hash.sha256().update(InputPassword).digest('hex'),
         });
         res.render('user/business/userBusiness');
         console.log("New user created")
 
 		flashMessage(res, 'success', 'Successfully created an account. Please login', 'fas fa-sign-in-alt', true);
-		return res.redirect("/auth/login");
+		return res.redirect("/auth/loginBusiness");
 	}
 	catch (error) {
 		//	Else internal server error
@@ -176,56 +196,74 @@ async function register_customer_page(req, res) {
 }
 
 async function register_customer_process(req, res) {
-    let errors = [];
-
+	let errors = [];
+    
     let { FirstName, LastName, Contact, Email, InputPassword, ConfirmPassword } = req.body;
 
-    if (InputPassword !== ConfirmPassword) {
-        errors.push({ text: 'password do not match!' });
-    }
-    if (InputPassword.length < 4) {
-        errors.push({ text: 'password must be at least 4 characters!' });
-    }
+	try {
+		if (! regexName.test(FirstName)) {
+			errors = errors.concat({ text: "Invalid name provided! It must be minimum 3 characters and starts with a alphabet." });
+		}
 
-    if (errors.length > 0) {
-        res.render('auth/registerCustomer');
-    } 
-    
-    else {
-        // If all is well, checks if user is already registered
-		CustomerUser.findOne({
-			where: {Email}
-		})
-		.then(user => {
-			if(user) {
-				// If user is found, that means email given has already been registered
-				//req.flash('error_msg', user.name + ' already registered');
-				res.render('auth/registerCustomer')
-			} else {
-				// Generate salt hashed password
-				bcrypt.genSalt(10, (err, salt) => {
-					bcrypt.hash(InputPassword, salt, (err, hash) => {
-						if(err) throw err;
-						InputPassword = hash;
-						// Create new user record
-						CustomerUser.create({
-                            "first_name":  FirstName,
-                            "last_name":  LastName,
-                            "contact":  Contact,
-                            "email":    Email,
-                            "password":  InputPassword
-						})
-						.then(user => {
-							res.render('auth/login');
-						})
-						.catch(err => console.log(err));
-					})
-				});
-				
+		if (! regexName.test(LastName)) {
+			errors = errors.concat({ text: "Invalid name provided! It must be minimum 3 characters and starts with a alphabet." });
+		}
+
+		if (! regexEmail.test(Email)) {
+			errors = errors.concat({ text: "Invalid email address!" });
+		}
+
+		else {
+			const user = await User.findOne({where: {email: Email}});
+			if (user != null) {
+				errors = errors.concat({ text: "This email cannot be used!" });
 			}
-		});
+		}
+
+		if (! regexPwd.test(InputPassword)) {
+			errors = errors.concat({ text: "Password requires minimum eight characters, at least one uppercase letter, one lowercase letter and one number!" });
+		}
+		else if (InputPassword !== ConfirmPassword) {
+			errors = errors.concat({ text: "Password do not match!" });
+		}
+
+		if (errors.length > 0) {
+			throw new Error("There are validation errors");
+		}
+	}
+	catch (error) {
+		console.error("There is errors with the registration form body.");
+		console.error(error);
+		return res.render('auth/registerCustomer', { errors: errors });
+	}
+
+	//	Create new user, now that all the test above passed
+	try {
+		User.create({
+			"email" : Email
+		})
+		CustomerUser.create({
+			"first_name":  FirstName,
+			"last_name":  LastName,
+			"contact":  Contact,
+			"email":    Email,
+			"password":  Hash.sha256().update(InputPassword).digest('hex'),
+		})
+        res.render('user/customer/userCustomer');
+        console.log("New user created")
+
+		flashMessage(res, 'success', 'Successfully created an account. Please login', 'fas fa-sign-in-alt', true);
+		return res.redirect("/auth/loginCustomer");
+	}
+	catch (error) {
+		//	Else internal server error
+		console.error(`Failed to create a new user: ${Email} `);
+		console.error(error);
+		return res.status(500).end();
 	}
 };
+
+// Logout
 
 async function logout_process(req, res) {
 	req.logout();

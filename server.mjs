@@ -22,10 +22,11 @@ import LocalStrategy from 'passport-local';
 import bcrypt from 'bcryptjs';
 
 //	Import models
-import { BusinessUser, BusinessRole } from './models/Business.mjs';
-import { Outlets, OutletsRole } from './models/Outlets.mjs';
-import { CustomerUser, UserRole } from './models/Customer.mjs';
+import { BusinessUser  } from './models/Business.mjs';
+import { Outlets } from './models/Outlets.mjs';
+import { CustomerUser } from './models/Customer.mjs';
 import { Feedback } from './models/Feedback.mjs'
+import { User } from './models/Users.mjs';
 
 
 const Server = Express();
@@ -86,6 +87,7 @@ BusinessUser.initialize(Database);
 DiscountSlot.initialize(Database);
 Outlets.initialize(Database);
 Feedback.initialize(Database);
+User.initialize(Database);
 
 //	Sync your database
 Database.sync({ drop: false });	//	drop is true => clear tables, recreate
@@ -127,10 +129,11 @@ Server.use(ExpSession({
 /**
  * Initialize passport
  **/
-import { initialize_business_passport, initialize_customer_passport } from './utils/passport.mjs';
-initialize_business_passport(Server);
-initialize_customer_passport(Server);
+import {  initialize_passport } from './utils/passport.mjs';
 
+initialize_passport(Server);
+
+`2`
 
 
 
