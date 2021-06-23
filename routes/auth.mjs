@@ -165,7 +165,7 @@ async function register_business_process(req, res) {
         console.log("New user created")
 
 		flashMessage(res, 'success', 'Successfully created an account. Please login', 'fas fa-sign-in-alt', true);
-		return res.redirect("/auth/login");
+		return res.redirect("/auth/loginBusiness");
 	}
 	catch (error) {
 		//	Else internal server error
@@ -237,7 +237,7 @@ async function register_customer_process(req, res) {
         console.log("New user created")
 
 		flashMessage(res, 'success', 'Successfully created an account. Please login', 'fas fa-sign-in-alt', true);
-		return res.redirect("/auth/login");
+		return res.redirect("/auth/loginCustomer");
 	}
 	catch (error) {
 		//	Else internal server error

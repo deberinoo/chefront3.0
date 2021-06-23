@@ -74,6 +74,10 @@ router.get("/restaurant", async function(req, res) {
 	return res.render('restaurant');
 });
 
+router.get("/success", async function(req, res) {
+	return res.render('success');
+});
+
 // ---------------- 
 // Error page routing
 router.use(function (req, res, next) {
