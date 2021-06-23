@@ -22,23 +22,24 @@
                                 aria-controls="home" aria-selected="false">Favourites</a>
                         </li>
                     </ul>
-                    <form class="col-12">
+                    <form class="col-12" action="/u/customer/saveUser/{{user.email}}?_method=PUT" method="post">
                         <div class="row mt-5 align-items-center">
                             <div class="col-md-3 text-center mb-5">
                                 <div class="avatar avatar-xl">
-                                    <img src="../../public/img/illustrations/user.png" alt="..."
+                                    <img src="../../../public/img/illustrations/user.png" alt="..."
                                         class="avatar-img rounded-circle" />
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="row align-items-center">
                                     <div class="col-md-7">
-                                        <h4 class="mb-1">Customer Name</h4>
+                                        <h4 class="mb-1">{{user.first_name}} {{user.last_name}} </h4>
                                     </div>
                                 </div>
                                 <div class="row mb-4">
-                                    <div class="col-md-12">
-                                        <p class="small mb-0 text-muted">Phone Number</p>
+                                    <div class="col-md-12">                                       
+                                        <p class="small mb-0 text-muted">{{user.email}}</p>
+                                        <p class="small mb-0 text-muted">{{user.contact}}</p>
                                     </div>
                                 </div>
                             </div>
@@ -57,6 +58,10 @@
                         <div class="form-group">
                             <label for="inputAddress5">Phone Number</label>
                             <input name="Contact" type="text" class="form-control text-dark" id="inputAddress5" placeholder="" />
+                         
+                            <label for="inputEmail4">Email</label>
+                            <input type="email" name="Email" class="form-control text-dark" id="inputEmail4" value="{{user.email}}"/>
+
                         </div>
                         <hr class="my-4" />
                         <div class="row mb-4">
