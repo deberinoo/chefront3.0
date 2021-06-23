@@ -73,8 +73,8 @@ async function customer_login_process(req, res, next) {
 	});
 
 	return Passport.authenticate('local', {
-		successRedirect: "/u/userCustomer",
-		failureRedirect: "/auth/loginCustomer",
+		successRedirect: "/u/customer/"+ user.email,
+		failureRedirect: "/auth/loginCustome r",
 		failureFlash:    true
 	})(req, res, next);
 }
@@ -105,7 +105,7 @@ async function business_login_process(req, res, next) {
 	});
 
 	return Passport.authenticate('local', {
-		successRedirect: "/u/userCustomer",
+		successRedirect: "/u/" + user.business_name,
 		failureRedirect: "/auth/loginBusiness",
 		failureFlash:    true
 	})(req, res, next);
