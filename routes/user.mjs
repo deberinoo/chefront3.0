@@ -138,8 +138,8 @@ async function view_reservation_status_page(req, res) {
 
 router.get("/customer/:user_email",             user_customer_page);
 router.get("/customer/edit/:user_email",        edit_user_customer_page);
-router.put("/customer/saveUser/:user_email",              save_edit_user_customer);
-router.get("/my-reservations",          view_reservations_page);
+router.put("/customer/saveUser/:user_email",    save_edit_user_customer);
+router.get("/my-reservations",                  view_reservations_page);
 
 async function user_customer_page(req, res) {
     CustomerUser.findOne({

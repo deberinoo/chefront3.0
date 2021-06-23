@@ -3,10 +3,6 @@ import { flashMessage } from '../utils/flashmsg.mjs'
 import { BusinessUser } from '../models/Business.mjs';
 import { CustomerUser } from '../models/Customer.mjs';
 import { User } from '../models/Users.mjs'
-import passport from 'passport';
-import bcrypt from 'bcryptjs';
-
-
 
 import Passport         from 'passport';
 import Hash             from 'hash.js';
@@ -21,62 +17,37 @@ export default router;
  //	Min 3 character, must start with alphabet
  const regexName  = /^[a-zA-Z][a-zA-Z]{2,}$/;
  //	Min 8 character, 1 upper, 1 lower, 1 number, 1 symbol
- const regexPwd   = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+ //const regexPwd   = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
  
+ // Min 8 character, 1 letter, 1 number 
+ const regexPwd = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/
 
-router.get("/login",     login_page);
-router.get("/loginCustomer",    customer_login_page);
-router.get("/loginBusiness", business_login_page)
-router.post("/loginCustomer",    customer_login_process);
-router.post("/loginBusiness", business_login_process)
-router.get("/logout",     logout_process);
-router.get("/register",    register_page);
-router.get("/registerBusiness",    register_business_page);
+
+router.get("/login",     			login_page);
+
+router.get("/loginBusiness", 		business_login_page);
+router.post("/loginBusiness", 		business_login_process);
+router.get("/loginCustomer",    	customer_login_page);
+router.post("/loginCustomer",    	customer_login_process);
+
+router.get("/register",    			register_page);
+
+router.get("/registerBusiness",     register_business_page);
 router.post("/registerBusiness",    register_business_process);
 router.get("/registerCustomer",     register_customer_page);
-router.post("/registerCustomer",     register_customer_process);
+router.post("/registerCustomer",    register_customer_process);
 
+router.get("/logout",     			logout_process);
+
+
+// Login
 
 async function login_page(req, res) {
 	return res.render('auth/login');
 }
-async function customer_login_page(req, res) {
-	return res.render('auth/loginCustomer');
-}
+
 async function business_login_page(req, res) {
 	return res.render('auth/loginBusiness');
-}
-
-async function customer_login_process(req, res, next) {
-    let { Email, Password } = req.body;
-	
-	let errors = [];
-	try {
-		if (! regexEmail.test(Email)) {
-			errors = errors.concat({ text: "Invalid email address!" });
-		}
-		if (errors.length > 0) {
-			throw new Error("There are validation errors");
-		}
-	}
-	catch (error) {
-		console.error("There is errors with the login form body.");
-		console.error(error);
-		return res.render('auth/login', { errors: errors });
-	}
-
-	const user = await CustomerUser.findOne({
-        where: {
-            "email": Email,
-			"password": Hash.sha256().update(Password).digest('hex')
-        }
-	});
-
-	return Passport.authenticate('local', {
-		successRedirect: "/u/customer/"+ user.email,
-		failureRedirect: "/auth/loginCustome r",
-		failureFlash:    true
-	})(req, res, next);
 }
 
 async function business_login_process(req, res, next) {
@@ -110,6 +81,44 @@ async function business_login_process(req, res, next) {
 		failureFlash:    true
 	})(req, res, next);
 }
+
+async function customer_login_page(req, res) {
+	return res.render('auth/loginCustomer');
+}
+
+async function customer_login_process(req, res, next) {
+    let { Email, Password } = req.body;
+	
+	let errors = [];
+	try {
+		if (! regexEmail.test(Email)) {
+			errors = errors.concat({ text: "Invalid email address!" });
+		}
+		if (errors.length > 0) {
+			throw new Error("There are validation errors");
+		}
+	}
+	catch (error) {
+		console.error("There is errors with the login form body.");
+		console.error(error);
+		return res.render('auth/login', { errors: errors });
+	}
+
+	const user = await CustomerUser.findOne({
+        where: {
+            "email": Email,
+			"password": Hash.sha256().update(Password).digest('hex')
+        }
+	});
+
+	return Passport.authenticate('local', {
+		successRedirect: "/u/customer/"+ user.email,
+		failureRedirect: "/auth/loginCustomer",
+		failureFlash:    true
+	})(req, res, next);
+}
+
+// Register
 
 async function register_page(req, res) {
 	return res.render('auth/register');
@@ -253,6 +262,8 @@ async function register_customer_process(req, res) {
 		return res.status(500).end();
 	}
 };
+
+// Logout
 
 async function logout_process(req, res) {
 	req.logout();
