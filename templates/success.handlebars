@@ -1,0 +1,67 @@
+<title>Chefront - Success</title>
+
+<link rel="stylesheet" href="/public/css/restaurant.css">
+
+<section>
+    <div id="booking" class="section">
+		<div class="section-center">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-5 col-md-push-5">
+						<div class="booking-cta">
+							<h1 class="header">THANK YOU!</h1>
+							<p style="font-size: 28px; font-family: Avenir">Your reservation is successful!
+							</p>
+						</div>
+					</div>
+					<div class="col-md-7 col-md-pull-7">
+						<div class="booking-form">
+							<form>
+								<div class="form-group">
+									<span class="form-label">Restaurant Name</span>
+									<input readonly class="form-control" type="text" value="{{user.first_name}} {{user.last_name}}">
+								</div>
+								<div class="form-group">
+									<span class="form-label">Your Name</span>
+									<input readonly class="form-control" type="text" value="{{user.first_name}} {{user.last_name}}">
+								</div>
+								<div class="row">
+									<div class="col-sm-6">
+										<div class="form-group">
+											<span class="form-label">Your Email</span>
+											<input readonly class="form-control" type="text" value="{{user.email}}">
+										</div>
+									</div>
+									<div class="col-sm-6">
+										<div class="form-group">
+											<span class="form-label">Your Contact</span>
+											<input readonly class="form-control" type="text" value="{{user.contact}}">
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-sm-6">
+										<div class="form-group">
+											<span class="form-label">Date</span>
+											<input readonly class="form-control" type="date" required>
+										</div>
+									</div>
+									<div class="col-sm-6">
+										<div class="form-group">
+											<span class="form-label">Pax</span>
+											<input readonly class="form-control" type="text" required>
+										</div>
+									</div>
+								</div>
+								<div class="form-btn">
+									<button class="submit-btn">View my reservations</button>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
