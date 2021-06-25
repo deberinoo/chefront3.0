@@ -19,7 +19,6 @@ import MySQLStore from 'express-mysql-session';
 import passport from 'passport';
 
 import LocalStrategy from 'passport-local';
-import bcrypt from 'bcryptjs';
 
 //	Import models
 import { BusinessUser  } from './models/Business.mjs';
