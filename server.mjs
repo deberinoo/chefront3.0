@@ -1,25 +1,41 @@
-import Express         from 'express';
-import ExpHandlebars   from 'express-handlebars';
-import ExpSession      from 'express-session';
+import Express from 'express';
+import ExpHandlebars from 'express-handlebars';
+import ExpSession from 'express-session';
 import ExpSessionStore from 'express-mysql-session'
-import BodyParser      from 'body-parser';
-import CookieParser    from 'cookie-parser';
+import BodyParser from 'body-parser';
+import CookieParser from 'cookie-parser';
 
 import MethodOverrides from 'method-override';
-import Path            from 'path';
+import Path from 'path';
 
-import Flash           from 'connect-flash';
-import FlashMessenger  from 'flash-messenger';
+import Flash from 'connect-flash';
+import FlashMessenger from 'flash-messenger';
 
-import Handlebars      from 'handlebars';
+import Handlebars from 'handlebars';
 import { allowInsecurePrototypeAccess } from '@handlebars/allow-prototype-access';
 
-import ORM 			from 'sequelize'
+import ORM from 'sequelize'
+import MySQLStore from 'express-mysql-session';
+import passport from 'passport';
+
+import LocalStrategy from 'passport-local';
+import bcrypt from 'bcryptjs';
+
+//	Import models
+import { BusinessUser  } from './models/Business.mjs';
+import { Outlets } from './models/Outlets.mjs';
+import { CustomerUser } from './models/Customer.mjs';
+import { Feedback } from './models/Feedback.mjs'
+import { User } from './models/Users.mjs';
+
 
 const Server = Express();
-const Port   = process.env.PORT || 3000;
+const Port = process.env.PORT || 3000;
 const { Sequelize, DataTypes, Model, Op } = ORM
 
+import methodOverride from 'method-override';
+// Method override middleware to use other HTTP methods such as PUT and DELETE
+Server.use(methodOverride('_method'));
 
 // Initialise database
 const Config = {
@@ -31,20 +47,20 @@ const Config = {
 }
 
 export const SessionStore = new ExpSessionStore({
-	host : Config.host,
-	port : Config.port,
-	user : Config.username,
-	password : Config.password,
-	database : Config.database,
-	clearExpired : true,
-	checkExpirationInterval : 900000,
-	expiration : 900000
+	host: Config.host,
+	port: Config.port,
+	user: Config.username,
+	password: Config.password,
+	database: Config.database,
+	clearExpired: true,
+	checkExpirationInterval: 900000,
+	expiration: 900000
 })
 
 export const Database = new Sequelize(
 	Config.database, Config.username, Config.password, {
-	port:     Config.port,
-	host:     Config.host,      // Name or IP address of MySQL server
+	port: Config.port,
+	host: Config.host,      // Name or IP address of MySQL server
 	dialect: 'mysql',           // Tells sequelize that MySQL is used
 	operatorsAliases: false,
 	define: {
@@ -65,28 +81,24 @@ catch (error) {
 	console.error(`Error connecting to database`);
 }
 
- //	Import models
- import { CustomerUser, UserRole } from './models/Customer.mjs';
- import { BusinessUser, BusinessRole } from './models/Business.mjs';
- import { Outlets, OutletsRole } from './models/Outlets.mjs';
- import { Feedback } from './models/Feedback.mjs'
+//	Initialise models
+CustomerUser.initialize(Database);
+BusinessUser.initialize(Database);
+DiscountSlot.initialize(Database);
+Outlets.initialize(Database);
+Feedback.initialize(Database);
+User.initialize(Database);
 
- //	Initialise models
- CustomerUser.initialize(Database);
- BusinessUser.initialize(Database);
- Outlets.initialize(Database);
- Feedback.initialize(Database);
+//	Sync your database
+Database.sync({ drop: false });	//	drop is true => clear tables, recreate
 
- //	Sync your database
- Database.sync({ drop: false });	//	drop is true => clear tables, recreate
- 
- //------------ Init completed
+//------------ Init completed
 console.log(`Database connection successful`);
 
-Server.set('views',       'templates');		//	Let express know where to find HTML templates
+Server.set('views', 'templates');		//	Let express know where to find HTML templates
 Server.set('view engine', 'handlebars');	//	Let express know what template engine to use
 Server.engine('handlebars', ExpHandlebars({
-	handlebars:     allowInsecurePrototypeAccess(Handlebars),
+	handlebars: allowInsecurePrototypeAccess(Handlebars),
 	defaultLayout: 'main'
 }));
 //	Let express know where to access static files
@@ -96,19 +108,20 @@ Server.use("/public", Express.static('public'));
 /**
  * Form body parsers etc
  */
-Server.use(BodyParser.urlencoded( { extended: false }));
+Server.use(BodyParser.urlencoded({ extended: false }));
 Server.use(BodyParser.json());
 Server.use(CookieParser());
 Server.use(MethodOverrides('_method'));
 
 
+
 /**
  * Express Session
  */
- Server.use(ExpSession({
-	name:   'example-app',
+Server.use(ExpSession({
+	name: 'example-app',
 	secret: 'random-secret',
-	resave:  false,
+	resave: false,
 	saveUninitialized: false
 }));
 
@@ -116,8 +129,12 @@ Server.use(MethodOverrides('_method'));
 /**
  * Initialize passport
  **/
-import { initialize_passport } from './utils/passport.mjs';
+import {  initialize_passport } from './utils/passport.mjs';
+
 initialize_passport(Server);
+
+`2`
+
 
 
 /**
@@ -146,6 +163,7 @@ Server.use("/", Routes);
  * Prints all the routes registered into the application
 **/
 import { ListRoutes } from './utils/routes.mjs'
+import { DiscountSlot } from './models/DiscountSlot.mjs';
 console.log(`=====Registered Routes=====`);
 ListRoutes(Server._router).forEach(route => {
 	console.log(`${route.method.padStart(8)} | /${route.path}`);
@@ -155,6 +173,6 @@ console.log(`===========================`);
 /**
  * Start the server in infinite loop
  */
-Server.listen(Port, function() {
+Server.listen(Port, function () {
 	console.log(`Server listening at port ${Port}`);
 });

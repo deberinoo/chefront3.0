@@ -1,0 +1,99 @@
+<title>Chefront</title>
+
+<link rel="stylesheet" href="/public/css/restaurant.css">
+
+<section>
+    <div id="booking" class="section">
+		<div class="section-center">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-6">
+						<div class="booking-cta">
+                            <div class="card pt-2 p-3 mb-2">
+                                <img src="public/img/illustrations/mark.jpg"/>
+                            </div>
+							<div class="card pt-2 p-3 mb-2">
+                                <div>
+                                    <h3>Mac's</h3>
+                                    <h5>location</h5>
+                                </div>
+                            </div>
+						</div>
+					</div>
+					<div class="col-md-5 col-md-pull-7">
+						<div class="booking-form">
+							<form>
+                                <span class="form-label" style="font-size: larger">Reservation Details</span>
+                                <br><br>
+                                {{#if user}}
+                                    <div class="form-group">
+                                        <span class="form-label">Your Name</span>
+                                        <input class="form-control" type="text" value="{{user.first_name}} {{user.last_name}}">
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <span class="form-label">Your Email</span>
+                                                <input class="form-control" type="text" value="{{user.email}}">
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <span class="form-label">Your Contact</span>
+                                                <input class="form-control" type="text" value="{{user.contact}}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                {{else}}
+                                    <div class="form-group">
+                                        <span class="form-label">Your Name</span>
+                                        <input class="form-control" type="text" placeholder="">
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <span class="form-label">Your Email</span>
+                                                <input class="form-control" type="text" placeholder="">
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <span class="form-label">Your Contact</span>
+                                                <input class="form-control" type="text" placeholder="">
+                                            </div>
+                                        </div>
+                                    </div>
+                                {{/if}}
+								<div class="row">
+									<div class="col-sm-6">
+										<div class="form-group">
+											<span class="form-label">Date</span>
+											<input class="form-control" type="date" required>
+										</div>
+									</div>
+									<div class="col-sm-6">
+										<div class="form-group">
+											<span class="form-label">Pax</span>
+											<select class="form-control">
+												<option>1</option>
+												<option>2</option>
+												<option>3</option>
+												<option>4</option>
+												<option>5</option>
+											</select>
+											<span class="select-arrow"></span>
+										</div>
+									</div>
+								</div>
+								<div class="form-btn">
+									<button class="submit-btn">Book now</button>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+

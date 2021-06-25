@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { CustomerUser, UserRole } from '../models/Customer.mjs';
-import { BusinessUser, BusinessRole } from '../models/Business.mjs';
+import { CustomerUser } from '../models/Customer.mjs';
+import { BusinessUser } from '../models/Business.mjs';
 import { Feedback } from '../models/Feedback.mjs'
 
 import ORM             from 'sequelize';
