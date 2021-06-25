@@ -242,7 +242,7 @@ async function register_customer_process(req, res) {
 		})
         res.render('user/customer/userCustomer');
         console.log("New user created")
-
+		
 		flashMessage(res, 'success', 'Successfully created an account. Please login', 'fas fa-sign-in-alt', true);
 		return res.redirect("/auth/loginCustomer");
 	}

@@ -175,7 +175,7 @@ async function save_edit_user_customer(req, res) {
             email : req.params.user_email
         }
         }).then(() => {
-            res.redirect(`/u/${Email}`);
+            res.redirect(`/u/customer/${Email}`);
     }).catch(err => console.log(err));  
 };
 
