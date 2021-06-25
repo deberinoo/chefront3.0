@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { flashMessage } from '../utils/flashmsg.mjs'
 import { CustomerUser } from '../models/Customer.mjs';
 import { BusinessUser } from '../models/Business.mjs';
 import { Feedback } from '../models/Feedback.mjs'
@@ -11,7 +12,10 @@ export default router;
 
 router.get("/customerUsers",     view_customer_users_page);
 router.get("/businessUsers",     view_business_users_page);
-router.get("/feedback",          view_feedback_page)
+router.get("/feedback",          view_feedback_page);
+router.get("/deleteFeedback/:uuid",       delete_feedback);
+router.get("/deleteBusinessUser/:business_name",       delete_business_user);
+
 
 async function view_customer_users_page(req, res) {
     const user = await CustomerUser.findAll({
@@ -35,6 +39,27 @@ async function view_business_users_page(req, res) {
 	return res.render('admin/retrieve_businessUsers', {business: business});
 };
 
+async function delete_business_user(req, res) {
+    BusinessUser.findOne({
+        where: {
+            "business_name" : req.params.business_name
+        },
+    }).then((user) => {
+        if (user != null) {
+            BusinessUser.destroy({
+                where: {
+                    "business_name" : req.params.business_name
+                }
+            }).then(() => {
+                alertMessage(res, 'Feedback deleted', 'far fa-trash-alt', true );
+                res.redirect('admin/retrieve_businessUsers');
+            }).catch( err => console.log(err));
+        } else {
+	    res.redirect('/404');
+    }
+    });
+};
+
 async function view_feedback_page(req, res) {
     const feedback = await Feedback.findAll({
         where: {
@@ -45,3 +70,27 @@ async function view_feedback_page(req, res) {
     });
 	return res.render('admin/retrieve_feedback', {feedback : feedback});
 };
+
+async function delete_feedback(req, res) {
+    let feedbackId = req.params.uuid
+    Feedback.findOne({
+        where: {
+            uuid : feedbackId
+        },
+        attributes : ['uuid']
+    }).then((feedback) => {
+        if (feedback != null) {
+            Feedback.destroy({
+                where: {
+                    uuid : feedbackId
+                }
+            }).then(() => {
+                alertMessage(res, 'uuid', 'Feedback deleted', 'far fa-trash-alt', true );
+                res.redirect('admin/retrieve_feedback');
+            }).catch( err => console.log(err));
+        } else {
+	    res.redirect('/admin/feedback');
+    }
+    });
+};
+

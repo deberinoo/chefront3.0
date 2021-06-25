@@ -6,7 +6,7 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-12 col-lg-10 col-xl-8 mx-auto">
-                <h2 class="h3 mb-4 page-title">Create New Outlet</h2>
+                <h2 class="h3 mb-4 page-title">Update Outlet</h2>
                 <div class="my-4">
                     <ul class="nav nav-tabs mb-4" id="myTab" role="tablist">
                         <li class="nav-item">
@@ -34,7 +34,7 @@
                                 aria-controls="home" aria-selected="false">View reservation status</a>
                         </li>
                     </ul>
-                    <form action="/u/{{user.business_name}}/create-outlet" method="post">
+                    <form action="../../{{outlet.outlet_name}}/saveOutlet/{{outlet.postal_code}}?_method=PUT" method="post">
                         {{#if user}}
                             <div class="form-group row">
                                 <label for="staticBusinessName" class="col-sm-2 col-form-label">Outlet Name</label>
@@ -47,7 +47,7 @@
                                 <label for="location" class="col-sm-2 col-form-label">Location</label>
                                 <div class="col-sm-10">
                                     <select class="form-control text-dark form-select" id="location" name="Location">
-                                        <option selected>Select closest MRT station</option>
+                                        <option selected value="{{outlet.location}}">{{outlet.location}}</option>
                                         <option value="Bishan">Bishan</option>
                                         <option value="Dhoby Ghaut">Dhoby Ghaut</option>
                                         <option value="Harbourfront">Harbourfront</option>
@@ -65,34 +65,34 @@
                                 <label for="address" class="col-sm-2 col-form-label">Address</label>
                                 <div class="col-sm-10">
                                     <input type="text" class="form-control text-dark" id="address"
-                                        placeholder="125A Fernvale Rd #21-191" name="Address">
+                                        placeholder="125A Fernvale Rd #21-191" name="Address" value={{outlet.address}}>
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label for="postalCode" class="col-sm-2 col-form-label">Postal Code</label>
                                 <div class="col-sm-10">
                                     <input type="text" class="form-control text-dark" id="postalCode" placeholder="791059"
-                                        name="Postalcode">
+                                        name="Postalcode" value={{outlet.postal_code}}>
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label for="price" class="col-sm-2 col-form-label">Price</label>
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control text-dark" id="price" placeholder="$" name="Price">
+                                    <input type="text" class="form-control text-dark" id="price" placeholder="$" name="Price" value={{outlet.price}}>
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label for="contact" class="col-sm-2 col-form-label">Contact</label>
                                 <div class="col-sm-10">
                                     <input type="text" class="form-control text-dark" id="contact"
-                                        placeholder="+65 9665 9281" name="Contact">
+                                        placeholder="+65 9665 9281" name="Contact" value={{outlet.contact}}>
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label for="description" class="col-sm-2 col-form-label">Description</label>
                                 <div class="col-sm-10">
                                     <textarea class="form-control text-dark" id="description" rows="5" maxlength="300"
-                                        placeholder="Enter outlet description" name="Description"></textarea>
+                                         name="Description" value={{outlet.description}}>{{outlet.description}}</textarea>
                                     <div id="word-count">
                                         <span id="current">0</span>
                                         <span id="maximum">/ 300</span>
@@ -100,7 +100,7 @@
                                 </div>
                             </div>
                         {{/if}}
-                        <button type="submit" class="btn btn-danger btn-block col-sm-10 rounded-pill shadow-sm" style="margin-left: 125px;">Create</button>
+                        <button type="submit" class="btn btn-danger btn-block col-sm-10 rounded-pill shadow-sm" style="margin-left: 125px;">Update</button>
                     </form>
                 </div>
             </div>

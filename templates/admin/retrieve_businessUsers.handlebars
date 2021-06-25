@@ -36,6 +36,7 @@
                               <th scope="col" data-sortable="true">Address</th>
                               <th scope="col" data-sortable="true">Contact</th>
                               <th scope="col" data-sortable="true">Email</th>
+                              <th></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -45,6 +46,7 @@
                                   <td>{{ address }}</td>
                                   <td>{{ contact }}</td>
                                   <td>{{ email }}</td>
+                                  <td><a href= "/admin/deleteBusinessUser/{{business_name}}" type="submit" class="btn btn-light btn-small"><i class="bi bi-person-x"></i> Delete</a></td>
                               </tr>
                             {{/each}}
                         </tbody>
