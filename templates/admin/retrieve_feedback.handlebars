@@ -35,6 +35,7 @@
                               <th scope="col" data-sortable="true">Email</th>
                               <th scope="col" data-sortable="true">Phone Number</th>
                               <th scope="col" data-sortable="true">Feedback</th>
+                              <th scope="col" data-sortable="true">Read Status</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -44,6 +45,8 @@
                                   <td>{{ email }}</td>
                                   <td>{{ phone }}</td>
                                   <td>{{ message }}</td>
+                                  <td>{{ read }}</td>
+                                  <td><a href= "/admin/deleteFeedback/{{uuid}}" type="submit" class="btn btn-light btn-small"><i class="bi bi-person-x"></i> Delete</a></td>
                               </tr>
                               {{/each}}
                         </tbody>

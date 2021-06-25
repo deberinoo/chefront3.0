@@ -28,7 +28,6 @@ router.post("/registerBusiness",    register_business_process);
 router.get("/registerCustomer",     register_customer_page);
 router.post("/registerCustomer",     register_customer_process);
 
-
 async function login_page(req, res) {
 	return res.render('auth/login');
 }

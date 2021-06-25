@@ -11,7 +11,9 @@ export default router;
 
 router.get("/customerUsers",     view_customer_users_page);
 router.get("/businessUsers",     view_business_users_page);
-router.get("/feedback",          view_feedback_page)
+router.get("/feedback",          view_feedback_page);
+router.get("/deleteFeedback/:uuid",       delete_feedback);
+
 
 async function view_customer_users_page(req, res) {
     const user = await CustomerUser.findAll({
@@ -45,3 +47,27 @@ async function view_feedback_page(req, res) {
     });
 	return res.render('admin/retrieve_feedback', {feedback : feedback});
 };
+
+async function delete_feedback(req, res) {
+    let feedbackId = req.params.uuid
+    Feedback.findOne({
+        where: {
+            uuid : feedbackId
+        },
+        attributes : ['uuid']
+    }).then((feedback) => {
+        if (feedback != null) {
+            Feedback.destroy({
+                where: {
+                    uuid : feedbackId
+                }
+            }).then(() => {
+                alertMessage(res, 'uuid', 'Feedback deleted', 'far fa-trash-alt', true );
+                res.redirect('admin/retrieve_feedback');
+            }).catch( err => console.log(err));
+        } else {
+	    res.redirect('/admin/feedback');
+    }
+    });
+};
+
