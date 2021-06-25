@@ -49,6 +49,7 @@
                               <th scope="col" data-sortable="true">Time</th>
                               <th scope="col" data-sortable="true">Discount</th>
                               <th scope="col" data-sortable="true">Expired</th>
+                              <th></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -58,6 +59,7 @@
                                   <td>{{ time }}</td>
                                   <td>{{ discount }}</td>
                                   <td>{{ expired }}</td>
+                                  <td><a href="/u/{{business_name}}/delete-discount-slot/{{uuid}}" type="submit" class="btn btn-light btn-small"><i class="bi bi-person-x"></i> Delete</a></td>
                               </tr>
                             {{/each}}
                         </tbody>

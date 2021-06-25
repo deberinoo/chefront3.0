@@ -18,7 +18,6 @@ export function initialize_passport(server) {
 	});
 	Passport.deserializeUser(async function (uid, done) {
 		try {
-			console.log("hello111");
 			const business = await BusinessUser.findByPk(uid);
 			if (business == null) {
 				const customer = await CustomerUser.findByPk(uid);

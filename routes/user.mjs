@@ -1,4 +1,5 @@
 import { Router }       from 'express';
+import { flashMessage } from '../utils/flashmsg.mjs';
 import { CustomerUser, UserRole } from '../models/Customer.mjs';
 import { DiscountSlot } from '../models/DiscountSlot.mjs';
 import { Outlets, OutletsRole } from '../models/Outlets.mjs';
@@ -14,17 +15,25 @@ export default router;
 
 // ---------------- 
 // Business User routing
+
+// Business User profile
 router.get("/:business_name",                         user_business_page);
 router.get("/edit/:business_name",                    edit_user_business_page);
 router.put("/saveUser/:business_name",                save_edit_user_business);
+
+// Discount Slot
 router.get("/:business_name/create-discount-slot",    create_discount_slot_page);
 router.post("/:business_name/create-discount-slot",   create_discount_slot_process);
 router.get("/:business_name/view-discount-slots",     view_discount_slots_page);
+router.get("/:business_name/delete-discount-slot/:uuid",    delete_discount_slot);
+
+// Outlets
 router.get("/:business_name/create-outlet",           create_outlet_page);
 router.post("/:business_name/create-outlet",          create_outlet_process);
 router.get("/:business_name/view-outlets",            view_outlets_page);
 router.get("/:business_name/edit/:postal_code",       edit_outlets_page);
 router.put("/:business_name/saveOutlet/:postal_code", save_edit_outlet);
+
 router.get("/reservation-status",                     view_reservation_status_page);
 
 async function user_business_page(req, res) {
@@ -75,7 +84,7 @@ async function create_discount_slot_process(req, res) {
     let { BusinessName, Location, Time, Discount } = req.body;
 
     const discountslot = await DiscountSlot.create({
-        "outlet_name":  BusinessName,
+        "business_name":  BusinessName,
         "location":  Location,
         "time": Time,
         "discount": Discount
@@ -86,12 +95,34 @@ async function create_discount_slot_process(req, res) {
 async function view_discount_slots_page(req, res) {
     const discountslot = await DiscountSlot.findAll({
         where: {
-            "outlet_name": {
+            "business_name": {
                 [Op.eq]: req.params.business_name
             }
         }
     });
     return res.render('user/business/retrieve_discountslots', {discountslot: discountslot});
+};
+
+async function delete_discount_slot(req, res) {
+    DiscountSlot.findOne({
+        where: {
+            "business_name" : req.params.business_name,
+            "uuid" : req.params.uuid
+        },
+    }).then((discount_slot) => {
+        if (discount_slot != null) {
+            DiscountSlot.destroy({
+                where: {
+                    "business_name" : req.params.business_name,
+                    "uuid" : req.params.uuid
+                }
+            }).then(() => {
+                res.redirect(`/u/${req.params.business_name}/view-discount-slots`);
+            }).catch( err => console.log(err));
+        } else {
+	    res.redirect('/404');
+    }
+    });
 };
 
 async function create_outlet_page(req, res) {

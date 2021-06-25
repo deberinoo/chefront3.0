@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { flashMessage } from '../utils/flashmsg.mjs'
+import { flashMessage } from '../utils/flashmsg.mjs';
 import { CustomerUser } from '../models/Customer.mjs';
 import { BusinessUser } from '../models/Business.mjs';
 import { Feedback } from '../models/Feedback.mjs'
