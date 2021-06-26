@@ -196,6 +196,7 @@ async function register_business_process(req, res) {
             "contact":  Contact,
             "email":    Email,
             "password": Hash.sha256().update(InputPassword).digest('hex'),
+			"role": "business"
         });
         res.render('user/business/userBusiness');
         console.log("New user created")
@@ -269,6 +270,7 @@ async function register_customer_process(req, res) {
 			"contact":  Contact,
 			"email":    Email,
 			"password":  Hash.sha256().update(InputPassword).digest('hex'),
+			"role": "customer"
 		})
         res.render('user/customer/userCustomer');
         console.log("New user created")
