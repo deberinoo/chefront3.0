@@ -40,6 +40,8 @@ async function view_business_users_page(req, res) {
 };
 
 async function delete_business_user(req, res) {
+
+
     BusinessUser.findOne({
         where: {
             "business_name" : req.params.business_name

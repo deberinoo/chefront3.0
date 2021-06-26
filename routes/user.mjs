@@ -3,7 +3,8 @@ import { flashMessage } from '../utils/flashmsg.mjs';
 import { CustomerUser, UserRole } from '../models/Customer.mjs';
 import { DiscountSlot } from '../models/DiscountSlot.mjs';
 import { Outlets, OutletsRole } from '../models/Outlets.mjs';
-
+import { flashMessage } from '../utils/flashmsg.mjs'
+import { User } from '../models/Users.mjs'
 
 import Passport         from 'passport';
 import ORM             from 'sequelize';
@@ -31,7 +32,7 @@ router.get("/:business_name/delete-discount-slot/:uuid",    delete_discount_slot
 router.get("/:business_name/create-outlet",           create_outlet_page);
 router.post("/:business_name/create-outlet",          create_outlet_process);
 router.get("/:business_name/view-outlets",            view_outlets_page);
-router.get("/:business_name/edit/:postal_code",       edit_outlets_page);
+router.get("/business/:business_name/edit/:postal_code",       edit_outlets_page);
 router.put("/:business_name/saveOutlet/:postal_code", save_edit_outlet);
 
 router.get("/:business_name/reservation-status",      view_reservation_status_page);
@@ -320,6 +321,8 @@ router.get("/customer/:user_email",             user_customer_page);
 router.get("/customer/edit/:user_email",        edit_user_customer_page);
 router.put("/customer/saveUser/:user_email",    save_edit_user_customer);
 router.get("/my-reservations",                  view_reservations_page);
+router.get("/customer/delete/:user_email",       delete_customer_user);
+
 
 async function user_customer_page(req, res) {
     const user = CustomerUser.findOne({
@@ -360,6 +363,14 @@ async function edit_user_customer_page(req, res) {
 async function save_edit_user_customer(req, res) {
     let { FirstName, LastName, Contact, Email } = req.body;
 
+    User.update({
+        email : Email
+    }, {
+        where: {
+            email : req.params.user_email
+        }
+    });
+
     CustomerUser.update({
         first_name : FirstName,
         last_name : LastName,
@@ -370,7 +381,7 @@ async function save_edit_user_customer(req, res) {
             email : req.params.user_email
         }
         }).then(() => {
-            res.redirect(`/u/${Email}`);
+            res.redirect(`/u/customer/${Email}`);
     }).catch(err => console.log(err));  
 };
 
@@ -388,5 +399,44 @@ async function view_reservations_page(req, res) {
         admin: admin,
         business: business,
         customer: customer
+    });
+};
+
+async function delete_customer_user(req, res) {
+    User.findOne({
+        where: {
+            email : req.params.user_email
+        },
+    }).then((user) => {
+        if (user != null) {
+            User.destroy({
+                where: {
+                    email : req.params.user_email
+                }
+            })
+        }
+        else {
+	    res.redirect('/404');
+    }
+    });
+
+    CustomerUser.findOne({
+        where: {
+            "email" : req.params.user_email
+        },
+    }).then((user) => {
+        if (user != null) {
+            CustomerUser.destroy({
+                where: {
+                    "email" : req.params.user_email
+                }
+            }).then(() => {
+                flashMessage(res,'success', 'Customer account deleted', 'far fa-trash-alt', true );
+                req.logout();
+	            return res.redirect("/home"); 
+            }).catch( err => console.log(err));
+        } else {
+	    res.redirect('/404');
+    }
     });
 };
