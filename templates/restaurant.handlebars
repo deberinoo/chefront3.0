@@ -22,9 +22,12 @@
 					</div>
 					<div class="col-md-5 col-md-pull-7">
 						<div class="booking-form">
-							<form>
+							<form action="/customer/create-reservation" method="post">
                                 <span class="form-label" style="font-size: larger">Reservation Details</span>
                                 <br><br>
+                                <input type="hidden" value="{{reservation.reservation_id}}"> <!-- need to find a way to get & set these -->
+                                <input type="hidden" value="{{reservation.outlet_name}}">
+                                <input type="hidden" value="{{reservation.location}}">
                                 {{#if user}}
                                     <div class="form-group">
                                         <span class="form-label">Your Name</span>
@@ -75,13 +78,25 @@
 										<div class="form-group">
 											<span class="form-label">Pax</span>
 											<select class="form-control">
-												<option>1</option>
-												<option>2</option>
-												<option>3</option>
-												<option>4</option>
-												<option>5</option>
+												<option value="1">1</option>
+												<option value="2">2</option>
+												<option value="3">3</option>
+												<option value="4">4</option>
+												<option value="5">5</option>
 											</select>
 											<span class="select-arrow"></span>
+										</div>
+									</div>
+                                    <div class="col-sm-6">
+										<div class="form-group">
+											<span class="form-label">Time</span>
+											<input class="form-control" type="text" required>
+										</div>
+									</div>
+                                    <div class="col-sm-6">
+										<div class="form-group">
+											<span class="form-label">Discount</span>
+											<input class="form-control" type="text" required>
 										</div>
 									</div>
 								</div>

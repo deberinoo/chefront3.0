@@ -34,7 +34,7 @@
                                 aria-controls="home" aria-selected="false">View reservation status</a>
                         </li>
                     </ul>
-                    <form action="../../{{outlet.outlet_name}}/saveOutlet/{{outlet.postal_code}}?_method=PUT" method="post">
+                    <form action="../../{{outlet.business_name}}/saveOutlet/{{outlet.postal_code}}?_method=PUT" method="post">
                         {{#if user}}
                             <div class="form-group row">
                                 <label for="staticBusinessName" class="col-sm-2 col-form-label">Outlet Name</label>
