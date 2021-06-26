@@ -29,7 +29,18 @@ router.get("/", async function (req, res) {
 // ---------------- 
 //	Common URL paths
 router.get("/home",      async function(req, res) {
-	return res.render('index');
+	console.log(role);
+	if (role != undefined) {
+		var role = roleResult(req.user.role);
+		var admin = role[0];
+		var business = role[1];
+		var customer = role[2];
+	}
+	return res.render('index', {
+		admin: admin,
+		business: business,
+		customer: customer
+	});
 });
 
 router.get("/error", async function(req, res) {

@@ -34,25 +34,61 @@ router.get("/:business_name/view-outlets",            view_outlets_page);
 router.get("/:business_name/edit/:postal_code",       edit_outlets_page);
 router.put("/:business_name/saveOutlet/:postal_code", save_edit_outlet);
 
-router.get("/reservation-status",                     view_reservation_status_page);
+router.get("/:business_name/reservation-status",      view_reservation_status_page);
+
+function getRole(role) {
+	if (role == 'admin') {
+		var admin = true;
+		var business = false;
+		var customer = false;
+	}
+	else if (role == 'business') {
+		var admin = false;
+		var business = true;
+		var customer = false;
+	}
+	else if (role == 'customer') {
+		var admin = false;
+		var business = false;
+		var customer = true;
+	}
+	return [admin, business, customer];
+}
 
 async function user_business_page(req, res) {
-    BusinessUser.findOne({
+    const user = BusinessUser.findOne({
         where: {
             "business_name": req.params.business_name
         }
     })
-	return res.render('user/business/userBusiness');
+    var role = getRole(req.user.role);
+    var admin = role[0];
+    var business = role[1];
+    var customer = role[2];
+
+	return res.render('user/business/userBusiness', {
+        admin: admin,
+        business: business,
+        customer: customer
+    });
 };
 
 async function edit_user_business_page(req, res) {
-    BusinessUser.findOne({
+    const user = BusinessUser.findOne({
         where: {
             "business_name": req.params.business_name
         }
     }).then((user) => {
+        var role = getRole(req.user.role);
+        var admin = role[0];
+        var business = role[1];
+        var customer = role[2];
+
         res.render('user/business/update_userBusiness', {
-            user // passes user object to handlebar
+            user,
+            admin: admin,
+            business: business,
+            customer: customer // passes user object to handlebar
         });
     }).catch(err => console.log(err)); // To catch no user ID
 };
@@ -75,7 +111,20 @@ async function save_edit_user_business(req, res) {
 };
 
 async function create_discount_slot_page(req, res) {
-    return res.render('user/business/create_discountslot');
+    const user = BusinessUser.findOne({
+        where: {
+            "business_name": req.params.business_name
+        }
+    })
+    var role = getRole(req.user.role);
+    var admin = role[0];
+    var business = role[1];
+    var customer = role[2];
+    return res.render('user/business/create_discountslot', {
+        admin: admin,
+        business: business,
+        customer: customer
+    });
 };
 
 async function create_discount_slot_process(req, res) {
@@ -93,6 +142,16 @@ async function create_discount_slot_process(req, res) {
 };
 
 async function view_discount_slots_page(req, res) {
+    const user = BusinessUser.findOne({
+        where: {
+            "business_name": req.params.business_name
+        }
+    })
+    var role = getRole(req.user.role);
+    var admin = role[0];
+    var business = role[1];
+    var customer = role[2];
+    
     const discountslot = await DiscountSlot.findAll({
         where: {
             "business_name": {
@@ -100,7 +159,12 @@ async function view_discount_slots_page(req, res) {
             }
         }
     });
-    return res.render('user/business/retrieve_discountslots', {discountslot: discountslot});
+    return res.render('user/business/retrieve_discountslots', {
+        discountslot: discountslot,
+        admin: admin,
+        business: business,
+        customer: customer
+    });
 };
 
 async function delete_discount_slot(req, res) {
@@ -126,7 +190,20 @@ async function delete_discount_slot(req, res) {
 };
 
 async function create_outlet_page(req, res) {
-	return res.render('user/business/create_outlet');
+    const user = BusinessUser.findOne({
+        where: {
+            "business_name": req.params.business_name
+        }
+    })
+    var role = getRole(req.user.role);
+    var admin = role[0];
+    var business = role[1];
+    var customer = role[2];
+	return res.render('user/business/create_outlet', {
+        admin: admin,
+        business: business,
+        customer: customer
+    });
 };
 
 async function create_outlet_process(req, res) {
@@ -147,29 +224,54 @@ async function create_outlet_process(req, res) {
 };
 
 async function view_outlets_page(req, res) {
-    	const outlet = await Outlets.findAll({
+    const outlet = await Outlets.findAll({
         where: {
             "outlet_name": {
                 [Op.eq]: req.params.business_name
             }
         }
     });
+
+    const user = BusinessUser.findOne({
+        where: {
+            "business_name": req.params.business_name
+        }
+    })
+    var role = getRole(req.user.role);
+    var admin = role[0];
+    var business = role[1];
+    var customer = role[2];
     
-    var location = outlet.location;
-    outlet.forEach (o => console.log(`Outlets location ${o.location}`));
-	console.log("Retrieve Outlets accessed");
-	return res.render('user/business/retrieve_outlets',{outlet: outlet});
+	return res.render('user/business/retrieve_outlets', {
+        outlet: outlet,
+        admin: admin,
+        business: business,
+        customer: customer
+    });
 };
 
 async function edit_outlets_page(req, res){
-   Outlets.findOne({
+    const user = BusinessUser.findOne({
+        where: {
+            "business_name": req.params.business_name
+        }
+    })
+    var role = getRole(req.user.role);
+    var admin = role[0];
+    var business = role[1];
+    var customer = role[2];
+
+    Outlets.findOne({
         where: {
             "outlet_name" : req.params.business_name,
             "postal_code": req.params.postal_code
         }
     }).then((outlet) => {
         res.render(`user/business/update_outlet`, {
-            outlet // passes user object to handlebar
+            outlet,
+            admin: admin,
+            business: business,
+            customer: customer // passes user object to handlebar
         });
     }).catch(err => console.log(err)); // To catch no user ID
 };
@@ -195,7 +297,20 @@ async function save_edit_outlet(req, res){
 };
 
 async function view_reservation_status_page(req, res) {
-	return res.render('user/business/retrieve_reservationBusiness');
+    const user = BusinessUser.findOne({
+        where: {
+            "business_name": req.params.business_name
+        }
+    })
+    var role = getRole(req.user.role);
+    var admin = role[0];
+    var business = role[1];
+    var customer = role[2];
+	return res.render('user/business/retrieve_reservationBusiness', {
+        admin: admin,
+        business: business,
+        customer: customer
+    });
 };
 
 // ---------------- 	
@@ -207,22 +322,37 @@ router.put("/customer/saveUser/:user_email",    save_edit_user_customer);
 router.get("/my-reservations",                  view_reservations_page);
 
 async function user_customer_page(req, res) {
-    CustomerUser.findOne({
+    const user = CustomerUser.findOne({
         where: {
             "email": req.params.user_email
         }
     })
-	return res.render('user/customer/userCustomer');
+    var role = getRole(req.user.role);
+    var admin = role[0];
+    var business = role[1];
+    var customer = role[2];
+	return res.render('user/customer/userCustomer', {
+        admin: admin,
+        business: business,
+        customer: customer
+    });
 };
 
 async function edit_user_customer_page(req, res) {
-    CustomerUser.findOne({
+    const user = CustomerUser.findOne({
         where: {
             "email": req.params.user_email
         }
     }).then((user) => {
+        var role = getRole(req.user.role);
+        var admin = role[0];
+        var business = role[1];
+        var customer = role[2];
         res.render('user/customer/update_userCustomer', {
-            user // passes user object to handlebar
+            user,
+            admin: admin,
+            business: business,
+            customer: customer // passes user object to handlebar
         });
     }).catch(err => console.log(err)); // To catch no user ID
 };
@@ -245,5 +375,18 @@ async function save_edit_user_customer(req, res) {
 };
 
 async function view_reservations_page(req, res) {
-	return res.render('user/customer/reservationCustomer');
+    const user = CustomerUser.findOne({
+        where: {
+            "email": req.params.user_email
+        }
+    })
+    var role = getRole(req.user.role);
+    var admin = role[0];
+    var business = role[1];
+    var customer = role[2];
+	return res.render('user/customer/reservationCustomer', {
+        admin: admin,
+        business: business,
+        customer: customer
+    });
 };

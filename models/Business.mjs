@@ -2,7 +2,7 @@ import ORM from 'sequelize'
 const {Sequelize, DataTypes,Model} = ORM;
 
 export class BusinessRole {
-    static get User() {return "user"}
+    static get User() {return "business"}
 }
 
 export class BusinessUser extends Model {
@@ -16,7 +16,7 @@ export class BusinessUser extends Model {
             "contact" : { type: DataTypes.INTEGER(16), allowNull: false},
             "email" : { type: DataTypes.STRING(128), allowNull: false},
             "password" : { type: DataTypes.STRING(64), allowNull: false},
-            "role" : { type: DataTypes.ENUM(BusinessRole.User), defaultValue: BusinessRole.User, allowNull: false},
+            "role" : { type: DataTypes.ENUM(BusinessRole.User), defaultValue: "business", allowNull: false},
             "verified" : {type: DataTypes.BOOLEAN, allowNull:false, defaultValue: false}
         }, {
             "sequelize" : database,
