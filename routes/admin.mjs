@@ -10,11 +10,11 @@ const { Sequelize, DataTypes, Model, Op } = ORM;
 const router = Router();
 export default router;
 
-router.get("/customerUsers",     view_customer_users_page);
-router.get("/businessUsers",     view_business_users_page);
-router.get("/feedback",          view_feedback_page);
-router.get("/deleteFeedback/:uuid",       delete_feedback);
-router.get("/deleteBusinessUser/:business_name",       delete_business_user);
+router.get("/customerUsers",            view_customer_users_page);
+router.get("/businessUsers",            view_business_users_page);
+router.get("/businessUsers",            delete_business_user);
+router.get("/feedback",                 view_feedback_page);
+router.get("/deleteFeedback/:uuid",     delete_feedback);
 
 
 async function view_customer_users_page(req, res) {
@@ -40,8 +40,6 @@ async function view_business_users_page(req, res) {
 };
 
 async function delete_business_user(req, res) {
-
-
     BusinessUser.findOne({
         where: {
             "business_name" : req.params.business_name
@@ -53,8 +51,7 @@ async function delete_business_user(req, res) {
                     "business_name" : req.params.business_name
                 }
             }).then(() => {
-                alertMessage(res, 'Feedback deleted', 'far fa-trash-alt', true );
-                res.redirect('admin/retrieve_businessUsers');
+                res.render('admin/retrieve_businessUsers');
             }).catch( err => console.log(err));
         } else {
 	    res.redirect('/404');
@@ -87,7 +84,6 @@ async function delete_feedback(req, res) {
                     uuid : feedbackId
                 }
             }).then(() => {
-                alertMessage(res, 'uuid', 'Feedback deleted', 'far fa-trash-alt', true );
                 res.redirect('admin/retrieve_feedback');
             }).catch( err => console.log(err));
         } else {
