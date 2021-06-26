@@ -11,7 +11,7 @@ export class Outlets extends Model {
             "uuid" : { type: DataTypes.CHAR(36), primaryKey: true, defaultValue: DataTypes.UUIDV4},
             "dateCreated" : { type: DataTypes.DATE(), allowNull: false, defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')},
             "dataUpdated" : { type: DataTypes.DATE(), allowNull: false, defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')},
-            "outlet_name" : { type: DataTypes.STRING(64), allowNull: false},
+            "business_name" : { type: DataTypes.STRING(64), allowNull: false},
             "location" : { type: DataTypes.STRING(64), allowNull: false},
             "address" : { type: DataTypes.STRING(64), allowNull: false},
             "postal_code" : { type: DataTypes.INTEGER(6), allowNull: false},

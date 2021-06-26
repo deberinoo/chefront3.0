@@ -3,6 +3,9 @@ import { flashMessage } from '../utils/flashmsg.mjs';
 import { CustomerUser, UserRole } from '../models/Customer.mjs';
 import { DiscountSlot } from '../models/DiscountSlot.mjs';
 import { Outlets, OutletsRole } from '../models/Outlets.mjs';
+import { Reservations} from '../models/Reservations.mjs';
+
+
 import { User } from '../models/Users.mjs'
 
 import Passport         from 'passport';
@@ -31,8 +34,10 @@ router.get("/:business_name/delete-discount-slot/:uuid",    delete_discount_slot
 router.get("/:business_name/create-outlet",                 create_outlet_page);
 router.post("/:business_name/create-outlet",                create_outlet_process);
 router.get("/:business_name/view-outlets",                  view_outlets_page);
-router.get("/business/:business_name/edit/:postal_code",    edit_outlets_page);
+router.get("/:business_name/edit/:postal_code",             edit_outlets_page);
 router.put("/:business_name/saveOutlet/:postal_code",       save_edit_outlet);
+router.get("/:business_name/delete/:postal_code",           delete_outlet);
+router.get("/reservation-status",                           view_reservation_status_page);
 
 router.get("/:business_name/reservation-status",            view_reservation_status_page);
 
@@ -212,7 +217,7 @@ async function create_outlet_process(req, res) {
     let { BusinessName, Location, Address, Postalcode, Price, Contact, Description } = req.body;
 
     const outlet = await Outlets.create({
-        "outlet_name":  BusinessName,
+        "business_name":  BusinessName,
         "location":  Location,
         "address":  Address,
         "postal_code":  Postalcode,
@@ -226,7 +231,7 @@ async function create_outlet_process(req, res) {
 async function view_outlets_page(req, res) {
     const outlet = await Outlets.findAll({
         where: {
-            "outlet_name": {
+            "business_name": {
                 [Op.eq]: req.params.business_name
             }
         }
@@ -263,7 +268,7 @@ async function edit_outlets_page(req, res){
 
     Outlets.findOne({
         where: {
-            "outlet_name" : req.params.business_name,
+            "business_name" : req.params.business_name,
             "postal_code": req.params.postal_code
         }
     }).then((outlet) => {
@@ -280,7 +285,7 @@ async function save_edit_outlet(req, res){
     let { BusinessName, Location, Address, Postalcode, Price, Contact, Description } = req.body;
 
     Outlets.update({
-        outlet_name:  BusinessName,
+        business_name:  BusinessName,
         location:  Location,
         address:  Address,
         postal_code:  Postalcode,
@@ -294,6 +299,28 @@ async function save_edit_outlet(req, res){
         }).then(() => {
             res.redirect(`/u/${BusinessName}/view-outlets`);
     }).catch(err => console.log(err)); 
+};
+
+async function delete_outlet(req, res) {
+    Outlets.findOne({
+        where: {
+            "business_name" : req.params.business_name,
+            "postal_code" : req.params.postal_code
+        },
+    }).then((outlet) => {
+        if (outlet!= null) {
+            Outlets.destroy({
+                where: {
+                    "business_name" : req.params.business_name,
+                    "postal_code" : req.params.postal_code
+                }
+            }).then(() => {
+                res.redirect(`/u/${req.params.business_name}/view-outlets`);
+            }).catch( err => console.log(err));
+        } else {
+	    res.redirect('/404');
+    }
+    });
 };
 
 async function view_reservation_status_page(req, res) {
@@ -319,7 +346,8 @@ async function view_reservation_status_page(req, res) {
 router.get("/customer/:user_email",             user_customer_page);
 router.get("/customer/edit/:user_email",        edit_user_customer_page);
 router.put("/customer/saveUser/:user_email",    save_edit_user_customer);
-router.get("/my-reservations",                  view_reservations_page);
+router.post("customer/create-reservation",      create_reservation_process);
+router.get("/retrieve_reservation/:user_email", view_reservations_page);
 router.get("/customer/delete/:user_email",       delete_customer_user);
 
 
@@ -384,7 +412,34 @@ async function save_edit_user_customer(req, res) {
     }).catch(err => console.log(err));  
 };
 
+async function create_reservation_process(req, res) {
+    let errors = [];
+    
+    let { reservation_id, outlet_name, location, user_name, user_email, user_contact, date, pax, time, discount } = req.body;
+
+    const reservation = await Reservations.create({
+        "reservation_id" : reservation_id,
+        "outlet_name" : outlet_name,
+        "location" : location,
+        "user_name" : user_name,
+        "user_email" : user_email,
+        "user_contact" : user_contact,
+        "date" : date,
+        "pax" : pax,
+        "time" : time,
+        "discount" : discount,
+    });
+    res.redirect("/retrieve_reservation/:user_email");
+};
+
 async function view_reservations_page(req, res) {
+	const reservation = await Reservations.findAll({
+        where: {
+            "user_email": {
+                [Op.eq]: req.params.user_email
+            }
+        }
+    });
     const user = CustomerUser.findOne({
         where: {
             "email": req.params.user_email
@@ -394,7 +449,8 @@ async function view_reservations_page(req, res) {
     var admin = role[0];
     var business = role[1];
     var customer = role[2];
-	return res.render('user/customer/reservationCustomer', {
+    return res.render('user/customer/retrieve_reservations', {
+        reservation: reservation,
         admin: admin,
         business: business,
         customer: customer
