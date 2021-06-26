@@ -21,18 +21,30 @@
 			<div class="ps-lg-5">
 				<div class="dropdown">
 					{{#if user}}
+						{{#if business}}
 						<button class="btn btn-lg btn-outline-danger dropdown-toggle" type="button" id="dropdownMenuButton"
 							data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 							{{user.business_name}}
-							{{user.first_name}}
 						</button>
 						<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-							<a class="dropdown-item" href="#">Profile</a>
-							<a class="dropdown-item" href="#">Reservations</a>
-							<a class="dropdown-item" href="#">Favourites</a>
+							<a class="dropdown-item" href="/u/{{user.business_name}}">Profile</a>
 							<div class="dropdown-divider"></div>
 							<a class="dropdown-item" href="/auth/logout">Sign out</a>
 						</div>
+						{{/if}}
+						{{#if customer}}
+							<button class="btn btn-lg btn-outline-danger dropdown-toggle" type="button" id="dropdownMenuButton"
+								data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								{{user.first_name}} {{user.last_name}}
+							</button>
+							<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+								<a class="dropdown-item" href="#">Profile</a>
+								<a class="dropdown-item" href="#">Reservations</a>
+								<a class="dropdown-item" href="#">Favourites</a>
+								<div class="dropdown-divider"></div>
+								<a class="dropdown-item" href="/auth/logout">Sign out</a>
+							</div>
+						{{/if}}
 					{{else}}
 						<a href="/auth/login">
 							<button class="btn btn-lg btn-outline-danger order-0">Sign In</button>

@@ -39,6 +39,25 @@ router.post("/registerCustomer",    register_customer_process);
 
 router.get("/logout",     			logout_process);
 
+function getRole(role) {
+	if (role == 'admin') {
+		var admin = true;
+		var business = false;
+		var customer = false;
+	}
+	else if (role == 'business') {
+		var admin = false;
+		var business = true;
+		var customer = false;
+	}
+	else if (role == 'customer') {
+		var admin = false;
+		var business = false;
+		var customer = true;
+	}
+
+	return [admin, business, customer];
+}
 
 // Login
 
@@ -168,7 +187,8 @@ async function register_business_process(req, res) {
 	//	Create new user, now that all the test above passed
 	try {
 		User.create({
-			"email" : Email
+			"email" : Email,
+			"role" : "business"
 		})
         const user = await BusinessUser.create({
             "business_name":  BusinessName,
@@ -240,7 +260,8 @@ async function register_customer_process(req, res) {
 	//	Create new user, now that all the test above passed
 	try {
 		User.create({
-			"email" : Email
+			"email" : Email,
+			"role" : "customer"
 		})
 		CustomerUser.create({
 			"first_name":  FirstName,
@@ -251,7 +272,7 @@ async function register_customer_process(req, res) {
 		})
         res.render('user/customer/userCustomer');
         console.log("New user created")
-
+		
 		flashMessage(res, 'success', 'Successfully created an account. Please login', 'fas fa-sign-in-alt', true);
 		return res.redirect("/auth/loginCustomer");
 	}

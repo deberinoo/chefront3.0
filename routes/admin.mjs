@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { flashMessage } from '../utils/flashmsg.mjs';
 import { CustomerUser } from '../models/Customer.mjs';
 import { BusinessUser } from '../models/Business.mjs';
 import { Feedback } from '../models/Feedback.mjs'
@@ -13,6 +14,7 @@ router.get("/customerUsers",     view_customer_users_page);
 router.get("/businessUsers",     view_business_users_page);
 router.get("/feedback",          view_feedback_page);
 router.get("/deleteFeedback/:uuid",       delete_feedback);
+router.get("/deleteBusinessUser/:business_name",       delete_business_user);
 
 
 async function view_customer_users_page(req, res) {
@@ -35,6 +37,29 @@ async function view_business_users_page(req, res) {
         }
     });
 	return res.render('admin/retrieve_businessUsers', {business: business});
+};
+
+async function delete_business_user(req, res) {
+
+
+    BusinessUser.findOne({
+        where: {
+            "business_name" : req.params.business_name
+        },
+    }).then((user) => {
+        if (user != null) {
+            BusinessUser.destroy({
+                where: {
+                    "business_name" : req.params.business_name
+                }
+            }).then(() => {
+                alertMessage(res, 'Feedback deleted', 'far fa-trash-alt', true );
+                res.redirect('admin/retrieve_businessUsers');
+            }).catch( err => console.log(err));
+        } else {
+	    res.redirect('/404');
+    }
+    });
 };
 
 async function view_feedback_page(req, res) {
