@@ -3,7 +3,6 @@ import { flashMessage } from '../utils/flashmsg.mjs';
 import { CustomerUser, UserRole } from '../models/Customer.mjs';
 import { DiscountSlot } from '../models/DiscountSlot.mjs';
 import { Outlets, OutletsRole } from '../models/Outlets.mjs';
-import { flashMessage } from '../utils/flashmsg.mjs'
 import { User } from '../models/Users.mjs'
 
 import Passport         from 'passport';
