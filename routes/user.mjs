@@ -17,24 +17,24 @@ export default router;
 // Business User routing
 
 // Business User profile
-router.get("/:business_name",                         user_business_page);
-router.get("/edit/:business_name",                    edit_user_business_page);
-router.put("/saveUser/:business_name",                save_edit_user_business);
+router.get("/:business_name",                               user_business_page);
+router.get("/edit/:business_name",                          edit_user_business_page);
+router.put("/saveUser/:business_name",                      save_edit_user_business);
 
 // Discount Slot
-router.get("/:business_name/create-discount-slot",    create_discount_slot_page);
-router.post("/:business_name/create-discount-slot",   create_discount_slot_process);
-router.get("/:business_name/view-discount-slots",     view_discount_slots_page);
+router.get("/:business_name/create-discount-slot",          create_discount_slot_page);
+router.post("/:business_name/create-discount-slot",         create_discount_slot_process);
+router.get("/:business_name/view-discount-slots",           view_discount_slots_page);
 router.get("/:business_name/delete-discount-slot/:uuid",    delete_discount_slot);
 
 // Outlets
-router.get("/:business_name/create-outlet",           create_outlet_page);
-router.post("/:business_name/create-outlet",          create_outlet_process);
-router.get("/:business_name/view-outlets",            view_outlets_page);
-router.get("/business/:business_name/edit/:postal_code",       edit_outlets_page);
-router.put("/:business_name/saveOutlet/:postal_code", save_edit_outlet);
+router.get("/:business_name/create-outlet",                 create_outlet_page);
+router.post("/:business_name/create-outlet",                create_outlet_process);
+router.get("/:business_name/view-outlets",                  view_outlets_page);
+router.get("/business/:business_name/edit/:postal_code",    edit_outlets_page);
+router.put("/:business_name/saveOutlet/:postal_code",       save_edit_outlet);
 
-router.get("/:business_name/reservation-status",      view_reservation_status_page);
+router.get("/:business_name/reservation-status",            view_reservation_status_page);
 
 function getRole(role) {
 	if (role == 'admin') {
