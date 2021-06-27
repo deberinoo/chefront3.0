@@ -49,7 +49,7 @@
                               <th scope="col" data-sortable="true">Time</th>
                               <th scope="col" data-sortable="true">Discount</th>
                               <th scope="col" data-sortable="true">Expired</th>
-                              <th></th>
+                              <th scope="col">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -59,7 +59,10 @@
                                   <td>{{ time }}</td>
                                   <td>{{ discount }}</td>
                                   <td>{{ expired }}</td>
-                                  <td><a href="/u/b/{{business_name}}/delete-discount-slot/{{uuid}}" type="submit" class="btn btn-light btn-small"><i class="bi bi-person-x"></i> Delete</a></td>
+                                  <td>
+                                      <a href="../{{business_name}}/edit-discount-slot/{{uuid}}"><i class="material-icons" title="Edit">&#xE254;</i></a>
+							          <a href="/u/b/{{business_name}}/delete-discount-slot/{{uuid}}" class="delete" ><i class="material-icons" title="Delete">&#xE872;</i></a>                                      
+                                  </td>
                               </tr>
                             {{/each}}
                         </tbody>

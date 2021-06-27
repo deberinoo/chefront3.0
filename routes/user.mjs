@@ -29,16 +29,17 @@ router.get("/b/delete/:user_email",                           delete_business_us
 router.get("/b/:business_name/create-discount-slot",          create_discount_slot_page);
 router.post("/b/:business_name/create-discount-slot",         create_discount_slot_process);
 router.get("/b/:business_name/view-discount-slots",           view_discount_slots_page);
+router.get("/b/:business_name/edit-discount-slot/:uuid",      edit_discount_slot_page);
+router.put("/b/:business_name/saveDiscountSlot/:uuid",        save_edit_discount_slot);
 router.get("/b/:business_name/delete-discount-slot/:uuid",    delete_discount_slot);
 
 // Outlets
 router.get("/b/:business_name/create-outlet",                 create_outlet_page);
 router.post("/b/:business_name/create-outlet",                create_outlet_process);
 router.get("/b/:business_name/view-outlets",                  view_outlets_page);
-router.get("/b/:business_name/edit/:postal_code",             edit_outlets_page);
+router.get("/b/:business_name/edit-outlet/:postal_code",      edit_outlet_page);
 router.put("/b/:business_name/saveOutlet/:postal_code",       save_edit_outlet);
-router.get("/b/:business_name/delete/:postal_code",           delete_outlet);
-router.get("/b/business_name/reservation-status",                           view_reservation_status_page);
+router.get("/b/:business_name/delete-outlet/:postal_code",    delete_outlet);
 
 router.get("/b/:business_name/reservation-status",            view_reservation_status_page);
 
@@ -173,8 +174,6 @@ async function create_discount_slot_page(req, res) {
 };
 
 async function create_discount_slot_process(req, res) {
-    let errors = [];
-    
     let { BusinessName, Location, Time, Discount } = req.body;
 
     const discountslot = await DiscountSlot.create({
@@ -210,6 +209,49 @@ async function view_discount_slots_page(req, res) {
         business: business,
         customer: customer
     });
+};
+
+async function edit_discount_slot_page(req, res){
+    const user = BusinessUser.findOne({
+        where: {
+            "business_name": req.params.business_name
+        }
+    })
+    var role = getRole(req.user.role);
+    var admin = role[0];
+    var business = role[1];
+    var customer = role[2];
+
+    DiscountSlot.findOne({
+        where: {
+            "business_name" : req.params.business_name,
+            "uuid": req.params.uuid
+        }
+    }).then((discount_slot) => {
+        res.render(`user/business/update_discountslot`, {
+            discount_slot,
+            admin: admin,
+            business: business,
+            customer: customer // passes user object to handlebar
+        });
+    }).catch(err => console.log(err)); // To catch no user ID
+};
+
+async function save_edit_discount_slot(req, res){
+    let { BusinessName, Location, Time, Discount } = req.body;
+
+    DiscountSlot.update({
+        business_name:  BusinessName,
+        location:  Location,
+        time: Time,
+        discount: Discount
+    }, {
+        where: {
+            uuid : req.params.uuid
+        }
+        }).then(() => {
+            res.redirect(`/u/b/${BusinessName}/view-discount-slots`);
+    }).catch(err => console.log(err)); 
 };
 
 async function delete_discount_slot(req, res) {
@@ -295,7 +337,7 @@ async function view_outlets_page(req, res) {
     });
 };
 
-async function edit_outlets_page(req, res){
+async function edit_outlet_page(req, res){
     const user = BusinessUser.findOne({
         where: {
             "business_name": req.params.business_name
