@@ -14,8 +14,7 @@ export default router;
  * Regular expressions for form testing
  **/ 
  const regexEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
- //	Min 3 character, must start with alphabet
- const regexName  = /^[a-zA-Z][a-zA-Z]{2,}$/;
+ const regexName  = /^[a-z ,.'-]+$/i;
  //	Min 8 character, 1 upper, 1 lower, 1 number, 1 symbol
  //const regexPwd   = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
  
@@ -95,7 +94,7 @@ async function business_login_process(req, res, next) {
 	});
 
 	return Passport.authenticate('local', {
-		successRedirect: "/u/" + user.business_name,
+		successRedirect: "/u/b/" + user.business_name,
 		failureRedirect: "/auth/loginBusiness",
 		failureFlash:    true
 	})(req, res, next);
@@ -131,7 +130,7 @@ async function customer_login_process(req, res, next) {
 	});
 
 	return Passport.authenticate('local', {
-		successRedirect: "/u/customer/"+ user.email,
+		successRedirect: "/u/c/"+ user.email,
 		failureRedirect: "/auth/loginCustomer",
 		failureFlash:    true
 	})(req, res, next);

@@ -20,26 +20,27 @@ export default router;
 // Business User routing
 
 // Business User profile
-router.get("/:business_name",                               user_business_page);
-router.get("/edit/:business_name",                          edit_user_business_page);
-router.put("/saveUser/:business_name",                      save_edit_user_business);
+router.get("/b/:business_name",                               user_business_page);
+router.get("/b/edit/:business_name",                          edit_user_business_page);
+router.put("/b/saveUser/:business_name",                      save_edit_user_business);
+router.get("/b/delete/:user_email",                           delete_business_user);
 
 // Discount Slot
-router.get("/:business_name/create-discount-slot",          create_discount_slot_page);
-router.post("/:business_name/create-discount-slot",         create_discount_slot_process);
-router.get("/:business_name/view-discount-slots",           view_discount_slots_page);
-router.get("/:business_name/delete-discount-slot/:uuid",    delete_discount_slot);
+router.get("/b/:business_name/create-discount-slot",          create_discount_slot_page);
+router.post("/b/:business_name/create-discount-slot",         create_discount_slot_process);
+router.get("/b/:business_name/view-discount-slots",           view_discount_slots_page);
+router.get("/b/:business_name/delete-discount-slot/:uuid",    delete_discount_slot);
 
 // Outlets
-router.get("/:business_name/create-outlet",                 create_outlet_page);
-router.post("/:business_name/create-outlet",                create_outlet_process);
-router.get("/:business_name/view-outlets",                  view_outlets_page);
-router.get("/:business_name/edit/:postal_code",             edit_outlets_page);
-router.put("/:business_name/saveOutlet/:postal_code",       save_edit_outlet);
-router.get("/:business_name/delete/:postal_code",           delete_outlet);
-router.get("/reservation-status",                           view_reservation_status_page);
+router.get("/b/:business_name/create-outlet",                 create_outlet_page);
+router.post("/b/:business_name/create-outlet",                create_outlet_process);
+router.get("/b/:business_name/view-outlets",                  view_outlets_page);
+router.get("/b/:business_name/edit/:postal_code",             edit_outlets_page);
+router.put("/b/:business_name/saveOutlet/:postal_code",       save_edit_outlet);
+router.get("/b/:business_name/delete/:postal_code",           delete_outlet);
+router.get("/b/business_name/reservation-status",                           view_reservation_status_page);
 
-router.get("/:business_name/reservation-status",            view_reservation_status_page);
+router.get("/b/:business_name/reservation-status",            view_reservation_status_page);
 
 function getRole(role) {
 	if (role == 'admin') {
@@ -111,8 +112,47 @@ async function save_edit_user_business(req, res) {
             business_name: req.params.business_name
         }
         }).then(() => {
-            res.redirect(`/u/${BusinessName}`);
+            res.redirect(`/u/b/${BusinessName}`);
     }).catch(err => console.log(err));  
+};
+
+async function delete_business_user(req, res) {
+    User.findOne({
+        where: {
+            email : req.params.user_email
+        },
+    }).then((user) => {
+        if (user != null) {
+            User.destroy({
+                where: {
+                    email : req.params.user_email
+                }
+            })
+        }
+        else {
+	    res.redirect('/404');
+    }
+    });
+
+    BusinessUser.findOne({
+        where: {
+            "email" : req.params.user_email
+        },
+    }).then((user) => {
+        if (user != null) {
+            BusinessUser.destroy({
+                where: {
+                    "email" : req.params.user_email
+                }
+            }).then(() => {
+                flashMessage(res,'success', 'Business account deleted', 'far fa-trash-alt', true );
+                req.logout();
+	            return res.redirect("/home"); 
+            }).catch( err => console.log(err));
+        } else {
+	    res.redirect('/404');
+    }
+    });
 };
 
 async function create_discount_slot_page(req, res) {
@@ -143,7 +183,7 @@ async function create_discount_slot_process(req, res) {
         "time": Time,
         "discount": Discount
     });
-    res.redirect(`/u/${BusinessName}/view-discount-slots`);
+    res.redirect(`/u/b/${BusinessName}/view-discount-slots`);
 };
 
 async function view_discount_slots_page(req, res) {
@@ -186,7 +226,7 @@ async function delete_discount_slot(req, res) {
                     "uuid" : req.params.uuid
                 }
             }).then(() => {
-                res.redirect(`/u/${req.params.business_name}/view-discount-slots`);
+                res.redirect(`/u/b/${req.params.business_name}/view-discount-slots`);
             }).catch( err => console.log(err));
         } else {
 	    res.redirect('/404');
@@ -225,7 +265,7 @@ async function create_outlet_process(req, res) {
         "contact":  Contact,
         "description": Description
     });
-    res.redirect(`/u/${BusinessName}/view-outlets`);
+    res.redirect(`/u/b/${BusinessName}/view-outlets`);
 };
 
 async function view_outlets_page(req, res) {
@@ -297,7 +337,7 @@ async function save_edit_outlet(req, res){
             postal_code : req.params.postal_code
         }
         }).then(() => {
-            res.redirect(`/u/${BusinessName}/view-outlets`);
+            res.redirect(`/u/b/${BusinessName}/view-outlets`);
     }).catch(err => console.log(err)); 
 };
 
@@ -315,7 +355,7 @@ async function delete_outlet(req, res) {
                     "postal_code" : req.params.postal_code
                 }
             }).then(() => {
-                res.redirect(`/u/${req.params.business_name}/view-outlets`);
+                res.redirect(`/u/b/${req.params.business_name}/view-outlets`);
             }).catch( err => console.log(err));
         } else {
 	    res.redirect('/404');
@@ -343,12 +383,13 @@ async function view_reservation_status_page(req, res) {
 // ---------------- 	
 // Customer user routing
 
-router.get("/customer/:user_email",             user_customer_page);
-router.get("/customer/edit/:user_email",        edit_user_customer_page);
-router.put("/customer/saveUser/:user_email",    save_edit_user_customer);
-router.post("customer/create-reservation",      create_reservation_process);
-router.get("/retrieve_reservation/:user_email", view_reservations_page);
-router.get("/customer/delete/:user_email",       delete_customer_user);
+router.get("/c/:user_email",                        user_customer_page);
+router.get("/c/edit/:user_email",                   edit_user_customer_page);
+router.put("/c/saveUser/:user_email",               save_edit_user_customer);
+router.get("/c/delete/:user_email",                 delete_customer_user);
+
+router.post("c/create-reservation",                 create_reservation_process);
+router.get("/c/my-reservations/:user_email",        view_reservations_page);
 
 
 async function user_customer_page(req, res) {
@@ -408,8 +449,47 @@ async function save_edit_user_customer(req, res) {
             email : req.params.user_email
         }
         }).then(() => {
-            res.redirect(`/u/customer/${Email}`);
+            res.redirect(`/u/c/${Email}`);
     }).catch(err => console.log(err));  
+};
+
+async function delete_customer_user(req, res) {
+    User.findOne({
+        where: {
+            email : req.params.user_email
+        },
+    }).then((user) => {
+        if (user != null) {
+            User.destroy({
+                where: {
+                    email : req.params.user_email
+                }
+            })
+        }
+        else {
+	    res.redirect('/404');
+    }
+    });
+
+    CustomerUser.findOne({
+        where: {
+            "email" : req.params.user_email
+        },
+    }).then((user) => {
+        if (user != null) {
+            CustomerUser.destroy({
+                where: {
+                    "email" : req.params.user_email
+                }
+            }).then(() => {
+                flashMessage(res,'success', 'Customer account deleted', 'far fa-trash-alt', true );
+                req.logout();
+	            return res.redirect("/home"); 
+            }).catch( err => console.log(err));
+        } else {
+	    res.redirect('/404');
+    }
+    });
 };
 
 async function create_reservation_process(req, res) {
@@ -454,44 +534,5 @@ async function view_reservations_page(req, res) {
         admin: admin,
         business: business,
         customer: customer
-    });
-};
-
-async function delete_customer_user(req, res) {
-    User.findOne({
-        where: {
-            email : req.params.user_email
-        },
-    }).then((user) => {
-        if (user != null) {
-            User.destroy({
-                where: {
-                    email : req.params.user_email
-                }
-            })
-        }
-        else {
-	    res.redirect('/404');
-    }
-    });
-
-    CustomerUser.findOne({
-        where: {
-            "email" : req.params.user_email
-        },
-    }).then((user) => {
-        if (user != null) {
-            CustomerUser.destroy({
-                where: {
-                    "email" : req.params.user_email
-                }
-            }).then(() => {
-                flashMessage(res,'success', 'Customer account deleted', 'far fa-trash-alt', true );
-                req.logout();
-	            return res.redirect("/home"); 
-            }).catch( err => console.log(err));
-        } else {
-	    res.redirect('/404');
-    }
     });
 };

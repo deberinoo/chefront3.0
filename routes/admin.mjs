@@ -84,11 +84,9 @@ async function delete_feedback(req, res) {
                     uuid : feedbackId
                 }
             }).then(() => {
-                res.redirect('admin/retrieve_feedback');
+                res.redirect('/admin/feedback');
             }).catch( err => console.log(err));
-        } else {
-	    res.redirect('/admin/feedback');
-    }
+        }
     });
 };
 
