@@ -1,6 +1,7 @@
 import { Router }       from 'express';
 import { flashMessage } from '../utils/flashmsg.mjs';
 import { Feedback } from '../models/Feedback.mjs';
+import axios from 'axios';
 
 const router = Router();
 export default router;
@@ -18,6 +19,9 @@ router.use("/auth", RouterAuth);
 
 import RouterProfile from './user.mjs'
 router.use("/u", RouterProfile);
+
+import RouterPayment from './payment/payment.mjs'
+router.use("/payment", RouterPayment)
 
 import RouterAdmin from './admin.mjs'
 router.use("/admin", RouterAdmin);
