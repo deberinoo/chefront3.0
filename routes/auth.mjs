@@ -198,10 +198,9 @@ async function register_business_process(req, res) {
 			"role": "business"
         });
         res.render('user/business/userBusiness');
-        console.log("New user created")
 
-		flashMessage(res, 'success', 'Successfully created an account. Please login', 'fas fa-sign-in-alt', true);
-		return res.redirect("/auth/loginBusiness");
+		flashMessage(res, 'success', 'Successfully created an account. Please login', 'fas fa-sign-in-alt', false);
+		res.redirect("/auth/loginBusiness");
 	}
 	catch (error) {
 		//	Else internal server error
@@ -272,7 +271,6 @@ async function register_customer_process(req, res) {
 			"role": "customer"
 		})
         res.render('user/customer/userCustomer');
-        console.log("New user created")
 		
 		flashMessage(res, 'success', 'Successfully created an account. Please login', 'fas fa-sign-in-alt', true);
 		return res.redirect("/auth/loginCustomer");

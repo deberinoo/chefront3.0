@@ -25,7 +25,7 @@
                                 <li class="nav-item"> <a data-toggle="pill" href="#paypal" class="nav-link "> <i
                                             class="fab fa-paypal mr-2"></i> Paypal </a> </li>
                                 <li class="nav-item"> <a data-toggle="pill" href="#net-banking" class="nav-link "> <i
-                                            class="fas fa-mobile-alt mr-2"></i> Net Banking </a> </li>
+                                            class="fas fa-mobile-alt mr-2"></i> NetsQR </a> </li>
                             </ul>
                         </div>
                         <div class="tab-content">
@@ -90,22 +90,13 @@
                         </div>
                         <div id="net-banking" class="tab-pane pt-3">
                             <div class="form-group "> <label for="Select Your Bank">
-                                    <h6>Select your Bank</h6>
-                                </label> <select class="form-control text-dark" id="ccmonth">
-                                    <option value="" selected>-- Please select your Bank --</option>
-                                    <option>Bank 1</option>
-                                    <option>Bank 2</option>
-                                    <option>Bank 3</option>
-                                    <option>Bank 4</option>
-                                    <option>Bank 5</option>
-                                    <option>Bank 6</option>
-                                    <option>Bank 7</option>
-                                    <option>Bank 8</option>
-                                    <option>Bank 9</option>
-                                    <option>Bank 10</option>
-                                </select> </div>
+                                    <h6>Enter deposit amount</h6>
+									<label>Cents</label>
+									<input class="form-control" type="number" name="amount" id="price">
+									<img src="null" id="qr_code">
+							</div>
                             <div class="form-group">
-                                <p> <button type="button" class="btn btn-danger "><i class="fas fa-mobile-alt mr-2"></i>
+                                <p> <button onclick="generate_qr_code(null)" type="button" class="btn btn-danger"><i class="fas fa-mobile-alt mr-2"></i>
                                         Proceed Payment</button> </p>
                             </div>
                             <p class="text-muted">Note: After clicking on the button, you will be directed to a secure
@@ -120,7 +111,124 @@
 </section>
 
 <script>
-    $(function () {
+	$(function () {
         $('[data-toggle="tooltip"]').tooltip()
     })
+	/**
+	 * Make a request to generate the QR code
+	 * @param {InputEvent} event
+	 **/
+	async function generate_qr_code(event) {
+		const response = await fetch("/payment/generate", {
+			headers: {
+				"Content-Type": "application/json"
+			},
+			method: "POST",
+			body:   JSON.stringify({
+				amount: document.getElementById("price").value
+			})
+		});
+		if (response.ok) {
+			const content = await response.json();
+			preview_qr_code(content.qr_code);
+
+			//	Start auto ping
+			setTimeout(ping_transaction_status, 1000, 0, content);
+		}
+	}
+	
+	/**
+	 * Displays the QR code
+	 * @param {string} qr_code
+	 **/
+	function preview_qr_code(qr_code) {
+		document.getElementById("qr_code").src = `data:image;base64,${qr_code}`;
+	}
+
+	/**
+	 * Make a HTTP request to query the generated transaction
+	 * @param {JSON}   transaction
+	 * @param {number} attempt
+	 **/
+	async function ping_transaction_status(attempt, transaction) {
+
+		if (attempt > 5)
+			return void_transaction(transaction);
+
+		try {
+			const response = await fetch("/payment/query", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					txn_identifier:   transaction.txn_identifier,
+					transaction_date: transaction.transaction_date,
+					transaction_time: transaction.transaction_time,
+					stan:             transaction.stan,
+					amount:           transaction.amount
+				})
+			});
+
+			if (!response.ok) { throw new Error ("Failed to query transaction"); }
+			const content = await response.json();
+			const status  = content.status;
+			
+			switch (status) {
+				case 0:
+					console.log(`Awaiting for payment: ${attempt}`);
+					return setTimeout(ping_transaction_status, 1000, attempt + 1, transaction);
+				break;
+
+				case 1: 
+					console.log(`Payment succeeded`);
+				break;
+
+				case -1:
+					console.log(`Payment cancelled`);
+				break;
+			}
+		}
+		catch (error) {
+			console.error(error);
+			console.error(`Failed to ping transaction :${transaction.txn_identifier}`);
+		}
+	}
+
+
+	async function void_transaction(transaction) {
+		try {
+			const response = await fetch("/example/payment/void", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					txn_identifier:   transaction.txn_identifier,
+					transaction_date: transaction.transaction_date,
+					transaction_time: transaction.transaction_time,
+					stan:             transaction.stan,
+					amount:           transaction.amount
+				})
+			});
+
+			if (!response.ok) { throw new Error ("Failed to void transaction"); }
+			const content = await response.json();
+			const status  = content.status;
+			
+			switch (status) {
+				case 1:
+					console.log(`Transaction cancelled successfully`);
+				break;
+
+				default:
+					console.log(`No action required`);
+				break;
+			}
+		}
+		catch (error) {
+			console.error(error);
+			console.error(`Failed to void transaction :${transaction.txn_identifier}`);
+		}
+	}
 </script>

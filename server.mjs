@@ -115,7 +115,6 @@ Server.use(CookieParser());
 Server.use(MethodOverrides('_method'));
 
 
-
 /**
  * Express Session
  */
@@ -126,16 +125,12 @@ Server.use(ExpSession({
 	saveUninitialized: false
 }));
 
-
 /**
  * Initialize passport
  **/
 import {  initialize_passport } from './utils/passport.mjs';
 
 initialize_passport(Server);
-
-`2`
-
 
 
 /**

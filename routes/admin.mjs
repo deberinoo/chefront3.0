@@ -10,9 +10,11 @@ const { Sequelize, DataTypes, Model, Op } = ORM;
 const router = Router();
 export default router;
 
-router.get("/customerUsers",            view_customer_users_page);
-router.get("/businessUsers",            view_business_users_page);
-router.get("/businessUsers",            delete_business_user);
+router.get("/customerUsers",                        view_customer_users_page);
+router.get("/businessUsers",                        view_business_users_page);
+router.get("/businessUsers",                        delete_business_user);
+router.get("/deleteBusinessUser/:business_name",    delete_business_user);
+
 router.get("/feedback",                 view_feedback_page);
 router.get("/deleteFeedback/:uuid",     delete_feedback);
 
@@ -51,7 +53,7 @@ async function delete_business_user(req, res) {
                     "business_name" : req.params.business_name
                 }
             }).then(() => {
-                res.render('admin/retrieve_businessUsers');
+                res.redirect('/admin/businessUsers');
             }).catch( err => console.log(err));
         } else {
 	    res.redirect('/404');

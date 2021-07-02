@@ -5,6 +5,7 @@ import { Outlets, OutletsRole } from '../models/Outlets.mjs';
 import { Reservations } from '../models/Reservations.mjs';
 import ORM             from 'sequelize';
 const { Sequelize, DataTypes, Model, Op } = ORM;
+import axios from 'axios';
 
 const router = Router();
 export default router;
@@ -26,6 +27,9 @@ router.use("/auth", RouterAuth);
 import RouterProfile from './user.mjs'
 router.use("/u", RouterProfile);
 
+import RouterPayment from './payment/payment.mjs'
+router.use("/payment", RouterPayment)
+
 import RouterAdmin from './admin.mjs'
 router.use("/admin", RouterAdmin);
 
@@ -33,12 +37,32 @@ router.get("/", async function (req, res) {
 	return res.redirect("/home");
 });
 
+// ----------------
+// Check user role
+function getRole(role) {
+	if (role == 'admin') {
+		var admin = true;
+		var business = false;
+		var customer = false;
+	}
+	else if (role == 'business') {
+		var admin = false;
+		var business = true;
+		var customer = false;
+	}
+	else if (role == 'customer') {
+		var admin = false;
+		var business = false;
+		var customer = true;
+	}
+	return [admin, business, customer];
+}
+
 // ---------------- 
 //	Common URL paths
 router.get("/home",      async function(req, res) {
-	console.log(role);
 	if (role != undefined) {
-		var role = roleResult(req.user.role);
+		var role = getRole(req.user.role);
 		var admin = role[0];
 		var business = role[1];
 		var customer = role[2];
@@ -51,23 +75,62 @@ router.get("/home",      async function(req, res) {
 });
 
 router.get("/error", async function(req, res) {
-	return res.render('404')
+	if (role != undefined) {
+		var role = getRole(req.user.role);
+		var admin = role[0];
+		var business = role[1];
+		var customer = role[2];
+	}
+	return res.render('404', {
+		admin: admin,
+		business: business,
+		customer: customer
+	});
 });
 
 router.get("/about", async function(req, res) {
-	return res.render('about');
+	if (role != undefined) {
+		var role = getRole(req.user.role);
+		var admin = role[0];
+		var business = role[1];
+		var customer = role[2];
+	}
+	return res.render('about', {
+		admin: admin,
+		business: business,
+		customer: customer
+	});
 });
 
 router.get("/categories", async function(req, res) {
-	return res.render('categories');
+	if (role != undefined) {
+		var role = getRole(req.user.role);
+		var admin = role[0];
+		var business = role[1];
+		var customer = role[2];
+	}
+	return res.render('categories', {
+		admin: admin,
+		business: business,
+		customer: customer
+	});
 });
 
 router.get("/contact", async function(req, res) {
-	return res.render('contact');
+	if (role != undefined) {
+		var role = getRole(req.user.role);
+		var admin = role[0];
+		var business = role[1];
+		var customer = role[2];
+	}
+	return res.render('contact', {
+		admin: admin,
+		business: business,
+		customer: customer
+	});
 });
 
 router.post("/home", async function(req,res) {
-	let errors = [];
 	let { Name, Email, Phone, Message, Read } = req.body;
 
 	//CREATE
@@ -82,7 +145,17 @@ router.post("/home", async function(req,res) {
 });
 
 router.get("/payment", async function(req, res) {
-	return res.render('payment');
+	if (role != undefined) {
+		var role = getRole(req.user.role);
+		var admin = role[0];
+		var business = role[1];
+		var customer = role[2];
+	}
+	return res.render('payment', {
+		admin: admin,
+		business: business,
+		customer: customer
+	});
 });
 
 router.get("/restaurants", async function(req, res) {
@@ -93,6 +166,17 @@ router.get("/restaurants", async function(req, res) {
             }
         }})
 	return res.render('restaurants', {restaurants:restaurants});
+	if (role != undefined) {
+		var role = getRole(req.user.role);
+		var admin = role[0];
+		var business = role[1];
+		var customer = role[2];
+	}
+	return res.render('restaurants', {
+		admin: admin,
+		business: business,
+		customer: customer
+	});
 });
 
 async function create_reservation_page(req, res) {
@@ -131,11 +215,31 @@ async function create_reservation_process(req, res) {
 };
 
 router.get("/restaurant", async function(req, res) {
-	return res.render('restaurant');
+	if (role != undefined) {
+		var role = getRole(req.user.role);
+		var admin = role[0];
+		var business = role[1];
+		var customer = role[2];
+	}
+	return res.render('restaurant', {
+		admin: admin,
+		business: business,
+		customer: customer
+	});
 });
 
 router.get("/success", async function(req, res) {
-	return res.render('success');
+	if (role != undefined) {
+		var role = getRole(req.user.role);
+		var admin = role[0];
+		var business = role[1];
+		var customer = role[2];
+	}
+	return res.render('success', {
+		admin: admin,
+		business: business,
+		customer: customer
+	});
 });
 
 // ---------------- 

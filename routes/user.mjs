@@ -43,6 +43,8 @@ router.get("/b/:business_name/delete-outlet/:postal_code",    delete_outlet);
 
 router.get("/b/:business_name/reservation-status",            view_reservation_status_page);
 
+// ----------------
+// Check user role
 function getRole(role) {
 	if (role == 'admin') {
 		var admin = true;
@@ -61,6 +63,8 @@ function getRole(role) {
 	}
 	return [admin, business, customer];
 }
+
+// ----------------
 
 async function user_business_page(req, res) {
     const user = BusinessUser.findOne({
