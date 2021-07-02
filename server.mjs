@@ -25,6 +25,7 @@ import { BusinessUser  } from './models/Business.mjs';
 import { Outlets } from './models/Outlets.mjs';
 import { CustomerUser } from './models/Customer.mjs';
 import { Feedback } from './models/Feedback.mjs'
+import { Reservations } from './models/Reservations.mjs';
 import { User } from './models/Users.mjs';
 
 
@@ -87,6 +88,7 @@ DiscountSlot.initialize(Database);
 Outlets.initialize(Database);
 Feedback.initialize(Database);
 User.initialize(Database);
+Reservations.initialize(Database)
 
 //	Sync your database
 Database.sync({ drop: false });	//	drop is true => clear tables, recreate

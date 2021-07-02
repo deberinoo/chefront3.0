@@ -14,20 +14,26 @@
                             </div>
 							<div class="card pt-2 p-3 mb-2">
                                 <div>
-                                    <h3>Mac's</h3>
-                                    <h5>location</h5>
+                                    <h3>{{restaurants.business_name}}</h3>
+                                    <h5>{{restaurants.location}} • ${{restaurants.price}}</h5>
+                                </div>
+                            </div>
+                            <div class="card pt-2 p-3 mb-2">
+                                <div>
+                                    <h5>Description</h5>
+                                    <p>{{restaurants.description}}</p>
                                 </div>
                             </div>
 						</div>
 					</div>
 					<div class="col-md-5 col-md-pull-7">
 						<div class="booking-form">
-							<form action="/customer/create-reservation" method="post">
+							<form action="/restaurant/{{restaurants.business_name}}/{{restaurants.location}}" method="post">
                                 <span class="form-label" style="font-size: larger">Reservation Details</span>
                                 <br><br>
-                                <input type="hidden" value="{{reservation.reservation_id}}"> <!-- need to find a way to get & set these -->
-                                <input type="hidden" value="{{reservation.outlet_name}}">
-                                <input type="hidden" value="{{reservation.location}}">
+                                <input type="hidden" value="12345" name="ReservationID"> <!--need to find a way to get & set these -->
+                                <input type="hidden" value="{{restaurants.business_name}}" name="BusinessName">
+                                <input type="hidden" value="{{restaurants.location}}" name="Location">
                                 {{#if user}}
                                     <div class="form-group">
                                         <span class="form-label">Your Name</span>
@@ -50,19 +56,19 @@
                                 {{else}}
                                     <div class="form-group">
                                         <span class="form-label">Your Name</span>
-                                        <input class="form-control" type="text" placeholder="">
+                                        <input class="form-control" type="text" placeholder="" name="user_name"> 
                                     </div>
                                     <div class="row">
                                         <div class="col-sm-6">
                                             <div class="form-group">
                                                 <span class="form-label">Your Email</span>
-                                                <input class="form-control" type="text" placeholder="">
+                                                <input class="form-control" type="text" placeholder="" name="user_email">
                                             </div>
                                         </div>
                                         <div class="col-sm-6">
                                             <div class="form-group">
                                                 <span class="form-label">Your Contact</span>
-                                                <input class="form-control" type="text" placeholder="">
+                                                <input class="form-control" type="text" placeholder="" name="user_contact">
                                             </div>
                                         </div>
                                     </div>
@@ -71,13 +77,13 @@
 									<div class="col-sm-6">
 										<div class="form-group">
 											<span class="form-label">Date</span>
-											<input class="form-control" type="date" required>
+											<input class="form-control" type="date" name="ResDate" required>
 										</div>
 									</div>
 									<div class="col-sm-6">
 										<div class="form-group">
 											<span class="form-label">Pax</span>
-											<select class="form-control">
+											<select class="form-control" name="Pax">
 												<option value="1">1</option>
 												<option value="2">2</option>
 												<option value="3">3</option>
@@ -90,13 +96,13 @@
                                     <div class="col-sm-6">
 										<div class="form-group">
 											<span class="form-label">Time</span>
-											<input class="form-control" type="text" required>
+											<input class="form-control" type="time" name="Time" required>
 										</div>
 									</div>
                                     <div class="col-sm-6">
 										<div class="form-group">
 											<span class="form-label">Discount</span>
-											<input class="form-control" type="text" required>
+											<input class="form-control" type="text" name="Discount" required>
 										</div>
 									</div>
 								</div>

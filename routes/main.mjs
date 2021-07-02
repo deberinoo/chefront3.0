@@ -1,6 +1,10 @@
 import { Router }       from 'express';
 import { flashMessage } from '../utils/flashmsg.mjs';
 import { Feedback } from '../models/Feedback.mjs';
+import { Outlets, OutletsRole } from '../models/Outlets.mjs';
+import { Reservations } from '../models/Reservations.mjs';
+import ORM             from 'sequelize';
+const { Sequelize, DataTypes, Model, Op } = ORM;
 
 const router = Router();
 export default router;
@@ -10,6 +14,9 @@ export default router;
 router.get("/dynamic/:path", async function (req, res) {	
 	return res.sendFile(`./dynamic/${req.params.path}`)
 });
+
+router.get("/restaurant/:business_name/:location",     create_reservation_page);
+router.post("/restaurant/:business_name/:location",    create_reservation_process);
 
 // ---------------- 
 //	Additional routers
@@ -79,8 +86,49 @@ router.get("/payment", async function(req, res) {
 });
 
 router.get("/restaurants", async function(req, res) {
-	return res.render('restaurants');
+	const restaurants = await Outlets.findAll({
+        where: {
+            "business_name": {
+                [Op.ne]:"null"
+            }
+        }})
+	return res.render('restaurants', {restaurants:restaurants});
 });
+
+async function create_reservation_page(req, res) {
+    const restaurants = await Outlets.findOne({
+		where: {
+            "business_name": req.params.business_name,
+			"location": req.params.location
+
+        }})
+	return res.render('restaurant', {
+		restaurants:restaurants
+    });
+};
+
+async function create_reservation_process(req, res) {
+    let errors = [];
+    
+    let { ReservationID, BusinessName, Location, ResDate, Pax, Time, Discount, user_name, user_email, user_contact } = req.body;
+
+    const reservation = await Reservations.create({
+		"reservation_id":  ReservationID,
+		"business_name":  BusinessName,
+        "location":  Location,
+		"res_date": ResDate,
+		"pax": Pax,
+		"time": Time,
+		"discount": Discount,
+		"user_name": user_name,
+		"user_email": user_email,
+		"user_contact": user_contact,
+		
+    });
+    res.render("success", {
+		reservation:reservation
+	});
+};
 
 router.get("/restaurant", async function(req, res) {
 	return res.render('restaurant');
