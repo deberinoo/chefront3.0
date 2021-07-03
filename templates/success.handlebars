@@ -18,9 +18,9 @@
                 <div style="text-align:left;">
                     <p class="card-text">{{reservation.reservation_id}}
                     <p class="card-text">{{reservation.business_name}}</p>
-                    <p class="card-text"><i class="flaticon-calendar"></i> {{reservation.user_name}}</p>
+                    <p class="card-text"><i class="flaticon-calendar"></i> {{reservation.res_date}}</p>
                     <p class="card-text"><i class="flaticon-user"></i> {{reservation.pax}}
-                    <p class="card-text"><i class="flaticon-clock"></i> {{reservation.time}} / {{reservation.res_date}} / {{reservation.discount}}
+                    <p class="card-text"><i class="flaticon-clock"></i> {{reservation.time}} / {{reservation.discount}}
                     <br><br>
                 </div>
                 <form action="/reservations" method="POST">

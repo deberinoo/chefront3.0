@@ -7,7 +7,7 @@
 <section>
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-12 col-lg-10 col-xl-8 mx-auto">
+            <div class="col-12 col-lg-12 col-xl-12 mx-auto">
                 <h2 class="h3 mb-4 page-title">Retrieve Customer Users</h2>
                 <div class="my-4">
                     <ul class="nav nav-tabs mb-4" id="myTab" role="tablist">
@@ -25,35 +25,35 @@
                         </li>
                     </ul>
                 </div>
-                <table
-                        id="table"
-                        data-toggle="table"
-                        data-width = "50px" 
-                        data-pagination="true"
-                        data-page-size="10"
-                        data-search="true">
-                        <thead class="thead-dark">
-                            <tr>
-                              <th scope="col" data-sortable="true">First Name</th>
-                              <th scope="col" data-sortable="true">Last Name</th>
-                              <th scope="col" data-sortable="true">Email</th>
-                              <th scope="col" data-sortable="true">Phone Number</th>
-                              <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {{#each user}}
-                              <tr>
-                                  <td>{{ first_name }}</td>
-                                  <td>{{ last_name }}</td>
-                                  <td>{{ email }}</td>
-                                  <td>{{ contact }}</td>
-                                  <td><a href=""><i class="material-icons" title="Delete">&#xE872;</i></a></td>
-                              </tr>
-                              {{/each}}
-                        </tbody>
-                    </table>
             </div>
+            <table
+                id="table"
+                data-toggle="table"
+                data-width = "50px" 
+                data-pagination="true"
+                data-page-size="10"
+                data-search="true">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col" data-sortable="true">First Name</th>
+                        <th scope="col" data-sortable="true">Last Name</th>
+                        <th scope="col" data-sortable="true">Email</th>
+                        <th scope="col" data-sortable="true">Phone Number</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each user}}
+                        <tr>
+                            <td>{{ first_name }}</td>
+                            <td>{{ last_name }}</td>
+                            <td>{{ email }}</td>
+                            <td>{{ contact }}</td>
+                            <td><a href=""><i class="material-icons" title="Delete">&#xE872;</i></a></td>
+                        </tr>
+                        {{/each}}
+                </tbody>
+            </table>
         </div>
     </div>
 </section>

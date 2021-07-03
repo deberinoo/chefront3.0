@@ -6,7 +6,7 @@
 <section>
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-12 col-lg-10 col-xl-8 mx-auto">
+            <div class="col-12 col-lg-12 col-xl-12 mx-auto">
                 <h2 class="h3 mb-4 page-title">Retrieve Business Users</h2>
                 <div class="my-4">
                     <ul class="nav nav-tabs mb-4" id="myTab" role="tablist">
@@ -23,37 +23,37 @@
                                 aria-controls="home" aria-selected="false">View feedback</a>
                         </li>
                     </ul>
-                    <table
-                        id="table"
-                        data-toggle="table"
-                        data-width = "50px" 
-                        data-pagination="true"
-                        data-page-size="10"
-                        data-search="true"
-                        data-side-pagination="server">
-                        <thead class="thead-dark">
-                            <tr>
-                              <th scope="col" data-sortable="true">Name</th>
-                              <th scope="col" data-sortable="true">Address</th>
-                              <th scope="col" data-sortable="true">Contact</th>
-                              <th scope="col" data-sortable="true">Email</th>
-                              <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {{#each business}}
-                              <tr>
-                                  <td>{{ business_name }}</td>
-                                  <td>{{ address }}</td>
-                                  <td>{{ contact }}</td>
-                                  <td>{{ email }}</td>
-                                  <td><a href="/admin/deleteBusinessUser/{{business_name}}"><i class="material-icons" title="Delete">&#xE872;</i></a></td>
-                              </tr>
-                            {{/each}}
-                        </tbody>
-                    </table>
                 </div>
             </div>
+            <table
+                id="table"
+                data-toggle="table"
+                data-width = "50px" 
+                data-pagination="true"
+                data-page-size="10"
+                data-search="true"
+                data-side-pagination="server">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col" data-sortable="true">Name</th>
+                        <th scope="col" data-sortable="true">Address</th>
+                        <th scope="col" data-sortable="true">Contact</th>
+                        <th scope="col" data-sortable="true">Email</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each business}}
+                        <tr>
+                            <td>{{ business_name }}</td>
+                            <td>{{ address }}</td>
+                            <td>{{ contact }}</td>
+                            <td>{{ email }}</td>
+                            <td><a href="/admin/deleteBusinessUser/{{business_name}}"><i class="material-icons" title="Delete">&#xE872;</i></a></td>
+                        </tr>
+                    {{/each}}
+                </tbody>
+            </table>
         </div>
     </div>
 </section>

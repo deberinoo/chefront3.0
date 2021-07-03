@@ -6,7 +6,7 @@
 <section>
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-12 col-lg-10 col-xl-8 mx-auto">
+            <div class="col-12 col-lg-12 col-xl-12 mx-auto">
                 <h2 class="h3 mb-4 page-title">View Feedback</h2>
                 <div class="my-4">
                     <ul class="nav nav-tabs mb-4" id="myTab" role="tablist">
@@ -23,37 +23,37 @@
                                 aria-controls="home" aria-selected="false">View feedback</a>
                         </li>
                     </ul>
-                    <table id="table"
-                        data-toggle="table"
-                        data-width = "50px" 
-                        data-pagination="true"
-                        data-page-size="10"
-                        data-search="true">
-                        <thead class="thead-dark">
-                            <tr>
-                              <th scope="col" data-sortable="true">Name</th>
-                              <th scope="col" data-sortable="true">Email</th>
-                              <th scope="col" data-sortable="true">Phone Number</th>
-                              <th scope="col" data-sortable="true">Feedback</th>
-                              <th scope="col" data-sortable="true">Read Status</th>
-                              <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {{#each feedback}}
-                              <tr>
-                                  <td>{{ name }}</td>
-                                  <td>{{ email }}</td>
-                                  <td>{{ phone }}</td>
-                                  <td>{{ message }}</td>
-                                  <td>{{ read }}</td>
-                                  <td><a href="/admin/deleteFeedback/{{uuid}}"><i class="material-icons" title="Delete">&#xE872;</i></a></td>
-                              </tr>
-                              {{/each}}
-                        </tbody>
-                    </table>
                 </div>
             </div>
+            <table id="table"
+                data-toggle="table"
+                data-width = "50px" 
+                data-pagination="true"
+                data-page-size="10"
+                data-search="true">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col" data-sortable="true">Name</th>
+                        <th scope="col" data-sortable="true">Email</th>
+                        <th scope="col" data-sortable="true">Phone Number</th>
+                        <th scope="col" data-sortable="true">Feedback</th>
+                        <th scope="col" data-sortable="true">Read Status</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each feedback}}
+                        <tr>
+                            <td>{{ name }}</td>
+                            <td>{{ email }}</td>
+                            <td>{{ phone }}</td>
+                            <td>{{ message }}</td>
+                            <td>{{ read }}</td>
+                            <td><a href="/admin/deleteFeedback/{{uuid}}"><i class="material-icons" title="Delete">&#xE872;</i></a></td>
+                        </tr>
+                        {{/each}}
+                </tbody>
+            </table>
         </div>
     </div>
 </section>

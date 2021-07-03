@@ -164,8 +164,8 @@ router.get("/restaurants", async function(req, res) {
             "business_name": {
                 [Op.ne]:"null"
             }
-        }})
-	return res.render('restaurants', {restaurants:restaurants});
+        }
+	});
 	if (role != undefined) {
 		var role = getRole(req.user.role);
 		var admin = role[0];
@@ -173,9 +173,10 @@ router.get("/restaurants", async function(req, res) {
 		var customer = role[2];
 	}
 	return res.render('restaurants', {
-		admin: admin,
-		business: business,
-		customer: customer
+		admin:admin,
+		business:business,
+		customer:customer,
+		restaurants:restaurants
 	});
 });
 
@@ -191,13 +192,19 @@ async function create_reservation_page(req, res) {
     });
 };
 
+
+function getId() {
+    const rand = Math.random().toString(16).substr(2, 6); 
+	return rand
+}
+
 async function create_reservation_process(req, res) {
     let errors = [];
     
-    let { ReservationID, BusinessName, Location, ResDate, Pax, Time, Discount, user_name, user_email, user_contact } = req.body;
+    let { BusinessName, Location, ResDate, Pax, Time, Discount, user_name, user_email, user_contact } = req.body;
 
     const reservation = await Reservations.create({
-		"reservation_id":  ReservationID,
+		"reservation_id":  String(getId()),
 		"business_name":  BusinessName,
         "location":  Location,
 		"res_date": ResDate,

@@ -31,7 +31,6 @@
 							<form action="/restaurant/{{restaurants.business_name}}/{{restaurants.location}}" method="post">
                                 <span class="form-label" style="font-size: larger">Reservation Details</span>
                                 <br><br>
-                                <input type="hidden" value="12345" name="ReservationID"> <!--need to find a way to get & set these -->
                                 <input type="hidden" value="{{restaurants.business_name}}" name="BusinessName">
                                 <input type="hidden" value="{{restaurants.location}}" name="Location">
                                 {{#if user}}

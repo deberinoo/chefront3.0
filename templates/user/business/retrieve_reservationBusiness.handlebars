@@ -1,14 +1,14 @@
 <title>Chefront - Reservation Status</title>
 
 <link rel="stylesheet" href="/public/css/profile.css">
-<script src="https://unpkg.com/bootstrap-table@1.18.3/dist/bootstrap-table.min.js"></script>
 <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">
+<script src="https://unpkg.com/bootstrap-table@1.18.3/dist/bootstrap-table.min.js"></script>
 <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
 
 <section>
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-12 col-lg-10 col-xl-8 mx-auto">
+            <div class="col-12 col-lg-12 col-xl-12 mx-auto">
                 <h2 class="h3 mb-4 page-title">Reservation Status</h2>
                 <div class="my-4">
                     <ul class="nav nav-tabs mb-4" id="myTab" role="tablist">
@@ -37,52 +37,52 @@
                                 aria-controls="home" aria-selected="false">View reservation status</a>
                         </li>
                     </ul>
-                    <table
-                        id="table"
-                        data-toggle="table"
-                        data-width = "50px" 
-                        data-pagination="true"
-                        data-page-size="10"
-                        data-search="true">
-                        <thead class="thead-dark">
-                          <tr>
-                            <th scope="col" data-sortable="true">Customer Name</th>
-                            <th scope="col" data-sortable="true">Reservation ID</th>
-                            <th scope="col" data-sortable="true">Timing</th>
-                            <th scope="col" data-sortable="true">Discount</th>
-                            <th scope="col" data-sortable="true">Attended?</th>
-                            <th></th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <th scope="row">1</th>
-                            <td>Mark</td>
-                            <td>74NMP3</td>
-                            <td>4.00pm</td>
-                            <td>50%</td>
-                            <td><input type="checkbox" checked data-on="No" data-off="Yes" data-toggle="toggle" data-onstyle="outline-danger" data-offstyle="outline-success"></td>
-                          </tr>
-                          <tr>
-                            <th scope="row">2</th>
-                            <td>Mark</td>
-                            <td>74NMP3</td>
-                            <td>4.00pm</td>
-                            <td>50%</td>
-                            <td><input type="checkbox" checked data-on="No" data-off="Yes" data-toggle="toggle" data-onstyle="outline-danger" data-offstyle="outline-success"></td>
-                          </tr>
-                          <tr>
-                            <th scope="row">3</th>
-                            <td>Mark</td>
-                            <td>74NMP3</td>
-                            <td>4.00pm</td>
-                            <td>50%</td>
-                            <td><input type="checkbox" checked data-on="No" data-off="Yes" data-toggle="toggle" data-onstyle="outline-danger" data-offstyle="outline-success"></td>
-                          </tr>
-                        </tbody>
-                    </table>
                 </div>
             </div>
+            <table
+                id="table"
+                data-toggle="table"
+                data-width = "50px" 
+                data-pagination="true"
+                data-page-size="10"
+                data-search="true">
+                <thead class="thead-dark">
+                    <tr>
+                    <th scope="col" data-sortable="true">Customer Name</th>
+                    <th scope="col" data-sortable="true">Reservation ID</th>
+                    <th scope="col" data-sortable="true">Timing</th>
+                    <th scope="col" data-sortable="true">Discount</th>
+                    <th scope="col" data-sortable="true">Attended?</th>
+                    <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                    <th scope="row">1</th>
+                    <td>Mark</td>
+                    <td>74NMP3</td>
+                    <td>4.00pm</td>
+                    <td>50%</td>
+                    <td><input type="checkbox" checked data-on="No" data-off="Yes" data-toggle="toggle" data-onstyle="outline-danger" data-offstyle="outline-success"></td>
+                    </tr>
+                    <tr>
+                    <th scope="row">2</th>
+                    <td>Mark</td>
+                    <td>74NMP3</td>
+                    <td>4.00pm</td>
+                    <td>50%</td>
+                    <td><input type="checkbox" checked data-on="No" data-off="Yes" data-toggle="toggle" data-onstyle="outline-danger" data-offstyle="outline-success"></td>
+                    </tr>
+                    <tr>
+                    <th scope="row">3</th>
+                    <td>Mark</td>
+                    <td>74NMP3</td>
+                    <td>4.00pm</td>
+                    <td>50%</td>
+                    <td><input type="checkbox" checked data-on="No" data-off="Yes" data-toggle="toggle" data-onstyle="outline-danger" data-offstyle="outline-success"></td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 </section>
