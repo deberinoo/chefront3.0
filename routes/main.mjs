@@ -3,6 +3,7 @@ import { flashMessage } from '../utils/flashmsg.mjs';
 import { Feedback } from '../models/Feedback.mjs';
 import { Outlets, OutletsRole } from '../models/Outlets.mjs';
 import { Reservations } from '../models/Reservations.mjs';
+import { User } from '../models/Users.mjs';
 import ORM             from 'sequelize';
 const { Sequelize, DataTypes, Model, Op } = ORM;
 import axios from 'axios';
@@ -61,12 +62,15 @@ function getRole(role) {
 // ---------------- 
 //	Common URL paths
 router.get("/home",      async function(req, res) {
-	if (role != undefined) {
+	if (req.user == undefined) {
+		return res.render('index')
+	} else {
 		var role = getRole(req.user.role);
 		var admin = role[0];
 		var business = role[1];
 		var customer = role[2];
 	}
+
 	return res.render('index', {
 		admin: admin,
 		business: business,
@@ -75,12 +79,15 @@ router.get("/home",      async function(req, res) {
 });
 
 router.get("/error", async function(req, res) {
-	if (role != undefined) {
+	if (req.user == undefined) {
+		return res.render('404')
+	} else {
 		var role = getRole(req.user.role);
 		var admin = role[0];
 		var business = role[1];
 		var customer = role[2];
 	}
+
 	return res.render('404', {
 		admin: admin,
 		business: business,
@@ -89,12 +96,15 @@ router.get("/error", async function(req, res) {
 });
 
 router.get("/about", async function(req, res) {
-	if (role != undefined) {
+	if (req.user == undefined) {
+		return res.render('about')
+	} else {
 		var role = getRole(req.user.role);
 		var admin = role[0];
 		var business = role[1];
 		var customer = role[2];
 	}
+
 	return res.render('about', {
 		admin: admin,
 		business: business,
@@ -103,12 +113,15 @@ router.get("/about", async function(req, res) {
 });
 
 router.get("/categories", async function(req, res) {
-	if (role != undefined) {
+	if (req.user == undefined) {
+		return res.render('categories')
+	} else {
 		var role = getRole(req.user.role);
 		var admin = role[0];
 		var business = role[1];
 		var customer = role[2];
 	}
+
 	return res.render('categories', {
 		admin: admin,
 		business: business,
@@ -117,12 +130,15 @@ router.get("/categories", async function(req, res) {
 });
 
 router.get("/contact", async function(req, res) {
-	if (role != undefined) {
+	if (req.user == undefined) {
+		return res.render('contact')
+	} else {
 		var role = getRole(req.user.role);
 		var admin = role[0];
 		var business = role[1];
 		var customer = role[2];
 	}
+	
 	return res.render('contact', {
 		admin: admin,
 		business: business,
@@ -145,12 +161,15 @@ router.post("/home", async function(req,res) {
 });
 
 router.get("/payment", async function(req, res) {
-	if (role != undefined) {
+	if (req.user == undefined) {
+		return res.render('payment')
+	} else {
 		var role = getRole(req.user.role);
 		var admin = role[0];
 		var business = role[1];
 		var customer = role[2];
 	}
+
 	return res.render('payment', {
 		admin: admin,
 		business: business,
@@ -159,6 +178,15 @@ router.get("/payment", async function(req, res) {
 });
 
 router.get("/restaurants", async function(req, res) {
+	if (req.user == undefined) {
+		return res.render('restaurants')
+	} else {
+		var role = getRole(req.user.role);
+		var admin = role[0];
+		var business = role[1];
+		var customer = role[2];
+	}
+
 	const restaurants = await Outlets.findAll({
         where: {
             "business_name": {
@@ -166,12 +194,7 @@ router.get("/restaurants", async function(req, res) {
             }
         }
 	});
-	if (role != undefined) {
-		var role = getRole(req.user.role);
-		var admin = role[0];
-		var business = role[1];
-		var customer = role[2];
-	}
+
 	return res.render('restaurants', {
 		admin:admin,
 		business:business,
@@ -181,6 +204,15 @@ router.get("/restaurants", async function(req, res) {
 });
 
 async function create_reservation_page(req, res) {
+	if (req.user == undefined) {
+		return res.render('restaurant')
+	} else {
+		var role = getRole(req.user.role);
+		var admin = role[0];
+		var business = role[1];
+		var customer = role[2];
+	}
+
     const restaurants = await Outlets.findOne({
 		where: {
             "business_name": req.params.business_name,
@@ -188,10 +220,12 @@ async function create_reservation_page(req, res) {
 
         }})
 	return res.render('restaurant', {
+		admin:admin,
+		business:business,
+		customer:customer,
 		restaurants:restaurants
     });
 };
-
 
 function getId() {
     const rand = Math.random().toString(16).substr(2, 6); 
@@ -199,6 +233,15 @@ function getId() {
 }
 
 async function create_reservation_process(req, res) {
+	if (req.user == undefined) {
+		return res.render('restaurant')
+	} else {
+		var role = getRole(req.user.role);
+		var admin = role[0];
+		var business = role[1];
+		var customer = role[2];
+	}
+
     let errors = [];
     
     let { BusinessName, Location, ResDate, Pax, Time, Discount, user_name, user_email, user_contact } = req.body;
@@ -217,17 +260,23 @@ async function create_reservation_process(req, res) {
 		
     });
     res.render("success", {
+		admin:admin,
+		business:business,
+		customer:customer,
 		reservation:reservation
 	});
 };
 
 router.get("/restaurant", async function(req, res) {
-	if (role != undefined) {
+	if (req.user == undefined) {
+		return res.render('restaurant')
+	} else {
 		var role = getRole(req.user.role);
 		var admin = role[0];
 		var business = role[1];
 		var customer = role[2];
 	}
+
 	return res.render('restaurant', {
 		admin: admin,
 		business: business,
@@ -236,12 +285,15 @@ router.get("/restaurant", async function(req, res) {
 });
 
 router.get("/success", async function(req, res) {
-	if (role != undefined) {
+	if (req.user == undefined) {
+		return res.render('403')
+	} else {
 		var role = getRole(req.user.role);
 		var admin = role[0];
 		var business = role[1];
 		var customer = role[2];
 	}
+
 	return res.render('success', {
 		admin: admin,
 		business: business,
@@ -251,6 +303,10 @@ router.get("/success", async function(req, res) {
 
 // ---------------- 
 // Error page routing
+router.use(function (req, res, next) {
+	res.status(403).render('403')
+});
+
 router.use(function (req, res, next) {
 	res.status(404).render('404')
 });

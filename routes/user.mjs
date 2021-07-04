@@ -133,6 +133,11 @@ async function delete_business_user(req, res) {
                     email : req.params.user_email
                 }
             })
+            BusinessUser.destroy({
+                where: {
+                    email : req.params.user_email
+                }
+            })
         }
         else {
 	    res.redirect('/404');
