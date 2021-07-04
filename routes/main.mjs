@@ -178,14 +178,6 @@ router.get("/payment", async function(req, res) {
 });
 
 router.get("/restaurants", async function(req, res) {
-	if (req.user == undefined) {
-		return res.render('restaurants')
-	} else {
-		var role = getRole(req.user.role);
-		var admin = role[0];
-		var business = role[1];
-		var customer = role[2];
-	}
 
 	const restaurants = await Outlets.findAll({
         where: {
@@ -195,36 +187,46 @@ router.get("/restaurants", async function(req, res) {
         }
 	});
 
-	return res.render('restaurants', {
-		admin:admin,
-		business:business,
-		customer:customer,
-		restaurants:restaurants
-	});
-});
-
-async function create_reservation_page(req, res) {
 	if (req.user == undefined) {
-		return res.render('restaurant')
+		return res.render('restaurants', {
+			restaurants:restaurants
+		})
 	} else {
 		var role = getRole(req.user.role);
 		var admin = role[0];
 		var business = role[1];
 		var customer = role[2];
+		return res.render('restaurants', {
+			admin:admin,
+			business:business,
+			customer:customer,
+			restaurants:restaurants
+		});
 	}
+});
 
+async function create_reservation_page(req, res) {
     const restaurants = await Outlets.findOne({
 		where: {
             "business_name": req.params.business_name,
 			"location": req.params.location
 
         }})
-	return res.render('restaurant', {
-		admin:admin,
-		business:business,
-		customer:customer,
-		restaurants:restaurants
-    });
+
+	if (req.user == undefined) {
+		return res.render('restaurant', {restaurants:restaurants})
+	} else {
+		var role = getRole(req.user.role);
+		var admin = role[0];
+		var business = role[1];
+		var customer = role[2];
+		return res.render('restaurant', {
+			admin:admin,
+			business:business,
+			customer:customer,
+			restaurants:restaurants
+		});
+	}
 };
 
 function getId() {
@@ -234,7 +236,7 @@ function getId() {
 
 async function create_reservation_process(req, res) {
 	if (req.user == undefined) {
-		return res.render('restaurant')
+		return res.render('auth/loginCustomer')
 	} else {
 		var role = getRole(req.user.role);
 		var admin = role[0];
@@ -244,7 +246,7 @@ async function create_reservation_process(req, res) {
 
     let errors = [];
     
-    let { BusinessName, Location, ResDate, Pax, Time, Discount, user_name, user_email, user_contact } = req.body;
+    let { BusinessName, Location, ResDate, Pax, Time, Discount, Name, Email, Contact } = req.body;
 
     const reservation = await Reservations.create({
 		"reservation_id":  String(getId()),
@@ -254,9 +256,9 @@ async function create_reservation_process(req, res) {
 		"pax": Pax,
 		"time": Time,
 		"discount": Discount,
-		"user_name": user_name,
-		"user_email": user_email,
-		"user_contact": user_contact,
+		"user_name": Name,
+		"user_email": Email,
+		"user_contact": Contact,
 		
     });
     res.render("success", {
@@ -292,13 +294,12 @@ router.get("/success", async function(req, res) {
 		var admin = role[0];
 		var business = role[1];
 		var customer = role[2];
+		return res.render('success', {
+			admin: admin,
+			business: business,
+			customer: customer
+		});
 	}
-
-	return res.render('success', {
-		admin: admin,
-		business: business,
-		customer: customer
-	});
 });
 
 // ---------------- 
