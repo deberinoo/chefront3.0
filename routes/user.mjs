@@ -5,6 +5,7 @@ import { CustomerUser } from '../models/Customer.mjs';
 import { DiscountSlot } from '../models/DiscountSlot.mjs';
 import { Outlets }      from '../models/Outlets.mjs';
 import { User }         from '../models/Users.mjs'
+import { Reservations } 	from '../models/Reservations.mjs';
 
 import Passport         from 'passport';
 import ORM             from 'sequelize';
@@ -577,7 +578,7 @@ async function view_reservations_page(req, res) {
     var admin = role[0];
     var business = role[1];
     var customer = role[2];
-    return res.render('user/customer/retrieve_reservations', {
+    return res.render('user/customer/retrieve_reservationCustomer', {
         reservation: reservation,
         admin: admin,
         business: business,

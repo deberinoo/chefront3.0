@@ -23,7 +23,7 @@
                     <p class="card-text"><i class="flaticon-clock"></i> {{reservation.time}} / {{reservation.discount}}
                     <br><br>
                 </div>
-                <form action="/reservations" method="POST">
+                <form action="/u/c/my-reservations/{{user.email}}">
                     <input type="submit" value="View All Reservations" class="btn btn-danger btnColor right-btn">
                 </form>
             </div>

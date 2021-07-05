@@ -231,7 +231,7 @@ async function create_reservation_page(req, res) {
 
 function getId() {
     const rand = Math.random().toString(16).substr(2, 6); 
-	return rand
+	return rand.toUpperCase();
 }
 
 async function create_reservation_process(req, res) {
