@@ -1,7 +1,9 @@
 import { Router } from 'express';
 import { flashMessage } from '../utils/flashmsg.mjs';
-import { CustomerUser } from '../models/Customer.mjs';
 import { BusinessUser } from '../models/Business.mjs';
+import { CustomerUser } from '../models/Customer.mjs';
+import { Outlets }      from '../models/Outlets.mjs';
+
 import { User } from '../models/Users.mjs';
 import { Feedback } from '../models/Feedback.mjs'
 
@@ -12,12 +14,16 @@ const router = Router();
 export default router;
 
 router.get("/customerUsers",                        view_customer_users_page);
+router.get("/deleteCustomerUser/:email",            delete_customer_user);
+
 router.get("/businessUsers",                        view_business_users_page);
-router.get("/businessUsers",                        delete_business_user);
 router.get("/deleteBusinessUser/:business_name",    delete_business_user);
 
-router.get("/feedback",                 view_feedback_page);
-router.get("/deleteFeedback/:uuid",     delete_feedback);
+router.get("/allOutlets",                           view_outlets_page);
+
+
+router.get("/feedback",                             view_feedback_page);
+router.get("/deleteFeedback/:uuid",                 delete_feedback);
 
 
 async function view_customer_users_page(req, res) {
@@ -29,6 +35,31 @@ async function view_customer_users_page(req, res) {
         }
     });
 	return res.render('admin/retrieve_customerUsers', {user: user});
+};
+
+async function delete_customer_user(req, res) {
+    CustomerUser.findOne({
+        where: {
+            "email" : req.params.email
+        },
+    }).then((user) => {
+        if (user != null) {
+            User.destroy({
+                where: {
+                    "email" : user.email
+                }
+            });
+            CustomerUser.destroy({
+                where: {
+                    "email" : req.params.email
+                }
+            }).then(() => {
+                res.redirect('/admin/customerUsers');
+            }).catch( err => console.log(err));
+        } else {
+	    res.redirect('/404');
+    }
+    });
 };
 
 async function view_business_users_page(req, res) {
@@ -65,6 +96,17 @@ async function delete_business_user(req, res) {
 	    res.redirect('/404');
     }
     });
+};
+
+async function view_outlets_page(req, res) {
+    const outlet = await Outlets.findAll({
+        where: {
+            "business_name": {
+                [Op.ne]:"null"
+            }
+        }
+    });
+	return res.render('admin/retrieve_allOutlets', {outlet: outlet});
 };
 
 async function view_feedback_page(req, res) {

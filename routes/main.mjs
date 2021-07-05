@@ -1,9 +1,9 @@
-import { Router }       from 'express';
-import { flashMessage } from '../utils/flashmsg.mjs';
-import { Feedback } from '../models/Feedback.mjs';
-import { Outlets, OutletsRole } from '../models/Outlets.mjs';
-import { Reservations } from '../models/Reservations.mjs';
-import { User } from '../models/Users.mjs';
+import { Router }       	from 'express';
+import { flashMessage } 	from '../utils/flashmsg.mjs';
+import { Feedback } 		from '../models/Feedback.mjs';
+import { Outlets } 			from '../models/Outlets.mjs';
+import { Reservations } 	from '../models/Reservations.mjs';
+
 import ORM             from 'sequelize';
 const { Sequelize, DataTypes, Model, Op } = ORM;
 import axios from 'axios';

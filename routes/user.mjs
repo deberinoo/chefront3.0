@@ -1,16 +1,13 @@
 import { Router }       from 'express';
 import { flashMessage } from '../utils/flashmsg.mjs';
-import { CustomerUser, UserRole } from '../models/Customer.mjs';
+import { BusinessUser } from '../models/Business.mjs';
+import { CustomerUser } from '../models/Customer.mjs';
 import { DiscountSlot } from '../models/DiscountSlot.mjs';
-import { Outlets, OutletsRole } from '../models/Outlets.mjs';
-
-
-
-import { User } from '../models/Users.mjs'
+import { Outlets }      from '../models/Outlets.mjs';
+import { User }         from '../models/Users.mjs'
 
 import Passport         from 'passport';
 import ORM             from 'sequelize';
-import { BusinessUser } from '../models/Business.mjs';
 const { Sequelize, DataTypes, Model, Op } = ORM;
 
 const router = Router();

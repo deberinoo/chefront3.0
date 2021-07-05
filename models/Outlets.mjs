@@ -1,10 +1,6 @@
 import ORM from 'sequelize'
 const {Sequelize, DataTypes,Model} = ORM;
 
-export class OutletsRole {
-    static get User() {return "user"}
-}
-
 export class Outlets extends Model {
     static initialize(database){
         Outlets.init({
@@ -18,7 +14,6 @@ export class Outlets extends Model {
             "price" : { type: DataTypes.INTEGER(3), allowNull: false},
             "contact" : { type: DataTypes.INTEGER(8), allowNull: false},
             "description" : { type: DataTypes.STRING(300), allowNull: false},
-            "role" : { type: DataTypes.ENUM(OutletsRole.User), defaultValue: OutletsRole.User, allowNull: false},
             "verified" : {type: DataTypes.BOOLEAN, allowNull:false, defaultValue: false}
         }, {
             "sequelize" : database,

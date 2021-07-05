@@ -1,21 +1,19 @@
-import Express from 'express';
-import ExpHandlebars from 'express-handlebars';
-import ExpSession from 'express-session';
-import ExpSessionStore from 'express-mysql-session'
-import BodyParser from 'body-parser';
-import CookieParser from 'cookie-parser';
+import Express 				from 'express';
+import ExpHandlebars 		from 'express-handlebars';
+import ExpSession 			from 'express-session';
+import ExpSessionStore 		from 'express-mysql-session';
+import BodyParser 			from 'body-parser';
+import CookieParser 		from 'cookie-parser';
+import MethodOverrides 		from 'method-override';
+import Path 				from 'path';
 
-import MethodOverrides from 'method-override';
-import Path from 'path';
+import Flash 				from 'connect-flash';
+import FlashMessenger 		from 'flash-messenger';
 
-import Flash from 'connect-flash';
-import FlashMessenger from 'flash-messenger';
-
-import Handlebars from 'handlebars';
+import Handlebars 						from 'handlebars';
 import { allowInsecurePrototypeAccess } from '@handlebars/allow-prototype-access';
 
-import ORM from 'sequelize'
-import MySQLStore from 'express-mysql-session';
+import ORM from 'sequelize';
 import passport from 'passport';
 
 import LocalStrategy from 'passport-local';
