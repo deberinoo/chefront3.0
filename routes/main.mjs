@@ -17,8 +17,24 @@ router.get("/dynamic/:path", async function (req, res) {
 	return res.sendFile(`./dynamic/${req.params.path}`)
 });
 
-router.get("/restaurant/:business_name/:location",     create_reservation_page);
+// Main routes
+router.get("/home",     							   view_home_page);
+router.get("/about",     							   view_about_page);
+router.get("/categories",     						   view_categories_page);
+router.get("/error",     							   view_error_page);
+router.get("/success",                                 view_success_page);
+
+// Contact routes
+router.get("/contact",     						       view_contact_page);
+router.post("/home",     							   create_feedback_process);
+
+// Restaurant routes
+router.get("/restaurants",                             view_restaurants_page); 
+router.get("/restaurant/:business_name/:location",     view_individual_restaurant_page);
 router.post("/restaurant/:business_name/:location",    create_reservation_process);
+
+// Payment routes
+router.get("/payment",                                 view_payment_page);
 
 // ---------------- 
 //	Additional routers
@@ -61,7 +77,7 @@ function getRole(role) {
 
 // ---------------- 
 //	Common URL paths
-router.get("/home",      async function(req, res) {
+async function view_home_page(req, res) {
 	if (req.user == undefined) {
 		return res.render('index')
 	} else {
@@ -76,9 +92,9 @@ router.get("/home",      async function(req, res) {
 		business: business,
 		customer: customer
 	});
-});
+};
 
-router.get("/error", async function(req, res) {
+async function view_error_page(req, res) {
 	if (req.user == undefined) {
 		return res.render('404')
 	} else {
@@ -93,9 +109,9 @@ router.get("/error", async function(req, res) {
 		business: business,
 		customer: customer
 	});
-});
+};
 
-router.get("/about", async function(req, res) {
+async function view_about_page(req, res) {
 	if (req.user == undefined) {
 		return res.render('about')
 	} else {
@@ -110,9 +126,9 @@ router.get("/about", async function(req, res) {
 		business: business,
 		customer: customer
 	});
-});
+};
 
-router.get("/categories", async function(req, res) {
+async function view_categories_page(req, res) {
 	if (req.user == undefined) {
 		return res.render('categories')
 	} else {
@@ -127,9 +143,9 @@ router.get("/categories", async function(req, res) {
 		business: business,
 		customer: customer
 	});
-});
+};
 
-router.get("/contact", async function(req, res) {
+async function view_contact_page(req, res) {
 	if (req.user == undefined) {
 		return res.render('contact')
 	} else {
@@ -144,9 +160,9 @@ router.get("/contact", async function(req, res) {
 		business: business,
 		customer: customer
 	});
-});
+};
 
-router.post("/home", async function(req,res) {
+async function create_feedback_process(req,res) {
 	let { Name, Email, Phone, Message, Read } = req.body;
 
 	//CREATE
@@ -158,9 +174,9 @@ router.post("/home", async function(req,res) {
 		"read" : Read
 	});
 	return res.redirect("/home");
-});
+};
 
-router.get("/payment", async function(req, res) {
+async function view_payment_page(req, res) {
 	if (req.user == undefined) {
 		return res.render('payment')
 	} else {
@@ -175,9 +191,9 @@ router.get("/payment", async function(req, res) {
 		business: business,
 		customer: customer
 	});
-});
+};
 
-router.get("/restaurants", async function(req, res) {
+async function view_restaurants_page(req, res) {
 
 	const restaurants = await Outlets.findAll({
         where: {
@@ -203,9 +219,9 @@ router.get("/restaurants", async function(req, res) {
 			restaurants:restaurants
 		});
 	}
-});
+};
 
-async function create_reservation_page(req, res) {
+async function view_individual_restaurant_page(req, res) {
     const restaurants = await Outlets.findOne({
 		where: {
             "business_name": req.params.business_name,
@@ -269,24 +285,7 @@ async function create_reservation_process(req, res) {
 	});
 };
 
-router.get("/restaurant", async function(req, res) {
-	if (req.user == undefined) {
-		return res.render('restaurant')
-	} else {
-		var role = getRole(req.user.role);
-		var admin = role[0];
-		var business = role[1];
-		var customer = role[2];
-	}
-
-	return res.render('restaurant', {
-		admin: admin,
-		business: business,
-		customer: customer
-	});
-});
-
-router.get("/success", async function(req, res) {
+async function view_success_page(req, res) {
 	if (req.user == undefined) {
 		return res.render('403')
 	} else {
@@ -300,7 +299,7 @@ router.get("/success", async function(req, res) {
 			customer: customer
 		});
 	}
-});
+};
 
 // ---------------- 
 // Error page routing

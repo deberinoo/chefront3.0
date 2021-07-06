@@ -7,7 +7,7 @@ import { Outlets }      from '../models/Outlets.mjs';
 import { User }         from '../models/Users.mjs'
 import { Reservations } 	from '../models/Reservations.mjs';
 
-import Passport         from 'passport';
+import Passport        from 'passport';
 import ORM             from 'sequelize';
 const { Sequelize, DataTypes, Model, Op } = ORM;
 

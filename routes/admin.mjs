@@ -21,7 +21,6 @@ router.get("/deleteBusinessUser/:business_name",    delete_business_user);
 
 router.get("/allOutlets",                           view_outlets_page);
 
-
 router.get("/feedback",                             view_feedback_page);
 router.get("/deleteFeedback/:uuid",                 delete_feedback);
 

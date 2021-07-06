@@ -21,7 +21,6 @@ export default router;
  // Min 8 character, 1 letter, 1 number 
  const regexPwd = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/
 
-
 router.get("/login",     			login_page);
 
 router.get("/loginBusiness", 		business_login_page);
