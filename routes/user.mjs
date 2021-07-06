@@ -1,10 +1,10 @@
-import { Router }       from 'express';
-import { flashMessage } from '../utils/flashmsg.mjs';
-import { BusinessUser } from '../models/Business.mjs';
-import { CustomerUser } from '../models/Customer.mjs';
-import { DiscountSlot } from '../models/DiscountSlot.mjs';
-import { Outlets }      from '../models/Outlets.mjs';
-import { User }         from '../models/Users.mjs'
+import { Router }           from 'express';
+import { flashMessage }     from '../utils/flashmsg.mjs';
+import { BusinessUser }     from '../models/Business.mjs';
+import { CustomerUser }     from '../models/Customer.mjs';
+import { DiscountSlot }     from '../models/DiscountSlot.mjs';
+import { Outlets }          from '../models/Outlets.mjs';
+import { User }             from '../models/Users.mjs'
 import { Reservations } 	from '../models/Reservations.mjs';
 
 import Passport        from 'passport';

@@ -1,13 +1,13 @@
-import { Router } from 'express';
+import { Router }       from 'express';
 import { flashMessage } from '../utils/flashmsg.mjs';
 import { BusinessUser } from '../models/Business.mjs';
 import { CustomerUser } from '../models/Customer.mjs';
 import { Outlets }      from '../models/Outlets.mjs';
 
-import { User } from '../models/Users.mjs';
-import { Feedback } from '../models/Feedback.mjs'
+import { User }         from '../models/Users.mjs';
+import { Feedback }     from '../models/Feedback.mjs'
 
-import ORM             from 'sequelize';
+import ORM              from 'sequelize';
 const { Sequelize, DataTypes, Model, Op } = ORM;
 
 const router = Router();
@@ -20,6 +20,7 @@ router.get("/businessUsers",                        view_business_users_page);
 router.get("/deleteBusinessUser/:business_name",    delete_business_user);
 
 router.get("/allOutlets",                           view_outlets_page);
+router.get("/deleteOutlet/:postal_code",            delete_outlet);
 
 router.get("/feedback",                             view_feedback_page);
 router.get("/deleteFeedback/:uuid",                 delete_feedback);
@@ -106,6 +107,26 @@ async function view_outlets_page(req, res) {
         }
     });
 	return res.render('admin/retrieve_allOutlets', {outlet: outlet});
+};
+
+async function delete_outlet(req, res) {
+    Outlets.findOne({
+        where: {
+            "postal_code" : req.params.postal_code
+        },
+    }).then((outlet) => {
+        if (outlet != null) {
+            Outlets.destroy({
+                where: {
+                    "postal_code" : req.params.postal_code
+                }
+            }).then(() => {
+                res.redirect('/admin/allOutlets');
+            }).catch( err => console.log(err));
+        } else {
+	    res.redirect('/404');
+    }
+    });
 };
 
 async function view_feedback_page(req, res) {

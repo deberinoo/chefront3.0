@@ -4,9 +4,9 @@ import { Feedback } 		from '../models/Feedback.mjs';
 import { Outlets } 			from '../models/Outlets.mjs';
 import { Reservations } 	from '../models/Reservations.mjs';
 
-import ORM             from 'sequelize';
+import axios 				from 'axios';
+import ORM             		from 'sequelize';
 const { Sequelize, DataTypes, Model, Op } = ORM;
-import axios from 'axios';
 
 const router = Router();
 export default router;
