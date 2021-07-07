@@ -81,8 +81,15 @@ async function business_login_process(req, res, next) {
 
 	let errors = [];
 	try {
-		if (! regexEmail.test(Email)) {
-			errors = errors.concat({ text: "Invalid email address!" });
+		const user = await BusinessUser.findOne({
+			where: {
+				"email": Email,
+				"password": Hash.sha256().update(Password).digest('hex')
+			}
+		});
+		if (user == null) {
+			errors = errors.concat({ text: "Invalid user credentials!" });
+			return res.render('auth/loginBusiness', { errors: errors });
 		}
 		if (errors.length > 0) {
 			throw new Error("There are validation errors");
@@ -91,7 +98,7 @@ async function business_login_process(req, res, next) {
 	catch (error) {
 		console.error("There is errors with the login form body.");
 		console.error(error);
-		return res.render('auth/login', { errors: errors });
+		return res.render('auth/loginBusiness', { errors: errors });
 	}
 
 	const user = await BusinessUser.findOne({
@@ -117,24 +124,28 @@ async function customer_login_process(req, res, next) {
 	
 	let errors = [];
 	try {
-		if (! regexEmail.test(Email)) {
-			errors = errors.concat({ text: "Invalid email address!" });
-		}
-		if (errors.length > 0) {
-			throw new Error("There are validation errors");
+		const user = await CustomerUser.findOne({
+			where: {
+				"email": Email,
+				"password": Hash.sha256().update(Password).digest('hex')
+			}
+		});
+		if (user == null) {
+			errors = errors.concat({ text: "Invalid user credentials!" });
+			return res.render('auth/loginCustomer', { errors: errors });
 		}
 	}
 	catch (error) {
 		console.error("There is errors with the login form body.");
 		console.error(error);
-		return res.render('auth/login', { errors: errors });
+		return res.render('auth/loginCustomer', { errors: errors });
 	}
 
 	const user = await CustomerUser.findOne({
-        where: {
-            "email": Email,
+		where: {
+			"email": Email,
 			"password": Hash.sha256().update(Password).digest('hex')
-        }
+		}
 	});
 
 	return Passport.authenticate('local', {
