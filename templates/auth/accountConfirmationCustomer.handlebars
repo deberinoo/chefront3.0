@@ -1,0 +1,31 @@
+<title>Chefront - Customer Account Confirmation</title>
+
+<link rel="stylesheet" href="/public/css/login.css">
+
+<section>
+	<div class="container-fluid">
+		<div class="row no-gutter">
+			<div class="col-md-6 d-none d-md-flex bg-image"></div>
+			<div class="col-md-6">
+				<div class="login d-flex align-items-center py-5">
+					<div class="container">
+						<div class="row">
+							<div class="col-lg-10 col-xl-7 mx-auto">
+								<h3 class="display-4 mb-4">Customer Account confirmation</h3>
+                                <form action="/auth/accountConfirmationCustomer/{{code}}/{{first_name}}/{{last_name}}/{{contact}}/{{email}}/{{password}}" method="post">
+									<div class="form-group mb-3">
+										<input id="confirmationCode" type="text" placeholder="Confirmation Code" required=""
+											autofocus="" class="form-control rounded-pill shadow-sm px-4 text-dark"
+											name="confirmationCode">
+									</div>
+									<button type="submit"
+										class="btn custom-btn btn-danger btn-block mb-2 rounded-pill shadow-sm">Confirm Account</button>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>

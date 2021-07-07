@@ -40,7 +40,7 @@ const oAuth2Client = new google.auth.OAuth2(
 );
 oAuth2Client.setCredentials({ refresh_token: REFRESH_TOKEN });
 
-export async function sendMail(email) {
+export async function sendMail(email,code) {
 	try {
 		const accessToken = await oAuth2Client.getAccessToken();
 
@@ -61,7 +61,7 @@ export async function sendMail(email) {
 			to: email,
 			subject: 'Email confirmation',
 			text: 'Hello from the CEO',
-			html: "<p>Email confirmed, thank you for using Chefront </p>",
+			html: `<p> This is the confirmation code for your account ,${code}.</p>`,
 		};
 
 		const result = await transport.sendMail(mailOptions);
