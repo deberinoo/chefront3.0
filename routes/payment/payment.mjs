@@ -5,11 +5,9 @@ import Hash    from 'hash.js';
 import Moment  from 'moment';
 
 import { nets_api_key, nets_api_skey, nets_api_gateway } from './payment-config.mjs';
-import axios from 'axios';
 
 const router = Router();
 export default router;
-router.get("/generate",  page_generate);
 router.post("/generate", nets_generate);
 router.post("/query",    nets_query);
 router.post("/void",     nets_void);
@@ -21,9 +19,6 @@ let   nets_stan     = 0;	//	Counter id for nets, keep this in database
  * @param {import('express').Request} req 
  * @param {import('express').Response} res 
  */
-async function page_generate(req, res) {
-	return res.render('payment');
-}
 
 /**
  * Signs the payload with the secret key

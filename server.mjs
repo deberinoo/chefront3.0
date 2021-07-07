@@ -9,6 +9,8 @@ import Path 				from 'path';
 
 import Flash 				from 'connect-flash';
 import FlashMessenger 		from 'flash-messenger';
+import nodemailer from 'nodemailer';
+import { google } from 'googleapis';
 
 import Handlebars 						from 'handlebars';
 import { allowInsecurePrototypeAccess } from '@handlebars/allow-prototype-access';
@@ -26,6 +28,53 @@ import { Feedback } from './models/Feedback.mjs'
 import { Reservations } from './models/Reservations.mjs';
 import { User } from './models/Users.mjs';
 
+const CLIENT_ID = '393014126046-dt545klaqnl5gielf5p7ojur8eteb12v.apps.googleusercontent.com'
+const CLEINT_SECRET = '0CJfoRhPlPFsdoVcpl-nUHHL'
+const REDIRECT_URI = 'https://developers.google.com/oauthplayground'
+const REFRESH_TOKEN = '1//04yKJ7OHbm8HnCgYIARAAGAQSNwF-L9IrhF2am19XPUV15m77Gg70X6jvBxNWyKKy1kBKP_s8AS7XxZP8MZzeev5_p0A1NClOjlc'
+
+const oAuth2Client = new google.auth.OAuth2(
+  CLIENT_ID,
+  CLEINT_SECRET,
+  REDIRECT_URI
+  );
+  oAuth2Client.setCredentials({ refresh_token: REFRESH_TOKEN });
+  
+  async function sendMail(email) {
+  try {
+    const accessToken = await oAuth2Client.getAccessToken();
+  
+    const transport = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      type: 'OAuth2',
+      user: 'chefrontceo@gmail.com',
+      clientId: CLIENT_ID,
+      clientSecret: CLEINT_SECRET,
+      refreshToken: REFRESH_TOKEN,
+      accessToken: accessToken,
+    },
+    });
+  
+    const mailOptions = {
+    from: 'SENDER NAME chefrontceo@gmail.com',
+    to: "" ,
+    subject: 'Hello from gmail using API',
+    text: 'Hello from deborah',
+    html: '<h1>Hello from saran</h1>',
+    };
+  
+    const result = await transport.sendMail(mailOptions);
+    return result;
+  } catch (error) {
+    return error;
+  }
+  }
+
+const email = 'geoffreypagdilao@gmail.com'
+sendMail(email)
+  .then((result) => console.log('Email sent...', result))
+  .catch((error) => console.log(error.message));
 
 const Server = Express();
 const Port = process.env.PORT || 3000;
