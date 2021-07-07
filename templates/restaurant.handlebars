@@ -27,7 +27,7 @@
 						</div>
 					</div>
 					<div class="col-md-5 col-md-pull-7">
-						<div class="booking-form">
+						<div class="booking-form" style="padding-top:15px;">
 							<form action="/restaurant/{{restaurants.business_name}}/{{restaurants.location}}" method="post">
                                 <span class="form-label" style="font-size: larger">Reservation Details</span>
                                 <br><br>
@@ -92,18 +92,36 @@
 											<span class="select-arrow"></span>
 										</div>
 									</div>
-                                    <div class="col-sm-6">
-										<div class="form-group">
-											<span class="form-label">Time</span>
-											<input class="form-control" type="time" name="Time" required>
-										</div>
-									</div>
-                                    <div class="col-sm-6">
-										<div class="form-group">
+                                    <div class="col-sm-12">
+                                        <div class="form-group">
 											<span class="form-label">Discount</span>
-											<input class="form-control" type="text" name="Discount" required>
-										</div>
-									</div>
+                                            <div class="form-control" style="height: 90px">
+                                                {{#each discountslot}}
+                                                    <label class="reservation" style="margin-right: 5px">
+                                                        <input type="radio" name="Slot" value="{{time}},{{discount}}">
+                                                        <div class="background"></div>
+                                                        <p class="time">{{time}}</p>
+                                                        <p class="discount">{{discount}}%</p>
+                                                    </label>
+                                                {{/each}}
+                                                <!--
+                                                <select class="form-control text-dark form-select" id="location" name="Time">
+                                                    <option selected>Select time</option>
+                                                    {{#each discountslot}}
+                                                        <option value="{{time}}">{{time}}</option>
+                                                    {{/each}}
+                                                </select>
+                                                <select class="form-control text-dark form-select" id="location" name="Discount">
+                                                    <option selected>Select discount</option>
+                                                    {{#each discountslot}}
+                                                        <option value="{{discount}}">{{discount}}</option>
+                                                    {{/each}}
+                                                </select>
+                                                -->
+                                            </div>
+                                            </select>
+                                        </div>
+                                    </div>
 								</div>
 								<div class="form-btn">
 									<button class="submit-btn">Book now</button>
@@ -116,4 +134,3 @@
 		</div>
 	</div>
 </section>
-

@@ -62,7 +62,6 @@ function getRole(role) {
 	}
 	return [admin, business, customer];
 }
-
 // ----------------
 
 async function user_business_page(req, res) {
@@ -154,7 +153,7 @@ async function delete_business_user(req, res) {
                     "email" : req.params.user_email
                 }
             }).then(() => {
-                flashMessage(res,'success', 'Business account deleted', 'far fa-trash-alt', true );
+                flashMessage(res,'success', 'Business account deleted', 'fa fa-trash', true );
                 req.logout();
 	            return res.redirect("/home"); 
             }).catch( err => console.log(err));
@@ -165,11 +164,18 @@ async function delete_business_user(req, res) {
 };
 
 async function create_discount_slot_page(req, res) {
+    const outlet = await Outlets.findAll({
+        where: {
+            "business_name": {
+                [Op.eq]: req.params.business_name
+            }
+        }
+    });
     const user = BusinessUser.findOne({
         where: {
             "business_name": req.params.business_name
         }
-    })
+    });
     var role = getRole(req.user.role);
     var admin = role[0];
     var business = role[1];
@@ -177,7 +183,8 @@ async function create_discount_slot_page(req, res) {
     return res.render('user/business/create_discountslot', {
         admin: admin,
         business: business,
-        customer: customer
+        customer: customer,
+        outlet: outlet
     });
 };
 
@@ -535,7 +542,7 @@ async function delete_customer_user(req, res) {
                     "email" : req.params.user_email
                 }
             }).then(() => {
-                flashMessage(res,'success', 'Customer account deleted', 'far fa-trash-alt', true );
+                flashMessage(res,'success', 'Customer account deleted', 'fa fa-trash', true );
                 req.logout();
 	            return res.redirect("/home"); 
             }).catch( err => console.log(err));

@@ -46,21 +46,31 @@
                             <div class="form-group row">
                                 <label for="location" class="col-sm-2 col-form-label">Location</label>
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control text-dark" id="location"
-                                        placeholder="Nearest MRT Station" name="Location">
+                                    <select class="form-control text-dark form-select" id="location" name="Location">
+                                        <option selected>Select closest MRT station</option>
+                                        {{#each outlet}}
+                                            <option value="{{location}}">{{location}}</option>
+                                        {{/each}}
+                                    </select>
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label for="price" class="col-sm-2 col-form-label">Time</label>
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control text-dark" id="time" placeholder="" name="Time">
+                                    <input type="time" class="form-control text-dark" id="time" placeholder="" name="Time">
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label for="contact" class="col-sm-2 col-form-label">Discount</label>
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control text-dark" id="discount"
-                                        placeholder="" name="Discount">
+                                    <select class="form-control text-dark form-select" id="discount" name="Discount">
+                                        <option selected>Select discount</option>
+                                        <option value="10">10%</option>
+                                        <option value="20">20%</option>
+                                        <option value="30">30%</option>
+                                        <option value="40">40%</option>
+                                        <option value="50">50%</option>
+                                    </select>
                                 </div>
                             </div>
                         {{/if}}

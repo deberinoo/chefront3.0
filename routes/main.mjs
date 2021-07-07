@@ -3,8 +3,9 @@ import { flashMessage } 	from '../utils/flashmsg.mjs';
 import { Feedback } 		from '../models/Feedback.mjs';
 import { Outlets } 			from '../models/Outlets.mjs';
 import { Reservations } 	from '../models/Reservations.mjs';
+import { DiscountSlot }     from '../models/DiscountSlot.mjs';
 
-import axios 				from 'axios';
+
 import ORM             		from 'sequelize';
 const { Sequelize, DataTypes, Model, Op } = ORM;
 
@@ -174,6 +175,8 @@ async function create_feedback_process(req,res) {
 		"message" : Message,
 		"read" : Read
 	});
+
+	flashMessage(res, 'success', 'Feedback successfully sent!', 'fa fa-comments', false);
 	return res.redirect("/home");
 };
 
@@ -227,11 +230,17 @@ async function view_individual_restaurant_page(req, res) {
 		where: {
             "business_name": req.params.business_name,
 			"location": req.params.location
-
-        }})
+        }
+	});
+	const discountslot = await DiscountSlot.findAll({
+		where: {
+            "business_name": req.params.business_name,
+			"location": req.params.location
+        }
+	});
 
 	if (req.user == undefined) {
-		return res.render('restaurant', {restaurants:restaurants})
+		return res.render('restaurant', {restaurants:restaurants, discountslot:discountslot})
 	} else {
 		var role = getRole(req.user.role);
 		var admin = role[0];
@@ -241,7 +250,8 @@ async function view_individual_restaurant_page(req, res) {
 			admin:admin,
 			business:business,
 			customer:customer,
-			restaurants:restaurants
+			restaurants:restaurants,
+			discountslot:discountslot
 		});
 	}
 };
@@ -263,7 +273,9 @@ async function create_reservation_process(req, res) {
 
     let errors = [];
     
-    let { BusinessName, Location, ResDate, Pax, Time, Discount, Name, Email, Contact } = req.body;
+    let { BusinessName, Location, ResDate, Pax, Slot, Name, Email, Contact } = req.body;
+
+	const timediscount = Slot.split(",")
 
     const reservation = await Reservations.create({
 		"reservation_id":  String(getId()),
@@ -271,8 +283,8 @@ async function create_reservation_process(req, res) {
         "location":  Location,
 		"res_date": ResDate,
 		"pax": Pax,
-		"time": Time,
-		"discount": Discount,
+		"time": timediscount[0],
+		"discount": timediscount[1],
 		"user_name": Name,
 		"user_email": Email,
 		"user_contact": Contact,
