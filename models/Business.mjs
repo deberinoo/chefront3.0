@@ -1,4 +1,6 @@
 import ORM from 'sequelize'
+import { Outlets }          from '../models/Outlets.mjs';
+
 const {Sequelize, DataTypes,Model} = ORM;
 
 export class BusinessRole {
@@ -34,3 +36,8 @@ export class BusinessUser extends Model {
     get uuid() { return this.getDataValue("uuid"); }
     get email() { return this.getDataValue("email"); }
 }
+
+//BusinessUser.hasMany(Outlets, {
+//    foreignKey: 'business_name',
+//    onDelete 
+//})

@@ -226,7 +226,7 @@ async function view_restaurants_page(req, res) {
 };
 
 async function view_individual_restaurant_page(req, res) {
-    const restaurants = await Outlets.findOne({
+    const restaurant = await Outlets.findOne({
 		where: {
             "business_name": req.params.business_name,
 			"location": req.params.location
@@ -240,7 +240,7 @@ async function view_individual_restaurant_page(req, res) {
 	});
 
 	if (req.user == undefined) {
-		return res.render('restaurant', {restaurants:restaurants, discountslot:discountslot})
+		return res.render('restaurant', {restaurant:restaurant, discountslot:discountslot})
 	} else {
 		var role = getRole(req.user.role);
 		var admin = role[0];
@@ -250,7 +250,7 @@ async function view_individual_restaurant_page(req, res) {
 			admin:admin,
 			business:business,
 			customer:customer,
-			restaurants:restaurants,
+			restaurant:restaurant,
 			discountslot:discountslot
 		});
 	}

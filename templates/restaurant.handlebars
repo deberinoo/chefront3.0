@@ -1,4 +1,4 @@
-<title>Chefront</title>
+<title>Chefront - {{restaurant.business_name}}</title>
 
 <link rel="stylesheet" href="/public/css/restaurant.css">
 
@@ -10,29 +10,29 @@
 					<div class="col-md-6">
 						<div class="booking-cta">
                             <div class="card pt-2 p-3 mb-2">
-                                <img src="/{{restaurants.thumbnail}}"/>
+                                <img src="/{{restaurant.thumbnail}}"/>
                             </div>
 							<div class="card pt-2 p-3 mb-2">
                                 <div>
-                                    <h3>{{restaurants.business_name}}</h3>
-                                    <h5>{{restaurants.location}} • ${{restaurants.price}}</h5>
+                                    <h3>{{restaurant.business_name}}</h3>
+                                    <h5>{{restaurant.location}} • ${{restaurant.price}}</h5>
                                 </div>
                             </div>
                             <div class="card pt-2 p-3 mb-2">
                                 <div>
                                     <h5>Description</h5>
-                                    <p>{{restaurants.description}}</p>
+                                    <p>{{restaurant.description}}</p>
                                 </div>
                             </div>
 						</div>
 					</div>
 					<div class="col-md-5 col-md-pull-7">
 						<div class="booking-form" style="padding-top:15px;">
-							<form action="/restaurant/{{restaurants.business_name}}/{{restaurants.location}}" method="post">
+							<form action="/restaurant/{{restaurant.business_name}}/{{restaurant.location}}" method="post">
                                 <span class="form-label" style="font-size: larger">Reservation Details</span>
                                 <br><br>
-                                <input type="hidden" value="{{restaurants.business_name}}" name="BusinessName">
-                                <input type="hidden" value="{{restaurants.location}}" name="Location">
+                                <input type="hidden" value="{{restaurant.business_name}}" name="BusinessName">
+                                <input type="hidden" value="{{restaurant.location}}" name="Location">
                                 {{#if user}}
                                     <div class="form-group">
                                         <span class="form-label">Your Name</span>
@@ -104,20 +104,6 @@
                                                         <p class="discount">{{discount}}%</p>
                                                     </label>
                                                 {{/each}}
-                                                <!--
-                                                <select class="form-control text-dark form-select" id="location" name="Time">
-                                                    <option selected>Select time</option>
-                                                    {{#each discountslot}}
-                                                        <option value="{{time}}">{{time}}</option>
-                                                    {{/each}}
-                                                </select>
-                                                <select class="form-control text-dark form-select" id="location" name="Discount">
-                                                    <option selected>Select discount</option>
-                                                    {{#each discountslot}}
-                                                        <option value="{{discount}}">{{discount}}</option>
-                                                    {{/each}}
-                                                </select>
-                                                -->
                                             </div>
                                             </select>
                                         </div>
