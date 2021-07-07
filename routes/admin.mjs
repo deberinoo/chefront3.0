@@ -13,6 +13,11 @@ const { Sequelize, DataTypes, Model, Op } = ORM;
 const router = Router();
 export default router;
 
+router.use(ensure_auth)
+router.use(ensure_admin)
+
+//Admin login
+
 // User management routes
 router.get("/businessUsers",                        view_business_users_page);
 router.get("/deleteBusinessUser/:business_name",    delete_business_user);
@@ -27,6 +32,27 @@ router.get("/deleteOutlet/:postal_code",            delete_outlet);
 // Feedback management routes
 router.get("/feedback",                             view_feedback_page);
 router.get("/deleteFeedback/:uuid",                 delete_feedback);
+
+async function ensure_auth(req, res, next) {
+    if (!req.isAuthenticated()) {
+        return res.redirect("/adminlogin");
+    }
+    else {
+        return next();
+    }
+}
+
+async function ensure_admin(req, res, next) {
+    /** @type {ModelUser} */
+    const user = req.user;
+    if (user.role == UserRole.Admin) {
+        return next();
+    }
+    else {
+        return res.sendStatus(403);
+    }
+}
+
 
 
 async function view_customer_users_page(req, res) {
