@@ -644,3 +644,37 @@ function makeid(length) {
 }
 
 
+//Admin login
+router.get("/adminlogin",     admin_login_page);
+router.post("/adminlogin",    	admin_login_process);
+
+async function admin_login_page(req, res) {
+	return res.render('admin/adminLogin');
+}
+
+async function admin_login_process(req, res, next) {
+    let { Email, Password } = req.body;
+	
+	let errors = [];
+	try {
+		const user = 
+			{
+				"email": "admin@chefront.com",
+				"password": "admin123"
+			};
+		if (user == null) {
+			errors = errors.concat({ text: "Invalid user credentials!" });
+			return res.render('admin/adminLogin');
+		}
+	}
+	catch (error) {
+		console.error("There is errors with the login form body.");
+		console.error(error);
+		return res.render('admin/adminLogin', { errors: errors });
+	}
+	return Passport.authenticate('local', {
+		successRedirect: "admin/feedback",
+		failureRedirect: "auth/adminlogin",
+		failureFlash:    true
+	})(req, res, next);
+}
