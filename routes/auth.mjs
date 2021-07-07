@@ -4,6 +4,7 @@ import { BusinessUser } from '../models/Business.mjs';
 import { CustomerUser } from '../models/Customer.mjs';
 import { User } 		from '../models/Users.mjs'
 import { sendMail,sendMailPasswordChange, sendMailPasswordChangeBusiness } from '../server.mjs';
+
 import Passport         from 'passport';
 import Hash             from 'hash.js';
 
@@ -21,31 +22,35 @@ export default router;
  // Min 8 character, 1 letter, 1 number 
  const regexPwd = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/
 
-router.get("/login",     			login_page);
+// General routes
+router.get("/login",     								login_page);
+router.get("/register",    								register_page);
+router.get("/logout",     								logout_process);
 
-router.get("/loginBusiness", 		business_login_page);
-router.post("/loginBusiness", 		business_login_process);
+// Business routes
+router.get("/loginBusiness", 							business_login_page);
+router.post("/loginBusiness", 							business_login_process);
+router.get("/registerBusiness",     					register_business_page);
+router.post("/registerBusiness",    					register_business_process);
+
+router.get("/forgetPasswordBusiness", 					forget_password_business_page)
+router.post("/forgetPasswordBusiness", 					forget_password_business_process)
+router.get("/resetPasswordBusiness/:email", 			reset_password_business_page)
+router.put("/resetPasswordBusinessProcess/:email", 		reset_password_business_process)
+
+// Customer routes
 router.get("/loginCustomer",    	customer_login_page);
 router.post("/loginCustomer",    	customer_login_process);
+router.get("/registerCustomer",     register_customer_page);
+router.post("/registerCustomer",    register_customer_process);
+
 router.get("/forgetPasswordCustomer", forget_password_customer_page)
 router.post("/forgetPasswordCustomer", forget_password_customer_process)
 router.get("/resetPasswordCustomer/:email", reset_password_customer_page)
 router.put("/resetPasswordCustomerProcess/:email", reset_password_customer_process)
 
-router.get("/forgetPasswordBusiness", forget_password_business_page)
-router.post("/forgetPasswordBusiness", forget_password_business_process)
-router.get("/resetPasswordBusiness/:email", reset_password_business_page)
-router.put("/resetPasswordBusinessProcess/:email", reset_password_business_process)
-
-router.get("/register",    			register_page);
-
-router.get("/registerBusiness",     register_business_page);
-router.post("/registerBusiness",    register_business_process);
-router.get("/registerCustomer",     register_customer_page);
-router.post("/registerCustomer",    register_customer_process);
-
-router.get("/logout",     			logout_process);
-
+// ----------------
+// Check user role
 function getRole(role) {
 	if (role == 'admin') {
 		var admin = true;
@@ -62,9 +67,9 @@ function getRole(role) {
 		var business = false;
 		var customer = true;
 	}
-
 	return [admin, business, customer];
 }
+// ----------------
 
 // Login
 
@@ -191,7 +196,7 @@ async function forget_password_customer_process(req, res, next) {
 			.then((result) => console.log('Email sent...', result))
 			.catch((error) => console.log(error.message));
 
-		flashMessage(res, 'success', 'Email successfully sent. Please check it to change password.', 'fas fa-sign-in-alt', false);
+		flashMessage(res, 'success', 'Email successfully sent. Please check your email to change your password.', 'fa fa-envelope', false);
 		res.redirect("/auth/login");
 	}
 	catch (error) {
@@ -200,8 +205,6 @@ async function forget_password_customer_process(req, res, next) {
 		console.error(error);
 		return res.status(500).end();
 	}
-
-	
 }
 
 async function forget_password_business_page(req, res) {
@@ -239,7 +242,7 @@ async function forget_password_business_process(req, res, next) {
 			.then((result) => console.log('Email sent...', result))
 			.catch((error) => console.log(error.message));
 
-		flashMessage(res, 'success', 'Email successfully sent. Please check it to change password.', 'fas fa-sign-in-alt', false);
+		flashMessage(res, 'success', 'Email successfully sent. Please check your email to change your password.', 'fa fa-envelope', false);
 		res.redirect("/auth/login");
 	}
 	catch (error) {
@@ -248,8 +251,6 @@ async function forget_password_business_process(req, res, next) {
 		console.error(error);
 		return res.status(500).end();
 	}
-
-	
 }
 
 
@@ -300,10 +301,7 @@ async function reset_password_customer_process(req, res, next) {
 		console.error(error);
 		return res.status(500).end();
 	}
-
-	
 }
-
 
 async function reset_password_business_page(req, res) {
 	console.log("reset page shown")
@@ -350,8 +348,6 @@ async function reset_password_business_process(req, res, next) {
 		console.error(error);
 		return res.status(500).end();
 	}
-
-	
 }
 
 // Register

@@ -13,15 +13,18 @@ const { Sequelize, DataTypes, Model, Op } = ORM;
 const router = Router();
 export default router;
 
-router.get("/customerUsers",                        view_customer_users_page);
-router.get("/deleteCustomerUser/:email",            delete_customer_user);
-
+// User management routes
 router.get("/businessUsers",                        view_business_users_page);
 router.get("/deleteBusinessUser/:business_name",    delete_business_user);
 
+router.get("/customerUsers",                        view_customer_users_page);
+router.get("/deleteCustomerUser/:email",            delete_customer_user);
+
+// Outlet management routes
 router.get("/allOutlets",                           view_outlets_page);
 router.get("/deleteOutlet/:postal_code",            delete_outlet);
 
+// Feedback management routes
 router.get("/feedback",                             view_feedback_page);
 router.get("/deleteFeedback/:uuid",                 delete_feedback);
 

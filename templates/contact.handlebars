@@ -1,6 +1,7 @@
 <title>Chefront - Contact Us</title>
 
 <link rel="stylesheet" href="/public/css/contact.css">
+<script src="form-validation.js"></script>
 
 <section>
     <div class="container-contact100">
@@ -11,23 +12,28 @@
                         Send us a message!
                     </span>
 
-                    <div class="wrap-input100 validate-input" data-validate="Please enter your name">
-                        <input class="input100" type="text" name="Name" placeholder="Full Name">
+                    <div class="wrap-input100 validate-input">
+                        <input class="input100" type="text" name="Name" placeholder="Full Name" required=""
+                        pattern="[A-Za-z]+" title="Name should contain characcters only">
                         <span class="focus-input100"></span>
                     </div>
 
-                    <div class="wrap-input100 validate-input" data-validate="Please enter your email: e@a.x">
-                        <input class="input100" type="text" name="Email" placeholder="E-mail">
+                    <div class="wrap-input100 validate-input">
+                        <input class="input100" type="text" name="Email" placeholder="E-mail" required=""
+                        pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+						title="Enter a valid email address (eg. john@example.com)">
                         <span class="focus-input100"></span>
                     </div>
 
-                    <div class="wrap-input100 validate-input" data-validate="Please enter your phone">
-                        <input class="input100" type="text" name="Phone" placeholder="Phone">
+                    <div class="wrap-input100 validate-input">
+                        <input class="input100" type="text" name="Phone" placeholder="Phone" required=""
+                        pattern="[0-9]{8}"
+                        title="Phone number should contain only eight numbers">
                         <span class="focus-input100"></span>
                     </div>
 
-                    <div class="wrap-input100 validate-input" data-validate="Please enter your message">
-                        <textarea class="input100" name="Message" placeholder="Your Message"></textarea>
+                    <div class="wrap-input100 validate-input">
+                        <textarea class="input100" name="Message" required="" placeholder="Your Message"></textarea>
                         <span class="focus-input100"></span>
                     </div>
 

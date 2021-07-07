@@ -174,6 +174,8 @@ async function create_feedback_process(req,res) {
 		"message" : Message,
 		"read" : Read
 	});
+
+	flashMessage(res, 'success', 'Feedback successfully sent!', 'fa fa-comments', false);
 	return res.redirect("/home");
 };
 
