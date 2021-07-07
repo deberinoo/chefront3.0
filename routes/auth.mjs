@@ -44,6 +44,9 @@ router.post("/registerBusiness",    register_business_process);
 router.get("/registerCustomer",     register_customer_page);
 router.post("/registerCustomer",    register_customer_process);
 
+router.get("/accountConfirmationCustomer", account_confirmation_customer_page)
+router.post("/accountConfirmationCustomer/:code/:first_name/:last_name/:contact/:email/:password", account_confirmation_customer_process)
+
 router.get("/logout",     			logout_process);
 
 function getRole(role) {
@@ -403,26 +406,26 @@ async function register_business_process(req, res) {
 
 	//	Create new user, now that all the test above passed
 	try {
-		User.create({
-			"email" : Email,
-			"role" : "business"
-		})
-        const user = await BusinessUser.create({
-            "business_name":  BusinessName,
-            "address":  Address,
-            "contact":  Contact,
-            "email":    Email,
-            "password": Hash.sha256().update(InputPassword).digest('hex'),
-			"role": "business"
-        });
+		// User.create({
+		// 	"email" : Email,
+		// 	"role" : "business"
+		// })
+        // const user = await BusinessUser.create({
+        //     "business_name":  BusinessName,
+        //     "address":  Address,
+        //     "contact":  Contact,
+        //     "email":    Email,
+        //     "password": Hash.sha256().update(InputPassword).digest('hex'),
+		// 	"role": "business"
+        // });
 		const email = Email
-		sendMail(email)
+		const code = makeid(5)
+
+		sendMail(email,code)
 			.then((result) => console.log('Email sent...', result))
 			.catch((error) => console.log(error.message));
-        res.render('user/business/userBusiness');
-
-		flashMessage(res, 'success', 'Successfully created an account. Please login', 'fas fa-sign-in-alt', false);
-		res.redirect("/auth/loginBusiness");
+		flashMessage(res, 'success', 'Please check your email for the code', 'fas fa-sign-in-alt', false);
+        return res.render('auth/accountConfirmationCustomer', { code : code});
 	}
 	catch (error) {
 		//	Else internal server error
@@ -480,6 +483,57 @@ async function register_customer_process(req, res) {
 
 	//	Create new user, now that all the test above passed
 	try {
+		const Password =  Hash.sha256().update(InputPassword).digest('hex')
+		const email = Email
+		const code = makeid(5)
+
+
+		sendMail(email,code)
+			.then((result) => console.log('Email sent...', result))
+			.catch((error) => console.log(error.message));
+		flashMessage(res, 'success', 'Please check your email for the code', 'fas fa-sign-in-alt', false);
+        return res.render('auth/accountConfirmationCustomer', { code : code, first_name : FirstName, last_name : LastName, contact : Contact, email : Email, password : Password });
+	}
+	catch (error) {
+		//	Else internal server error
+		console.error(`Failed to create a new user: ${Email} `);
+		console.error(error);
+		return res.status(500).end();
+	}
+};
+
+// Account Confirmation
+
+async function account_confirmation_customer_page(req, res) {
+	return res.render('auth/accountConfirmationCustomer');
+}
+
+async function account_confirmation_customer_process(req, res) {
+    let errors = [];
+    let generatedCode = req.params.code
+	let Email = req.params.email
+	let FirstName = req.params.first_name
+	let LastName = req.params.last_name
+	let Contact = req.params.contact
+	let Password = req.params.password
+    let { confirmationCode } = req.body;
+
+	try {
+		if (confirmationCode !== generatedCode) {
+			errors = errors.concat({ text: "Codes do not match!" });
+		}
+		if (errors.length > 0) {
+			throw new Error("There are validation errors");
+		}
+	}
+	catch (error) {
+		console.error("There is errors with the registration form body.");
+		console.error(error);
+		return res.render('auth/accountConfirmationCustomer', { errors: errors });
+	}
+
+	//	Create new user, now that all the test above passed
+	try {
 		User.create({
 			"email" : Email,
 			"role" : "customer"
@@ -489,14 +543,13 @@ async function register_customer_process(req, res) {
 			"last_name":  LastName,
 			"contact":  Contact,
 			"email":    Email,
-			"password":  Hash.sha256().update(InputPassword).digest('hex'),
+			"password":  Password,
 			"role": "customer"
 		})
-		sendMail(Email)
-        res.render('user/customer/userCustomer');
-		
-		flashMessage(res, 'success', 'Successfully created an account. Please login', 'fas fa-sign-in-alt', true);
-		return res.redirect("/auth/loginCustomer");
+		res.redirect("/auth/loginCustomer");
+
+		flashMessage(res, 'success', 'Successfully created an account. Please login', 'fas fa-sign-in-alt', false);
+
 	}
 	catch (error) {
 		//	Else internal server error
@@ -505,6 +558,20 @@ async function register_customer_process(req, res) {
 		return res.status(500).end();
 	}
 };
+
+// Code Generator
+
+function makeid(length) {
+    var result           = '';
+    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var charactersLength = characters.length;
+    for ( var i = 0; i < length; i++ ) {
+      result += characters.charAt(Math.floor(Math.random() * 
+ charactersLength));
+   }
+   return result;
+}
+
 
 // Logout
 
