@@ -6,7 +6,7 @@
 **/
 import Multer  from 'multer';
 import FileSys from 'fs';
-import Path    from 'path';
+
 
 /**
  * File filter used to accept image files only

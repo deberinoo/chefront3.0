@@ -14,6 +14,7 @@ export class Outlets extends Model {
             "price" : { type: DataTypes.INTEGER(3), allowNull: false},
             "contact" : { type: DataTypes.INTEGER(8), allowNull: false},
             "description" : { type: DataTypes.STRING(300), allowNull: false},
+            "thumbnail" : { type: DataTypes.CHAR(255), allowNull: false},
             "verified" : {type: DataTypes.BOOLEAN, allowNull:false, defaultValue: false}
         }, {
             "sequelize" : database,

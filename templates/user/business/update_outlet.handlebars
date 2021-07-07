@@ -34,7 +34,7 @@
                                 aria-controls="home" aria-selected="false">View reservation status</a>
                         </li>
                     </ul>
-                    <form action="../../{{outlet.business_name}}/saveOutlet/{{outlet.postal_code}}?_method=PUT" method="post">
+                    <form action="../../{{outlet.business_name}}/saveOutlet/{{outlet.postal_code}}?_method=PUT" method="post" enctype="multipart/form-data">
                         {{#if user}}
                             <div class="form-group row">
                                 <label for="staticBusinessName" class="col-sm-2 col-form-label">Outlet Name</label>
@@ -99,6 +99,13 @@
                                         <span id="current">0</span>
                                         <span id="maximum">/ 300</span>
                                     </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="thumbnail" class="col-sm-2 col-form-label"></label>
+                                <div class="col-sm-10">
+                                    <input type="file" class="form-control text-dark" id="thumbnail"
+                                    name="Thumbnail" value="c:/{{outlet.thumbnail}}">
                                 </div>
                             </div>
                         {{/if}}
