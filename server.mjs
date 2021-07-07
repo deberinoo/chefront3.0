@@ -92,7 +92,7 @@ export async function sendMailPasswordChange(email) {
 			to: email,
 			subject: 'Forget Password Email',
 			text: 'Hello from the CEO',
-			html: `<p>You requested for a password reset, kindly use this <a href='http://localhost:3000/auth/resetPasswordCustomer/${email}'>Link</a>to reset your password</p>`,
+			html: `<p>You requested for a password reset, kindly use this <a href='http://localhost:3000/auth/resetPasswordCustomer/${email}'>Link</a> to reset your password</p>`,
 		};
 
 		const result = await transport.sendMail(mailOptions);
@@ -102,6 +102,36 @@ export async function sendMailPasswordChange(email) {
 	}
 }
 
+export async function sendMailPasswordChangeBusiness(email) {
+	try {
+		const accessToken = await oAuth2Client.getAccessToken();
+
+		const transport = nodemailer.createTransport({
+			service: 'gmail',
+			auth: {
+				type: 'OAuth2',
+				user: 'chefrontceo@gmail.com',
+				clientId: CLIENT_ID,
+				clientSecret: CLEINT_SECRET,
+				refreshToken: REFRESH_TOKEN,
+				accessToken: accessToken,
+			},
+		});
+
+		const mailOptions = {
+			from: 'chefrontceo@gmail.com',
+			to: email,
+			subject: 'Forget Password Email',
+			text: 'Hello from the CEO',
+			html: `<p>You requested for a password reset, kindly use this <a href='http://localhost:3000/auth/resetPasswordBusiness/${email}'>Link</a> to reset your password</p>`,
+		};
+
+		const result = await transport.sendMail(mailOptions);
+		return result;
+	} catch (error) {
+		return error;
+	}
+}
 
 const Server = Express();
 const Port = process.env.PORT || 3000;
