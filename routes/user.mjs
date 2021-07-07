@@ -1,13 +1,13 @@
-import { Router }       from 'express';
-import { flashMessage } from '../utils/flashmsg.mjs';
-import { BusinessUser } from '../models/Business.mjs';
-import { CustomerUser } from '../models/Customer.mjs';
-import { DiscountSlot } from '../models/DiscountSlot.mjs';
-import { Outlets }      from '../models/Outlets.mjs';
-import { User }         from '../models/Users.mjs'
+import { Router }           from 'express';
+import { flashMessage }     from '../utils/flashmsg.mjs';
+import { BusinessUser }     from '../models/Business.mjs';
+import { CustomerUser }     from '../models/Customer.mjs';
+import { DiscountSlot }     from '../models/DiscountSlot.mjs';
+import { Outlets }          from '../models/Outlets.mjs';
+import { User }             from '../models/Users.mjs'
 import { Reservations } 	from '../models/Reservations.mjs';
 
-import Passport         from 'passport';
+import Passport        from 'passport';
 import ORM             from 'sequelize';
 const { Sequelize, DataTypes, Model, Op } = ORM;
 
@@ -164,11 +164,18 @@ async function delete_business_user(req, res) {
 };
 
 async function create_discount_slot_page(req, res) {
+    const outlet = await Outlets.findAll({
+        where: {
+            "business_name": {
+                [Op.eq]: req.params.business_name
+            }
+        }
+    });
     const user = BusinessUser.findOne({
         where: {
             "business_name": req.params.business_name
         }
-    })
+    });
     var role = getRole(req.user.role);
     var admin = role[0];
     var business = role[1];
@@ -176,7 +183,8 @@ async function create_discount_slot_page(req, res) {
     return res.render('user/business/create_discountslot', {
         admin: admin,
         business: business,
-        customer: customer
+        customer: customer,
+        outlet: outlet
     });
 };
 

@@ -128,3 +128,75 @@
 h3, h5 {
 	font-family: Avenir;
 }
+
+/* all the button styling stuff*/
+/* reservations radio button */
+[type=radio] {
+	position: absolute;
+	opacity: 0;
+	width: 0;
+	height: 0;
+  }
+  
+  /* IMAGE STYLES */
+  label {
+	  cursor: pointer;
+  }
+  
+  /* CHECKED STYLES */
+  [type=radio]:checked ~ .background {
+	  box-shadow: 0 0 0 2pt #dc4e5c;
+  }
+  
+  #rounded {
+	  border-radius: 50%;
+	  width: 70px;
+	  height: 70px;
+	  margin-right: 4px;
+  }
+  
+  .reservation {
+	  display: inline-block;
+	  width: 70px;
+	  height: 70px;
+	  margin: 0 auto;
+	  font-family: FFMark
+  }
+  
+  .background {
+	  position:absolute;
+	  display:block;
+	  width: 70px;
+	  height: 70px;
+	  background:#f55767;
+	  border-radius: 50%;
+  }
+  
+  .reservation p.time {
+	  position:absolute;
+	  text-align: center;
+	  color: white;
+	  margin-top: 5px;
+	  margin-bottom: 0;
+	  margin-left: auto;
+	  margin-right: auto;
+	  width: 70px;
+	  z-index: 1000;
+  }
+  
+  .reservation p.discount {
+	  position:absolute;
+	  text-align: center;
+	  color: white;
+	  font-size: 23px;
+	  width: 70px;
+	  margin-top: 25px;
+	  font-weight: 700;
+	  z-index: 1000;
+  }
+  
+  /* OTHER STUFF */
+  .text {
+	  font-size: 19px;
+  }
+  
