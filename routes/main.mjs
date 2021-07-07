@@ -14,8 +14,9 @@ export default router;
 
 // ---------------- 
 //	Serves dynamic files from the dynamic folder
-router.get("/dynamic/:path", async function (req, res) {	
-	return res.sendFile(`./dynamic/${req.params.path}`)
+router.get("/dynamic/:path/:file*", async function (req,res){
+    process.cwd() // current working directory
+    return res.sendFile(`${process.cwd()}/dynamic/${req.params.path}/${req.params.file}`)
 });
 
 // Main routes
@@ -174,6 +175,8 @@ async function create_feedback_process(req,res) {
 		"message" : Message,
 		"read" : Read
 	});
+
+	flashMessage(res, 'success', 'Feedback successfully sent!', 'fa fa-comments', false);
 	return res.redirect("/home");
 };
 

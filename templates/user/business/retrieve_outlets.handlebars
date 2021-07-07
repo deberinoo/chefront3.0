@@ -52,6 +52,7 @@
                         <th scope="col" data-sortable="true">Price</th>
                         <th scope="col" data-sortable="true">Contact</th>
                         <th scope="col" data-sortable="true">Description</th>
+                        <th scope="col" data-sortable="true">Thumbnail</th>
                         <th scope="col">Actions</th>
                     </tr>
                 </thead>
@@ -63,7 +64,8 @@
                             <td>{{ postal_code }}</td>
                             <td>{{ price }}</td>
                             <td>{{ contact }}</td>
-                            <td>{{ description}}</td>
+                            <td>{{ description }}</td>
+                            <td><img src="/{{thumbnail}}" width="70" height="50"></td>
                             <td>
                             <a href="../{{business_name}}/edit-outlet/{{postal_code}}"><i class="material-icons" title="Edit">&#xE254;</i></a>
                             <a href="/u/b/{{business_name}}/delete-outlet/{{postal_code}}" class="delete"><i class="material-icons" title="Delete">&#xE872;</i></a>

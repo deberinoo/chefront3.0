@@ -4,6 +4,7 @@ import { BusinessUser } from '../models/Business.mjs';
 import { CustomerUser } from '../models/Customer.mjs';
 import { User } 		from '../models/Users.mjs'
 import { sendMail,sendMailPasswordChange, sendMailPasswordChangeBusiness } from '../server.mjs';
+
 import Passport         from 'passport';
 import Hash             from 'hash.js';
 
@@ -21,12 +22,28 @@ export default router;
  // Min 8 character, 1 letter, 1 number 
  const regexPwd = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/
 
-router.get("/login",     			login_page);
+// General routes
+router.get("/login",     								login_page);
+router.get("/register",    								register_page);
+router.get("/logout",     								logout_process);
 
-router.get("/loginBusiness", 		business_login_page);
-router.post("/loginBusiness", 		business_login_process);
+// Business routes
+router.get("/loginBusiness", 							business_login_page);
+router.post("/loginBusiness", 							business_login_process);
+router.get("/registerBusiness",     					register_business_page);
+router.post("/registerBusiness",    					register_business_process);
+
+router.get("/forgetPasswordBusiness", 					forget_password_business_page)
+router.post("/forgetPasswordBusiness", 					forget_password_business_process)
+router.get("/resetPasswordBusiness/:email", 			reset_password_business_page)
+router.put("/resetPasswordBusinessProcess/:email", 		reset_password_business_process)
+
+// Customer routes
 router.get("/loginCustomer",    	customer_login_page);
 router.post("/loginCustomer",    	customer_login_process);
+router.get("/registerCustomer",     register_customer_page);
+router.post("/registerCustomer",    register_customer_process);
+
 router.get("/forgetPasswordCustomer", forget_password_customer_page)
 router.post("/forgetPasswordCustomer", forget_password_customer_process)
 router.get("/resetPasswordCustomer/:email", reset_password_customer_page)
@@ -65,15 +82,26 @@ function getRole(role) {
 		var business = false;
 		var customer = true;
 	}
-
 	return [admin, business, customer];
 }
+// ----------------
 
-// Login
+// General - Login, Register, Logout
 
 async function login_page(req, res) {
 	return res.render('auth/login');
 }
+
+async function register_page(req, res) {
+	return res.render('auth/register');
+}
+
+async function logout_process(req, res) {
+	req.logout();
+	return res.redirect("/home");
+}
+
+// Login
 
 async function business_login_page(req, res) {
 	return res.render('auth/loginBusiness');
@@ -158,54 +186,7 @@ async function customer_login_process(req, res, next) {
 	})(req, res, next);
 }
 
-// Forget Password
-async function forget_password_customer_page(req, res) {
-	return res.render('auth/forgetPasswordCustomer');
-}
-
-async function forget_password_customer_process(req, res, next) {
-    let { Email } = req.body;
-	
-	let errors = [];
-	try {
-		if (! regexEmail.test(Email)) {
-			errors = errors.concat({ text: "Invalid email address!" });
-		}
-		else {
-			const user = await CustomerUser.findOne({where: {email: Email}});
-			if (user == null) {
-				errors = errors.concat({ text: "This email does not exist!" });
-			}
-		}
-		if (errors.length > 0) {
-			throw new Error("There are validation errors");
-		}
-	}
-	catch (error) {
-		console.error("There is errors with the login form body.");
-		console.error(error);
-		return res.render('auth/forgetPasswordCustomer', { errors: errors });
-	}
-
-	try {
-		const user = await CustomerUser.findOne({where: {email: Email}});
-		const email = Email
-		sendMailPasswordChange(email)
-			.then((result) => console.log('Email sent...', result))
-			.catch((error) => console.log(error.message));
-
-		flashMessage(res, 'success', 'Email successfully sent. Please check it to change password.', 'fas fa-sign-in-alt', false);
-		res.redirect("/auth/login");
-	}
-	catch (error) {
-		//	Else internal server error
-		console.error(`Failed to send email to  ${Email} `);
-		console.error(error);
-		return res.status(500).end();
-	}
-
-	
-}
+// Forgot Password
 
 async function forget_password_business_page(req, res) {
 	return res.render('auth/forgetPasswordBusiness');
@@ -242,7 +223,7 @@ async function forget_password_business_process(req, res, next) {
 			.then((result) => console.log('Email sent...', result))
 			.catch((error) => console.log(error.message));
 
-		flashMessage(res, 'success', 'Email successfully sent. Please check it to change password.', 'fas fa-sign-in-alt', false);
+		flashMessage(res, 'success', 'Email successfully sent. Please check your email to change your password.', 'fa fa-envelope', false);
 		res.redirect("/auth/login");
 	}
 	catch (error) {
@@ -251,12 +232,101 @@ async function forget_password_business_process(req, res, next) {
 		console.error(error);
 		return res.status(500).end();
 	}
-
-	
 }
 
+async function forget_password_customer_page(req, res) {
+	return res.render('auth/forgetPasswordCustomer');
+}
+
+async function forget_password_customer_process(req, res, next) {
+    let { Email } = req.body;
+	
+	let errors = [];
+	try {
+		if (! regexEmail.test(Email)) {
+			errors = errors.concat({ text: "Invalid email address!" });
+		}
+		else {
+			const user = await CustomerUser.findOne({where: {email: Email}});
+			if (user == null) {
+				errors = errors.concat({ text: "This email does not exist!" });
+			}
+		}
+		if (errors.length > 0) {
+			throw new Error("There are validation errors");
+		}
+	}
+	catch (error) {
+		console.error("There is errors with the login form body.");
+		console.error(error);
+		return res.render('auth/forgetPasswordCustomer', { errors: errors });
+	}
+
+	try {
+		const user = await CustomerUser.findOne({where: {email: Email}});
+		const email = Email
+		sendMailPasswordChange(email)
+			.then((result) => console.log('Email sent...', result))
+			.catch((error) => console.log(error.message));
+
+		flashMessage(res, 'success', 'Email successfully sent. Please check your email to change your password.', 'fa fa-envelope', false);
+		res.redirect("/auth/login");
+	}
+	catch (error) {
+		//	Else internal server error
+		console.error(`Failed to send email to  ${Email} `);
+		console.error(error);
+		return res.status(500).end();
+	}
+}
 
 // Reset Password
+async function reset_password_business_page(req, res) {
+	console.log("reset page shown")
+	return res.render('auth/resetPasswordBusiness', { email : req.params.email});
+}
+
+async function reset_password_business_process(req, res, next) {
+	console.log("resetting process started")
+    let { InputPassword } = req.body;
+	
+	let errors = [];
+	try {
+		if (! regexPwd.test(InputPassword)) {
+			errors = errors.concat({ text: "Password requires minimum eight characters, at least one uppercase letter, one lowercase letter and one number!" });
+		}
+		
+		if (errors.length > 0) {
+			throw new Error("There are validation errors");
+		}
+	}
+	catch (error) {
+		console.log("form error")
+		console.error("There is errors with the login form body.");
+		console.error(error);
+		return res.render('auth/resetPasswordBusiness', { errors: errors });
+	}
+
+	try {
+		BusinessUser.update({
+			"password" : Hash.sha256().update(InputPassword).digest('hex'),
+		}, {
+			where: {
+				email : req.params.email
+			}
+		});
+		console.log("Pass changed")
+		flashMessage(res, 'success', 'Password successfully changed. Please login.', 'fas fa-sign-in-alt', false);
+		res.redirect("/auth/loginBusiness");
+	}
+	catch (error) {
+		//	Else internal server error
+		console.log("Pass changing error")
+		console.error(`Failed to update email for ${Email} `);
+		console.error(error);
+		return res.status(500).end();
+	}
+}
 
 async function reset_password_customer_page(req, res) {
 	console.log("reset page shown")
@@ -303,66 +373,9 @@ async function reset_password_customer_process(req, res, next) {
 		console.error(error);
 		return res.status(500).end();
 	}
-
-	
-}
-
-
-async function reset_password_business_page(req, res) {
-	console.log("reset page shown")
-	return res.render('auth/resetPasswordBusiness', { email : req.params.email});
-}
-
-async function reset_password_business_process(req, res, next) {
-	console.log("resetting process started")
-    let { InputPassword } = req.body;
-	
-	let errors = [];
-	try {
-		if (! regexPwd.test(InputPassword)) {
-			errors = errors.concat({ text: "Password requires minimum eight characters, at least one uppercase letter, one lowercase letter and one number!" });
-		}
-		
-		if (errors.length > 0) {
-			throw new Error("There are validation errors");
-		}
-	}
-	catch (error) {
-		console.log("form error")
-		console.error("There is errors with the login form body.");
-		console.error(error);
-		return res.render('auth/resetPasswordBusiness', { errors: errors });
-	}
-
-	try {
-		BusinessUser.update({
-			"password" : Hash.sha256().update(InputPassword).digest('hex'),
-		}, {
-			where: {
-				email : req.params.email
-			}
-		});
-		console.log("Pass changed")
-		flashMessage(res, 'success', 'Password successfully changed. Please login.', 'fas fa-sign-in-alt', false);
-		res.redirect("/auth/loginBusiness");
-	}
-	catch (error) {
-		//	Else internal server error
-		console.log("Pass changing error")
-		console.error(`Failed to update email for ${Email} `);
-		console.error(error);
-		return res.status(500).end();
-	}
-
-	
 }
 
 // Register
-
-async function register_page(req, res) {
-	return res.render('auth/register');
-}
-
 async function register_business_page(req, res) {
 	return res.render('auth/registerBusiness');
 }
@@ -573,9 +586,3 @@ function makeid(length) {
 }
 
 
-// Logout
-
-async function logout_process(req, res) {
-	req.logout();
-	return res.redirect("/home");
-}

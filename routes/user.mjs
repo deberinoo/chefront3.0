@@ -6,6 +6,7 @@ import { DiscountSlot }     from '../models/DiscountSlot.mjs';
 import { Outlets }          from '../models/Outlets.mjs';
 import { User }             from '../models/Users.mjs'
 import { Reservations } 	from '../models/Reservations.mjs';
+import { UploadFile }       from '../utils/multer.mjs';
 
 import Passport        from 'passport';
 import ORM             from 'sequelize';
@@ -33,10 +34,10 @@ router.get("/b/:business_name/delete-discount-slot/:uuid",    delete_discount_sl
 
 // Outlets
 router.get("/b/:business_name/create-outlet",                 create_outlet_page);
-router.post("/b/:business_name/create-outlet",                create_outlet_process);
+router.post("/b/:business_name/create-outlet",                UploadFile.single("Thumbnail"), create_outlet_process);
 router.get("/b/:business_name/view-outlets",                  view_outlets_page);
 router.get("/b/:business_name/edit-outlet/:postal_code",      edit_outlet_page);
-router.put("/b/:business_name/saveOutlet/:postal_code",       save_edit_outlet);
+router.put("/b/:business_name/saveOutlet/:postal_code",       UploadFile.single("Thumbnail"), save_edit_outlet);
 router.get("/b/:business_name/delete-outlet/:postal_code",    delete_outlet);
 
 router.get("/b/:business_name/reservation-status",            view_reservation_status_page);
@@ -61,7 +62,6 @@ function getRole(role) {
 	}
 	return [admin, business, customer];
 }
-
 // ----------------
 
 async function user_business_page(req, res) {
@@ -153,7 +153,7 @@ async function delete_business_user(req, res) {
                     "email" : req.params.user_email
                 }
             }).then(() => {
-                flashMessage(res,'success', 'Business account deleted', 'far fa-trash-alt', true );
+                flashMessage(res,'success', 'Business account deleted', 'fa fa-trash', true );
                 req.logout();
 	            return res.redirect("/home"); 
             }).catch( err => console.log(err));
@@ -312,6 +312,7 @@ async function create_outlet_process(req, res) {
     let errors = [];
     
     let { BusinessName, Location, Address, Postalcode, Price, Contact, Description } = req.body;
+    console.log(`${req.file.path}`)
 
     const outlet = await Outlets.create({
         "business_name":  BusinessName,
@@ -320,7 +321,8 @@ async function create_outlet_process(req, res) {
         "postal_code":  Postalcode,
         "price":  Price,
         "contact":  Contact,
-        "description": Description
+        "description": Description,
+        "thumbnail" : req.file.path
     });
     res.redirect(`/u/b/${BusinessName}/view-outlets`);
 };
@@ -388,7 +390,8 @@ async function save_edit_outlet(req, res){
         postal_code:  Postalcode,
         price:  Price,
         contact:  Contact,
-        description: Description
+        description: Description,
+        thumbnail: req.file.path
     }, {
         where: {
             postal_code : req.params.postal_code
@@ -539,7 +542,7 @@ async function delete_customer_user(req, res) {
                     "email" : req.params.user_email
                 }
             }).then(() => {
-                flashMessage(res,'success', 'Customer account deleted', 'far fa-trash-alt', true );
+                flashMessage(res,'success', 'Customer account deleted', 'fa fa-trash', true );
                 req.logout();
 	            return res.redirect("/home"); 
             }).catch( err => console.log(err));
