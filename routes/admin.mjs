@@ -35,7 +35,7 @@ router.get("/deleteFeedback/:uuid",                 delete_feedback);
 
 async function ensure_auth(req, res, next) {
     if (!req.isAuthenticated()) {
-        return res.redirect("/adminlogin");
+        return res.redirect("/auth/adminlogin");
     }
     else {
         return next();

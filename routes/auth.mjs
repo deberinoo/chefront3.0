@@ -642,11 +642,12 @@ async function admin_login_process(req, res, next) {
 	
 	let errors = [];
 	try {
-		const user = 
-			{
-				"email": "admin@chefront.com",
-				"password": "admin123"
-			};
+		const user = await BusinessUser.findOne({
+			where:{
+			"email": "chefrontceo@gmail.com",
+			}
+		}); 
+
 		if (user == null) {
 			errors = errors.concat({ text: "Invalid user credentials!" });
 			return res.render('admin/adminLogin');
