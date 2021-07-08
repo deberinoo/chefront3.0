@@ -40,6 +40,7 @@ router.get("/b/:business_name/edit-outlet/:postal_code",      edit_outlet_page);
 router.put("/b/:business_name/saveOutlet/:postal_code",       UploadFile.single("Thumbnail"), save_edit_outlet);
 router.get("/b/:business_name/delete-outlet/:postal_code",    delete_outlet);
 
+// Reservations
 router.get("/b/:business_name/reservation-status",            view_reservation_status_page);
 
 // ----------------
@@ -448,8 +449,13 @@ router.get("/c/edit/:user_email",                   edit_user_customer_page);
 router.put("/c/saveUser/:user_email",               save_edit_user_customer);
 router.get("/c/delete/:user_email",                 delete_customer_user);
 
-router.post("c/create-reservation",                 create_reservation_process);
-router.get("/c/my-reservations/:user_email",        view_reservations_page);
+// Customer reservation
+
+router.post("c/create-reservation",                                                create_reservation_process);
+router.get("/c/my-reservations/:user_email",                                       view_reservations_page);
+router.get("/c/my-reservations/:user_email/edit-reservation/:reservation_id",      edit_reservation_page);
+router.put("/c/my-reservations/:user_email/save-reservation/:reservation_id",      save_edit_reservation);
+router.get("/c/my-reservations/:user_email/cancel-reservation/:reservation_id",    delete_reservation);
 
 
 async function user_customer_page(req, res) {
@@ -555,11 +561,11 @@ async function delete_customer_user(req, res) {
 async function create_reservation_process(req, res) {
     let errors = [];
     
-    let { reservation_id, outlet_name, location, user_name, user_email, user_contact, date, pax, time, discount } = req.body;
+    let { reservation_id, business_name, location, user_name, user_email, user_contact, date, pax, time, discount } = req.body;
 
     const reservation = await Reservations.create({
         "reservation_id" : reservation_id,
-        "outlet_name" : outlet_name,
+        "business_name" : business_name,
         "location" : location,
         "user_name" : user_name,
         "user_email" : user_email,
@@ -567,7 +573,7 @@ async function create_reservation_process(req, res) {
         "date" : date,
         "pax" : pax,
         "time" : time,
-        "discount" : discount,
+        "discount" : discount
     });
     res.redirect("/retrieve_reservation/:user_email");
 };
@@ -596,3 +602,73 @@ async function view_reservations_page(req, res) {
         customer: customer
     });
 };
+
+async function edit_reservation_page(req, res){
+    const reservation = Reservations.findOne({
+        where: {
+            "user_email": req.params.user_email
+        }
+    });
+    var role = getRole(req.user.role);
+    var admin = role[0];
+    var business = role[1];
+    var customer = role[2];
+
+    Reservations.findOne({
+        where: {
+            "user_email": req.params.user_email,
+            "reservation_id": req.params.reservation_id
+        }
+    }).then((reservation) => {
+        res.render('user/customer/update_reservationCustomer', {
+            reservation: reservation,
+            admin: admin,
+            business: business,
+            customer: customer // passes user object to handlebar
+        });
+    }).catch(err => console.log(err)); // To catch no user ID
+};
+
+async function save_edit_reservation(req, res){
+    let { BusinessName, Location, ResDate, Pax, Name, Email, Contact } = req.body;
+
+    Reservations.update({
+        business_name : BusinessName,
+        location : Location,
+        user_name : Name,
+        user_email : Email,
+        user_contact : Contact,
+        res_date : ResDate,
+        pax : Pax
+    }, {
+        where: {
+            user_email: req.params.user_email,
+            reservation_id: req.params.reservation_id
+        }
+        }).then(() => {
+            res.redirect(`/u/c/my-reservations/${req.params.user_email}`);
+    }).catch(err => console.log(err)); 
+};
+
+async function delete_reservation(req, res) {
+    Reservations.findOne({
+        where: {
+            "user_email": req.params.user_email,
+            "reservation_id": req.params.reservation_id
+        },
+    }).then((reservation) => {
+        if (reservation!= null) {
+            Reservations.destroy({
+                where: {
+                    "user_email": req.params.user_email,
+                    "reservation_id": req.params.reservation_id
+                },
+            }).then(() => {
+                res.redirect(`/u/c/my-reservations/${req.params.user_email}`);
+            }).catch( err => console.log(err));
+        } else {
+	    res.redirect('/404');
+    }
+    });
+};
+

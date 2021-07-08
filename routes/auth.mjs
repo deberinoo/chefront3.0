@@ -418,6 +418,7 @@ async function register_business_process(req, res) {
         //     "password": Hash.sha256().update(InputPassword).digest('hex'),
 		// 	"role": "business"
         // });
+		const Password =  Hash.sha256().update(InputPassword).digest('hex')
 		const email = Email
 		const code = makeid(5)
 
@@ -425,7 +426,7 @@ async function register_business_process(req, res) {
 			.then((result) => console.log('Email sent...', result))
 			.catch((error) => console.log(error.message));
 		flashMessage(res, 'success', 'Please check your email for the code', 'fas fa-sign-in-alt', false);
-        return res.render('auth/accountConfirmationCustomer', { code : code});
+        return res.render('auth/accountConfirmationBusiness', { code : code, business_name : BusinessName, address : Address, contact : Contact, email : Email, password : Password });
 	}
 	catch (error) {
 		//	Else internal server error
@@ -529,7 +530,7 @@ async function account_confirmation_customer_process(req, res) {
 	catch (error) {
 		console.error("There is errors with the registration form body.");
 		console.error(error);
-		return res.render('auth/accountConfirmationCustomer', { errors: errors });
+		return res.render('auth/accountConfirmationCustomer', { errors: errors, code : generatedCode, first_name : FirstName, last_name : LastName, contact : Contact, email : Email, password : Password  });
 	}
 
 	//	Create new user, now that all the test above passed
@@ -559,6 +560,61 @@ async function account_confirmation_customer_process(req, res) {
 	}
 };
 
+async function account_confirmation_business_page(req, res) {
+	return res.render('auth/accountConfirmationBusiness');
+}
+
+async function account_confirmation_business_process(req, res) {
+    let errors = [];
+    let generatedCode = req.params.code
+	let Email = req.params.email
+	let BusinessName = req.params.business_name
+	let Address = req.params.address
+	let Contact = req.params.contact
+	let Password = req.params.password
+    let { confirmationCode } = req.body;
+
+	try {
+		if (confirmationCode !== generatedCode) {
+			errors = errors.concat({ text: "Codes do not match!" });
+		}
+		if (errors.length > 0) {
+			throw new Error("There are validation errors");
+		}
+	}
+	catch (error) {
+		console.error("There is errors with the registration form body.");
+		console.error(error);
+		return res.render('auth/accountConfirmationBusiness', { errors: errors, code : generatedCode, business_name : BusinessName, address : Address, contact : Contact, email : Email, password : Password  });
+	}
+
+	//	Create new user, now that all the test above passed
+	try {
+		User.create({
+			"email" : Email,
+			"role" : "business"
+		})
+        const user = await BusinessUser.create({
+            "business_name":  BusinessName,
+            "address":  Address,
+            "contact":  Contact,
+            "email":    Email,
+            "password": Password,
+			"role": "business"
+        });
+		res.redirect("/auth/loginBusiness");
+
+		flashMessage(res, 'success', 'Successfully created an account. Please login', 'fas fa-sign-in-alt', false);
+
+	}
+	catch (error) {
+		//	Else internal server error
+		console.error(`Failed to create a new user: ${Email} `);
+		console.error(error);
+		return res.status(500).end();
+	}
+};
+
 // Code Generator
 
 function makeid(length) {
@@ -573,3 +629,37 @@ function makeid(length) {
 }
 
 
+//Admin login
+router.get("/adminlogin",     admin_login_page);
+router.post("/adminlogin",    	admin_login_process);
+
+async function admin_login_page(req, res) {
+	return res.render('admin/adminLogin');
+}
+
+async function admin_login_process(req, res, next) {
+    let { Email, Password } = req.body;
+	
+	let errors = [];
+	try {
+		const user = 
+			{
+				"email": "admin@chefront.com",
+				"password": "admin123"
+			};
+		if (user == null) {
+			errors = errors.concat({ text: "Invalid user credentials!" });
+			return res.render('admin/adminLogin');
+		}
+	}
+	catch (error) {
+		console.error("There is errors with the login form body.");
+		console.error(error);
+		return res.render('admin/adminLogin', { errors: errors });
+	}
+	return Passport.authenticate('local', {
+		successRedirect: "admin/feedback",
+		failureRedirect: "auth/adminlogin",
+		failureFlash:    true
+	})(req, res, next);
+}

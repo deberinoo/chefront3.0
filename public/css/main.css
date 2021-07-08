@@ -17817,3 +17817,9 @@
 		display: none;
 	}
 }
+
+.card-img-top {
+    width: 25vw;
+    height: 15vw;
+    object-fit: cover;
+}
