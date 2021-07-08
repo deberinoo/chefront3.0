@@ -39,33 +39,20 @@ router.get("/resetPasswordBusiness/:email", 			reset_password_business_page)
 router.put("/resetPasswordBusinessProcess/:email", 		reset_password_business_process)
 
 // Customer routes
-router.get("/loginCustomer",    	customer_login_page);
-router.post("/loginCustomer",    	customer_login_process);
-router.get("/registerCustomer",     register_customer_page);
-router.post("/registerCustomer",    register_customer_process);
+router.get("/loginCustomer",    						customer_login_page);
+router.post("/loginCustomer",    						customer_login_process);
+router.get("/registerCustomer",     					register_customer_page);
+router.post("/registerCustomer",    					register_customer_process);
 
-router.get("/forgetPasswordCustomer", forget_password_customer_page)
-router.post("/forgetPasswordCustomer", forget_password_customer_process)
-router.get("/resetPasswordCustomer/:email", reset_password_customer_page)
-router.put("/resetPasswordCustomerProcess/:email", reset_password_customer_process)
+router.get("/forgetPasswordCustomer", 					forget_password_customer_page)
+router.post("/forgetPasswordCustomer", 					forget_password_customer_process)
+router.get("/resetPasswordCustomer/:email", 			reset_password_customer_page)
+router.put("/resetPasswordCustomerProcess/:email", 		reset_password_customer_process)
+router.get("/accountConfirmationCustomer", 															account_confirmation_customer_page)
+router.post("/accountConfirmationCustomer/:code/:first_name/:last_name/:contact/:email/:password",  account_confirmation_customer_process)
 
-router.get("/forgetPasswordBusiness", forget_password_business_page)
-router.post("/forgetPasswordBusiness", forget_password_business_process)
-router.get("/resetPasswordBusiness/:email", reset_password_business_page)
-router.put("/resetPasswordBusinessProcess/:email", reset_password_business_process)
-
-router.get("/register",    			register_page);
-
-router.get("/registerBusiness",     register_business_page);
-router.post("/registerBusiness",    register_business_process);
-router.get("/registerCustomer",     register_customer_page);
-router.post("/registerCustomer",    register_customer_process);
-
-router.get("/accountConfirmationCustomer", account_confirmation_customer_page)
-router.post("/accountConfirmationCustomer/:code/:first_name/:last_name/:contact/:email/:password", account_confirmation_customer_process)
-
-router.get("/logout",     			logout_process);
-
+// ----------------
+// Check user role
 function getRole(role) {
 	if (role == 'admin') {
 		var admin = true;
@@ -582,7 +569,7 @@ function makeid(length) {
       result += characters.charAt(Math.floor(Math.random() * 
  charactersLength));
    }
-   return result;
+   return result.toUpperCase();
 }
 
 
