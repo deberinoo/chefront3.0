@@ -659,8 +659,8 @@ async function admin_login_process(req, res, next) {
 		return res.render('admin/adminLogin', { errors: errors });
 	}
 	return Passport.authenticate('local', {
-		successRedirect: "admin/feedback",
-		failureRedirect: "auth/adminlogin",
+		successRedirect: "/admin/feedback",
+		failureRedirect: "/auth/adminlogin",
 		failureFlash:    true
 	})(req, res, next);
 }
