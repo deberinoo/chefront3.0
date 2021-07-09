@@ -79,7 +79,7 @@ function getRole(role) {
 
 // ---------------- 
 //	Common URL paths
-async function view_home_page(req, res) {
+function view_home_page(req, res) {
 	if (req.user == undefined) {
 		return res.render('index')
 	} else {
@@ -96,7 +96,7 @@ async function view_home_page(req, res) {
 	});
 };
 
-async function view_error_page(req, res) {
+function view_error_page(req, res) {
 	if (req.user == undefined) {
 		return res.render('404')
 	} else {
@@ -113,7 +113,7 @@ async function view_error_page(req, res) {
 	});
 };
 
-async function view_about_page(req, res) {
+function view_about_page(req, res) {
 	if (req.user == undefined) {
 		return res.render('about')
 	} else {
@@ -130,7 +130,7 @@ async function view_about_page(req, res) {
 	});
 };
 
-async function view_categories_page(req, res) {
+function view_categories_page(req, res) {
 	if (req.user == undefined) {
 		return res.render('categories')
 	} else {
@@ -147,7 +147,7 @@ async function view_categories_page(req, res) {
 	});
 };
 
-async function view_contact_page(req, res) {
+function view_contact_page(req, res) {
 	if (req.user == undefined) {
 		return res.render('contact')
 	} else {
@@ -180,7 +180,7 @@ async function create_feedback_process(req,res) {
 	return res.redirect("/home");
 };
 
-async function view_payment_page(req, res) {
+function view_payment_page(req, res) {
 	if (req.user == undefined) {
 		return res.render('payment')
 	} else {
@@ -198,7 +198,6 @@ async function view_payment_page(req, res) {
 };
 
 async function view_restaurants_page(req, res) {
-
 	const restaurants = await Outlets.findAll({
         where: {
             "business_name": {
@@ -298,7 +297,7 @@ async function create_reservation_process(req, res) {
 	});
 };
 
-async function view_success_page(req, res) {
+function view_success_page(req, res) {
 	if (req.user == undefined) {
 		return res.render('403')
 	} else {
