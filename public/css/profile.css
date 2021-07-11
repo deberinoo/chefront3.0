@@ -39,3 +39,9 @@ section {
 #word-count{
     position: inherit;
 }
+
+.search-input {
+    height: 2.9em;
+    font-size: 16px;
+    color:black;
+}
