@@ -18,7 +18,6 @@ export class CustomerUser extends Model {
             "email" : { type: DataTypes.STRING(128), allowNull: false},
             "password" : { type: DataTypes.STRING(64), allowNull: false},
             "role" : { type: DataTypes.ENUM(UserRole.User, UserRole.Admin), defaultValue: "customer", allowNull: false},
-            "verified" : {type: DataTypes.BOOLEAN, allowNull:false, defaultValue: false}
         }, {
             "sequelize" : database,
             "modelName" : "CustomerUser",

@@ -1,8 +1,8 @@
 import Passport 	from 'passport';
 import { Strategy } from 'passport-local';
 import Hash 		from 'hash.js';
-import { BusinessUser } from '../models/Business.mjs';
-import { CustomerUser } from '../models/Customer.mjs'; 
+import { BusinessUser } from '../data/Business.mjs';
+import { CustomerUser } from '../data/Customer.mjs'; 
 
 /**
  * Initialize the passport and configure local strategy

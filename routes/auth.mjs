@@ -1,9 +1,9 @@
 import { Router }       from 'express';
 import { flashMessage } from '../utils/flashmsg.mjs'
-import { BusinessUser } from '../models/Business.mjs';
-import { CustomerUser } from '../models/Customer.mjs';
-import { User } 		from '../models/Users.mjs'
-import { sendMail,sendMailPasswordChange, sendMailPasswordChangeBusiness } from '../server.mjs';
+import { BusinessUser } from '../data/Business.mjs';
+import { CustomerUser } from '../data/Customer.mjs';
+import { User } 		from '../data/Users.mjs'
+import { sendMail,sendMailPasswordChange, sendMailPasswordChangeBusiness } from '../data/mail.mjs';
 
 import Passport         from 'passport';
 import Hash             from 'hash.js';

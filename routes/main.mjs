@@ -1,9 +1,9 @@
 import { Router }       	from 'express';
 import { flashMessage } 	from '../utils/flashmsg.mjs';
-import { Feedback } 		from '../models/Feedback.mjs';
-import { Outlets } 			from '../models/Outlets.mjs';
-import { Reservations } 	from '../models/Reservations.mjs';
-import { DiscountSlot }     from '../models/DiscountSlot.mjs';
+import { Feedback } 		from '../data/Feedback.mjs';
+import { Outlets } 			from '../data/Outlets.mjs';
+import { Reservations } 	from '../data/Reservations.mjs';
+import { DiscountSlot }     from '../data/DiscountSlot.mjs';
 
 
 import ORM             		from 'sequelize';
