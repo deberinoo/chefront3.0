@@ -18,6 +18,7 @@ export class BusinessUser extends Model {
             "contact" : { type: DataTypes.INTEGER(16), allowNull: false},
             "email" : { type: DataTypes.STRING(128), allowNull: false},
             "password" : { type: DataTypes.STRING(64), allowNull: false},
+            "document" : { type: DataTypes.CHAR(255), allowNull: false},
             "role" : { type: DataTypes.ENUM(BusinessRole.User), defaultValue: "business", allowNull: false},
             "verified" : {type: DataTypes.BOOLEAN, allowNull:false, defaultValue: false}
         }, {

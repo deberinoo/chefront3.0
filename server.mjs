@@ -27,10 +27,12 @@ import { CustomerUser } from './models/Customer.mjs';
 import { Feedback } from './models/Feedback.mjs'
 import { Reservations } from './models/Reservations.mjs';
 import { User } from './models/Users.mjs';
+import { Favourites } from './models/Favourites.mjs';
+import { Review } from './models/Review.mjs';
 
 
 const CLIENT_ID = '393014126046-dt545klaqnl5gielf5p7ojur8eteb12v.apps.googleusercontent.com'
-const CLEINT_SECRET = '0CJfoRhPlPFsdoVcpl-nUHHL'
+const CLEINT_SECRET = 'UgsiVu-Lr2Pjq8C2kbO0Bbm0-nUHHL'
 const REDIRECT_URI = 'https://developers.google.com/oauthplayground'
 const REFRESH_TOKEN = '1//04yKJ7OHbm8HnCgYIARAAGAQSNwF-L9IrhF2am19XPUV15m77Gg70X6jvBxNWyKKy1kBKP_s8AS7XxZP8MZzeev5_p0A1NClOjlc'
 
@@ -245,6 +247,14 @@ export const Database = new Sequelize(
 
 try {
 	await Database.authenticate();
+	Reservations.belongsTo(User);
+	Favourites.belongsTo(User)
+	Feedback.belongsTo(User)
+	Review
+	User.hasMany(Reservations);
+
+
+	
 }
 catch (error) {
 	console.error("Error connecting to database");
@@ -256,7 +266,10 @@ DiscountSlot.initialize(Database);
 Outlets.initialize(Database);
 Feedback.initialize(Database);
 User.initialize(Database);
-Reservations.initialize(Database)
+Reservations.initialize(Database);
+Favourites.initialize(Database);
+Review.initialize(Database);
+
 
 //  Sync your database
 Database.sync({ drop: false });  //  drop is true => clear tables, recreate
@@ -314,6 +327,7 @@ Server.use("/", Routes);
 
 import { ListRoutes } from './utils/routes.mjs'
 import { DiscountSlot } from './models/DiscountSlot.mjs';
+import { Favourties } from './models/Favourites.mjs';
 console.log("===== Registered Routes =====");
 ListRoutes(Server._router).forEach(route => {
 	console.log(`${ route.method.padStart(8) } | /${route.path}`);

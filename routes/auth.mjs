@@ -573,6 +573,7 @@ async function account_confirmation_business_process(req, res) {
 	let Contact = req.params.contact
 	let Password = req.params.password
     let { confirmationCode } = req.body;
+	console.log(`${req.file.path}`)
 
 	try {
 		if (confirmationCode !== generatedCode) {
@@ -600,6 +601,7 @@ async function account_confirmation_business_process(req, res) {
             "contact":  Contact,
             "email":    Email,
             "password": Password,
+			"document" : req.file.path,
 			"role": "business"
         });
 		res.redirect("/auth/loginBusiness");
