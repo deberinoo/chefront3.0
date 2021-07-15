@@ -1,11 +1,11 @@
 import { Router }       from 'express';
 import { flashMessage } from '../utils/flashmsg.mjs';
-import { BusinessUser } from '../models/Business.mjs';
-import { CustomerUser } from '../models/Customer.mjs';
-import { Outlets }      from '../models/Outlets.mjs';
+import { BusinessUser } from '../data/Business.mjs';
+import { CustomerUser } from '../data/Customer.mjs';
+import { Outlets }      from '../data/Outlets.mjs';
 
-import { User }         from '../models/Users.mjs';
-import { Feedback }     from '../models/Feedback.mjs'
+import { User }         from '../data/Users.mjs';
+import { Feedback }     from '../data/Feedback.mjs'
 
 import ORM              from 'sequelize';
 const { Sequelize, DataTypes, Model, Op } = ORM;
@@ -33,7 +33,7 @@ router.get("/deleteOutlet/:postal_code",            delete_outlet);
 router.get("/feedback",                             view_feedback_page);
 router.get("/deleteFeedback/:uuid",                 delete_feedback);
 
-async function ensure_auth(req, res, next) {
+function ensure_auth(req, res, next) {
     if (!req.isAuthenticated()) {
         return res.redirect("/auth/adminlogin");
     }
@@ -42,7 +42,7 @@ async function ensure_auth(req, res, next) {
     }
 }
 
-async function ensure_admin(req, res, next) {
+function ensure_admin(req, res, next) {
     /** @type {ModelUser} */
     const user = req.user;
     if (user.email == "chefrontceo@gmail.com") {
@@ -52,8 +52,6 @@ async function ensure_admin(req, res, next) {
         return res.sendStatus(403);
     }
 }
-
-
 
 async function view_customer_users_page(req, res) {
     const user = await CustomerUser.findAll({
@@ -66,7 +64,7 @@ async function view_customer_users_page(req, res) {
 	return res.render('admin/retrieve_customerUsers', {user: user});
 };
 
-async function delete_customer_user(req, res) {
+function delete_customer_user(req, res) {
     CustomerUser.findOne({
         where: {
             "email" : req.params.email
@@ -102,7 +100,7 @@ async function view_business_users_page(req, res) {
 	return res.render('admin/retrieve_businessUsers', {business: business});
 };
 
-async function delete_business_user(req, res) {
+function delete_business_user(req, res) {
     BusinessUser.findOne({
         where: {
             "business_name" : req.params.business_name
@@ -138,7 +136,7 @@ async function view_outlets_page(req, res) {
 	return res.render('admin/retrieve_allOutlets', {outlet: outlet});
 };
 
-async function delete_outlet(req, res) {
+function delete_outlet(req, res) {
     Outlets.findOne({
         where: {
             "postal_code" : req.params.postal_code
@@ -169,7 +167,7 @@ async function view_feedback_page(req, res) {
 	return res.render('admin/retrieve_feedback', {feedback : feedback});
 };
 
-async function delete_feedback(req, res) {
+function delete_feedback(req, res) {
     let feedbackId = req.params.uuid
     Feedback.findOne({
         where: {

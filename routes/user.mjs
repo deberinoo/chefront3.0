@@ -1,11 +1,11 @@
 import { Router }           from 'express';
 import { flashMessage }     from '../utils/flashmsg.mjs';
-import { BusinessUser }     from '../models/Business.mjs';
-import { CustomerUser }     from '../models/Customer.mjs';
-import { DiscountSlot }     from '../models/DiscountSlot.mjs';
-import { Outlets }          from '../models/Outlets.mjs';
-import { User }             from '../models/Users.mjs'
-import { Reservations } 	from '../models/Reservations.mjs';
+import { BusinessUser }     from '../data/Business.mjs';
+import { CustomerUser }     from '../data/Customer.mjs';
+import { DiscountSlot }     from '../data/DiscountSlot.mjs';
+import { Outlets }          from '../data/Outlets.mjs';
+import { User }             from '../data/Users.mjs'
+import { Reservations } 	from '../data/Reservations.mjs';
 import { UploadFile }       from '../utils/multer.mjs';
 
 import Passport        from 'passport';
@@ -65,7 +65,7 @@ function getRole(role) {
 }
 // ----------------
 
-async function user_business_page(req, res) {
+function user_business_page(req, res) {
     const user = BusinessUser.findOne({
         where: {
             "business_name": req.params.business_name
@@ -83,7 +83,7 @@ async function user_business_page(req, res) {
     });
 };
 
-async function edit_user_business_page(req, res) {
+function edit_user_business_page(req, res) {
     const user = BusinessUser.findOne({
         where: {
             "business_name": req.params.business_name
@@ -103,7 +103,7 @@ async function edit_user_business_page(req, res) {
     }).catch(err => console.log(err)); // To catch no user ID
 };
 
-async function save_edit_user_business(req, res) {
+function save_edit_user_business(req, res) {
     let { BusinessName, Email, Address, Contact } = req.body;
 
     BusinessUser.update({
@@ -120,7 +120,7 @@ async function save_edit_user_business(req, res) {
     }).catch(err => console.log(err));  
 };
 
-async function delete_business_user(req, res) {
+function delete_business_user(req, res) {
     User.findOne({
         where: {
             email : req.params.user_email
@@ -227,7 +227,7 @@ async function view_discount_slots_page(req, res) {
     });
 };
 
-async function edit_discount_slot_page(req, res){
+function edit_discount_slot_page(req, res){
     const user = BusinessUser.findOne({
         where: {
             "business_name": req.params.business_name
@@ -253,7 +253,7 @@ async function edit_discount_slot_page(req, res){
     }).catch(err => console.log(err)); // To catch no user ID
 };
 
-async function save_edit_discount_slot(req, res){
+function save_edit_discount_slot(req, res){
     let { BusinessName, Location, Time, Discount } = req.body;
 
     DiscountSlot.update({
@@ -270,7 +270,7 @@ async function save_edit_discount_slot(req, res){
     }).catch(err => console.log(err)); 
 };
 
-async function delete_discount_slot(req, res) {
+function delete_discount_slot(req, res) {
     DiscountSlot.findOne({
         where: {
             "business_name" : req.params.business_name,
@@ -292,7 +292,7 @@ async function delete_discount_slot(req, res) {
     });
 };
 
-async function create_outlet_page(req, res) {
+function create_outlet_page(req, res) {
     const user = BusinessUser.findOne({
         where: {
             "business_name": req.params.business_name
@@ -355,7 +355,7 @@ async function view_outlets_page(req, res) {
     });
 };
 
-async function edit_outlet_page(req, res){
+function edit_outlet_page(req, res){
     const user = BusinessUser.findOne({
         where: {
             "business_name": req.params.business_name
@@ -381,7 +381,7 @@ async function edit_outlet_page(req, res){
     }).catch(err => console.log(err)); // To catch no user ID
 };
 
-async function save_edit_outlet(req, res){
+function save_edit_outlet(req, res){
     let { BusinessName, Location, Address, Postalcode, Price, Contact, Description } = req.body;
 
     Outlets.update({
@@ -402,7 +402,7 @@ async function save_edit_outlet(req, res){
     }).catch(err => console.log(err)); 
 };
 
-async function delete_outlet(req, res) {
+function delete_outlet(req, res) {
     Outlets.findOne({
         where: {
             "business_name" : req.params.business_name,
@@ -424,7 +424,7 @@ async function delete_outlet(req, res) {
     });
 };
 
-async function view_reservation_status_page(req, res) {
+function view_reservation_status_page(req, res) {
     const user = BusinessUser.findOne({
         where: {
             "business_name": req.params.business_name
@@ -457,8 +457,7 @@ router.get("/c/my-reservations/:user_email/edit-reservation/:reservation_id",   
 router.put("/c/my-reservations/:user_email/save-reservation/:reservation_id",      save_edit_reservation);
 router.get("/c/my-reservations/:user_email/cancel-reservation/:reservation_id",    delete_reservation);
 
-
-async function user_customer_page(req, res) {
+function user_customer_page(req, res) {
     const user = CustomerUser.findOne({
         where: {
             "email": req.params.user_email
@@ -475,7 +474,7 @@ async function user_customer_page(req, res) {
     });
 };
 
-async function edit_user_customer_page(req, res) {
+function edit_user_customer_page(req, res) {
     const user = CustomerUser.findOne({
         where: {
             "email": req.params.user_email
@@ -494,7 +493,7 @@ async function edit_user_customer_page(req, res) {
     }).catch(err => console.log(err)); // To catch no user ID
 };
  
-async function save_edit_user_customer(req, res) {
+function save_edit_user_customer(req, res) {
     let { FirstName, LastName, Contact, Email } = req.body;
 
     User.update({
@@ -519,7 +518,7 @@ async function save_edit_user_customer(req, res) {
     }).catch(err => console.log(err));  
 };
 
-async function delete_customer_user(req, res) {
+function delete_customer_user(req, res) {
     User.findOne({
         where: {
             email : req.params.user_email
@@ -604,32 +603,51 @@ async function view_reservations_page(req, res) {
 };
 
 async function edit_reservation_page(req, res){
-    const reservation = Reservations.findOne({
-        where: {
-            "user_email": req.params.user_email
-        }
-    });
     var role = getRole(req.user.role);
     var admin = role[0];
     var business = role[1];
     var customer = role[2];
+
+    const reservation = await Reservations.findOne({
+        where: {
+            "user_email": req.params.user_email,
+            "reservation_id": req.params.reservation_id
+        }
+    });
+
+    const restaurant = await Outlets.findOne({
+        where: {
+            "business_name": reservation.business_name,
+            "location": reservation.location
+        }
+    });
+    
+    const discountslot = await DiscountSlot.findAll({
+        where: {
+            "business_name": reservation.business_name,
+            "location": reservation.location
+        }
+    });
 
     Reservations.findOne({
         where: {
             "user_email": req.params.user_email,
             "reservation_id": req.params.reservation_id
         }
-    }).then((reservation) => {
+    })
+    .then((reservation) => {
         res.render('user/customer/update_reservationCustomer', {
             reservation: reservation,
+            restaurant: restaurant,
+            discountslot: discountslot,
             admin: admin,
             business: business,
-            customer: customer // passes user object to handlebar
+            customer: customer 
         });
     }).catch(err => console.log(err)); // To catch no user ID
 };
 
-async function save_edit_reservation(req, res){
+function save_edit_reservation(req, res){
     let { BusinessName, Location, ResDate, Pax, Name, Email, Contact } = req.body;
 
     Reservations.update({
@@ -650,7 +668,7 @@ async function save_edit_reservation(req, res){
     }).catch(err => console.log(err)); 
 };
 
-async function delete_reservation(req, res) {
+function delete_reservation(req, res) {
     Reservations.findOne({
         where: {
             "user_email": req.params.user_email,

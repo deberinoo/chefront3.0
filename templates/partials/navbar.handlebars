@@ -28,6 +28,9 @@
 						</button>
 						<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
 							<a class="dropdown-item" href="/u/b/{{user.business_name}}">Profile</a>
+							<a class="dropdown-item" href="/u/b/{{user.business_name}}/view-outlets">Outlets</a>
+							<a class="dropdown-item" href="/u/b/{{user.business_name}}/view-discount-slots">Discount Slots</a>
+							<a class="dropdown-item" href="/u/b/{{user.business_name}}/reservation-status">Reservation Status</a>
 							<div class="dropdown-divider"></div>
 							<a class="dropdown-item" href="/auth/logout">Sign out</a>
 						</div>
@@ -38,8 +41,8 @@
 								{{user.first_name}} {{user.last_name}}
 							</button>
 							<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-								<a class="dropdown-item" href="#">Profile</a>
-								<a class="dropdown-item" href="#">Reservations</a>
+								<a class="dropdown-item" href="/u/c/{{user.email}}">Profile</a>
+								<a class="dropdown-item" href="/u/c/my-reservations/{{user.email}}">Reservations</a>
 								<a class="dropdown-item" href="#">Favourites</a>
 								<div class="dropdown-divider"></div>
 								<a class="dropdown-item" href="/auth/logout">Sign out</a>

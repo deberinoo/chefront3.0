@@ -1,9 +1,9 @@
 import { Router }       from 'express';
 import { flashMessage } from '../utils/flashmsg.mjs'
-import { BusinessUser } from '../models/Business.mjs';
-import { CustomerUser } from '../models/Customer.mjs';
-import { User } 		from '../models/Users.mjs'
-import { sendMail,sendMailPasswordChange, sendMailPasswordChangeBusiness } from '../server.mjs';
+import { BusinessUser } from '../data/Business.mjs';
+import { CustomerUser } from '../data/Customer.mjs';
+import { User } 		from '../data/Users.mjs'
+import { sendMail,sendMailPasswordChange, sendMailPasswordChangeBusiness } from '../data/mail.mjs';
 
 import Passport         from 'passport';
 import Hash             from 'hash.js';
@@ -37,6 +37,8 @@ router.get("/forgetPasswordBusiness", 					forget_password_business_page)
 router.post("/forgetPasswordBusiness", 					forget_password_business_process)
 router.get("/resetPasswordBusiness/:email", 			reset_password_business_page)
 router.put("/resetPasswordBusinessProcess/:email", 		reset_password_business_process)
+router.get("/accountConfirmationBusiness", 															account_confirmation_business_page)
+router.post("/accountConfirmationBusiness/:code/:business_name/:address/:contact/:email/:password", account_confirmation_business_process)
 
 // Customer routes
 router.get("/loginCustomer",    						customer_login_page);
@@ -75,22 +77,22 @@ function getRole(role) {
 
 // General - Login, Register, Logout
 
-async function login_page(req, res) {
+function login_page(req, res) {
 	return res.render('auth/login');
 }
 
-async function register_page(req, res) {
+function register_page(req, res) {
 	return res.render('auth/register');
 }
 
-async function logout_process(req, res) {
+function logout_process(req, res) {
 	req.logout();
 	return res.redirect("/home");
 }
 
 // Login
 
-async function business_login_page(req, res) {
+function business_login_page(req, res) {
 	return res.render('auth/loginBusiness');
 }
 
@@ -133,7 +135,7 @@ async function business_login_process(req, res, next) {
 	})(req, res, next);
 }
 
-async function customer_login_page(req, res) {
+function customer_login_page(req, res) {
 	return res.render('auth/loginCustomer');
 }
 
@@ -175,7 +177,7 @@ async function customer_login_process(req, res, next) {
 
 // Forgot Password
 
-async function forget_password_business_page(req, res) {
+function forget_password_business_page(req, res) {
 	return res.render('auth/forgetPasswordBusiness');
 }
 
@@ -221,7 +223,7 @@ async function forget_password_business_process(req, res, next) {
 	}
 }
 
-async function forget_password_customer_page(req, res) {
+function forget_password_customer_page(req, res) {
 	return res.render('auth/forgetPasswordCustomer');
 }
 
@@ -268,13 +270,11 @@ async function forget_password_customer_process(req, res, next) {
 }
 
 // Reset Password
-async function reset_password_business_page(req, res) {
-	console.log("reset page shown")
+function reset_password_business_page(req, res) {
 	return res.render('auth/resetPasswordBusiness', { email : req.params.email});
 }
 
-async function reset_password_business_process(req, res, next) {
-	console.log("resetting process started")
+function reset_password_business_process(req, res, next) {
     let { InputPassword } = req.body;
 	
 	let errors = [];
@@ -315,12 +315,12 @@ async function reset_password_business_process(req, res, next) {
 	}
 }
 
-async function reset_password_customer_page(req, res) {
+function reset_password_customer_page(req, res) {
 	console.log("reset page shown")
 	return res.render('auth/resetPasswordCustomer', { email : req.params.email});
 }
 
-async function reset_password_customer_process(req, res, next) {
+function reset_password_customer_process(req, res, next) {
 	console.log("resetting process started")
     let { InputPassword } = req.body;
 	
@@ -363,7 +363,7 @@ async function reset_password_customer_process(req, res, next) {
 }
 
 // Register
-async function register_business_page(req, res) {
+function register_business_page(req, res) {
 	return res.render('auth/registerBusiness');
 }
 
@@ -406,18 +406,6 @@ async function register_business_process(req, res) {
 
 	//	Create new user, now that all the test above passed
 	try {
-		// User.create({
-		// 	"email" : Email,
-		// 	"role" : "business"
-		// })
-        // const user = await BusinessUser.create({
-        //     "business_name":  BusinessName,
-        //     "address":  Address,
-        //     "contact":  Contact,
-        //     "email":    Email,
-        //     "password": Hash.sha256().update(InputPassword).digest('hex'),
-		// 	"role": "business"
-        // });
 		const Password =  Hash.sha256().update(InputPassword).digest('hex')
 		const email = Email
 		const code = makeid(5)
@@ -436,7 +424,7 @@ async function register_business_process(req, res) {
 	}
 };
 
-async function register_customer_page(req, res) {
+function register_customer_page(req, res) {
 	return res.render('auth/registerCustomer');
 }
 
@@ -505,11 +493,11 @@ async function register_customer_process(req, res) {
 
 // Account Confirmation
 
-async function account_confirmation_customer_page(req, res) {
+function account_confirmation_customer_page(req, res) {
 	return res.render('auth/accountConfirmationCustomer');
 }
 
-async function account_confirmation_customer_process(req, res) {
+function account_confirmation_customer_process(req, res) {
     let errors = [];
     let generatedCode = req.params.code
 	let Email = req.params.email
@@ -560,7 +548,7 @@ async function account_confirmation_customer_process(req, res) {
 	}
 };
 
-async function account_confirmation_business_page(req, res) {
+function account_confirmation_business_page(req, res) {
 	return res.render('auth/accountConfirmationBusiness');
 }
 

@@ -1,5 +1,5 @@
 import ORM from 'sequelize'
-import { Outlets }          from '../models/Outlets.mjs';
+import { Outlets }          from '../data/Outlets.mjs';
 
 const {Sequelize, DataTypes,Model} = ORM;
 

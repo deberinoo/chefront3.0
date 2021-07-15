@@ -25,6 +25,7 @@ let   nets_stan     = 0;	//	Counter id for nets, keep this in database
  * @param {{}} payload 
  * @returns {string} Signature
  */
+
 function generate_signature(payload) {
 	// 1. signature = json + secret (Concatenate payload and secret)
 	const content = JSON.stringify(payload) + nets_api_skey;

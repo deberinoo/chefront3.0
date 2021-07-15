@@ -7,28 +7,20 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-12 col-lg-12 col-xl-12 mx-auto">
-                <h2 class="h3 mb-4 page-title">{{user.business_name}}'s Outlets</h2>
+                <h2 class="h3 mb-4 page-title">{{user.business_name}} Outlets</h2>
                 <div class="my-4">
                     <ul class="nav nav-tabs mb-4" id="myTab" role="tablist">
                         <li class="nav-item">
                             <a class="nav-link" id="home-tab" href="/u/b/{{user.business_name}}" role="tab"
-                                aria-controls="home" aria-selected="false">{{user.business_name}} Profile</a>
+                                aria-controls="home" aria-selected="false">Profile</a>
                         </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link active dropdown-toggle" data-toggle="dropdown" href="#" role="button"
-                                aria-haspopup="true" aria-expanded="false">Outlets</a>
-                            <div class="dropdown-menu">
-                                <a class="dropdown-item" href="/u/b/{{user.business_name}}/create-outlet">Create new outlet</a>
-                                <a class="dropdown-item" href="/u/b/{{user.business_name}}/view-outlets">View existing outlets</a>
-                            </div>
+                        <li class="nav-item">
+                            <a class="nav-link active" id="home-tab" href="/u/b/{{user.business_name}}/view-outlets" role="tab"
+                                aria-controls="home" aria-selected="false">Outlets</a>
                         </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button"
-                                aria-haspopup="true" aria-expanded="false">Discount slots</a>
-                            <div class="dropdown-menu">
-                                <a class="dropdown-item" href="/u/b/{{user.business_name}}/create-discount-slot">Create new slot</a>
-                                <a class="dropdown-item" href="/u/b/{{user.business_name}}/view-discount-slots">View existing slots</a>
-                            </div>
+                        <li class="nav-item">
+                            <a class="nav-link" id="home-tab" href="/u/b/{{user.business_name}}/view-discount-slots" role="tab"
+                                aria-controls="home" aria-selected="false">Discount slots</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" id="home-tab" href="/u/b/{{user.business_name}}/reservation-status" role="tab"
@@ -43,6 +35,12 @@
                 data-width = "50px" 
                 data-pagination="true"
                 data-page-size="10"
+                data-buttons="buttons"
+                data-show-columns="true"
+                data-show-refresh="true"
+                data-show-columns-toggle-all="true"
+                data-show-pagination-switch="true"
+                data-show-fullscreen="true"
                 data-search="true">
                 <thead class="thead-dark">
                     <tr>
@@ -77,6 +75,22 @@
         </div>
     </div>
 </section>
+
+<script>
+  function buttons () {
+    return {
+      btnAdd: {
+        icon: 'fa-plus',
+        event: function () {
+          window.location.href = "http://localhost:3000/u/b/{{user.business_name}}/create-outlet";  
+        },
+        attributes: {
+          title: 'Add a new outlet'
+        }
+      }
+    }
+  }
+</script>
 
 <!-- MODAL FOR UPDATE FORM POPUP 
     <div class="modal fade" id="update_outlet_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">

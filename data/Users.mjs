@@ -8,7 +8,6 @@ export class User extends Model {
             "dateCreated" : { type: DataTypes.DATE(), allowNull: false, defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')},
             "dataUpdated" : { type: DataTypes.DATE(), allowNull: false, defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')},   
             "email" : { type: DataTypes.STRING(128), allowNull: false},
-            "verified" : {type: DataTypes.BOOLEAN, allowNull:false, defaultValue: false},
             "role" : { type: DataTypes.STRING(10), allowNull: false},
         }, {
             "sequelize" : database,
