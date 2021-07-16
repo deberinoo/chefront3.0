@@ -8,9 +8,11 @@ import MethodOverrides 					from 'method-override';
 
 import Flash 							from 'connect-flash';
 import FlashMessenger 					from 'flash-messenger';
+import Passport 						from 'passport';
 
 import Handlebars 						from 'handlebars';
 import { allowInsecurePrototypeAccess } from '@handlebars/allow-prototype-access';
+
 
 
 const Server = Express();

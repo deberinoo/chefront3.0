@@ -415,7 +415,7 @@ async function register_business_process(req, res) {
 		sendMail(email,code)
 			.then((result) => console.log('Email sent...', result))
 			.catch((error) => console.log(error.message));
-		flashMessage(res, 'success', 'Please check your email for the code', 'fas fa-sign-in-alt', false);
+		flashMessage(res, 'success', 'Please check your email for your verification code', 'fas fa-sign-in-alt', false);
         return res.render('auth/accountConfirmationBusiness', { code:code, name:Name, contact:Contact, email:Email, password:Password });
 	}
 	catch (error) {
@@ -478,7 +478,7 @@ async function register_customer_process(req, res) {
 		sendMail(email,code)
 			.then((result) => console.log('Email sent...', result))
 			.catch((error) => console.log(error.message));
-		flashMessage(res, 'success', 'Please check your email for the code', 'fas fa-sign-in-alt', false);
+		flashMessage(res, 'success', 'Please check your email for your verification code', 'fas fa-sign-in-alt', false);
         return res.render('auth/accountConfirmationCustomer', { code : code, name:Name , contact : Contact, email : Email, password : Password });
 	}
 	catch (error) {
@@ -527,10 +527,8 @@ function account_confirmation_customer_process(req, res) {
 			"password":  Password,
 			"role": UserRole.Customer
 		})
-		res.redirect("/auth/loginCustomer");
-
 		flashMessage(res, 'success', 'Successfully created an account. Please login', 'fas fa-sign-in-alt', false);
-
+		res.redirect("/auth/loginCustomer");
 	}
 	catch (error) {
 		//	Else internal server error
@@ -575,13 +573,10 @@ async function account_confirmation_business_process(req, res) {
 			"email": Email,
 			"contact": Contact,
 			"password": Password,
-			"document": req.file.path,
 			"role": UserRole.Business
 		})
-		res.redirect("/auth/loginBusiness");
-
 		flashMessage(res, 'success', 'Successfully created an account. Please login', 'fas fa-sign-in-alt', false);
-
+		res.redirect("/auth/loginBusiness");
 	}
 	catch (error) {
 		//	Else internal server error

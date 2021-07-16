@@ -7,8 +7,8 @@ import { Outlets }          from '../data/models/Outlets.mjs';
 import { Reservations }     from '../data/models/Reservations.mjs';
 import { DiscountSlot }     from '../data/models/DiscountSlot.mjs';
 import { Feedback }         from '../data/models/Feedback.mjs';
-import { Favourites } 		from '../data/models/Favourites.mjs';
-import { Review } 			from '../data/models/Review.mjs';
+//import { Favourites } 		from '../data/models/Favourites.mjs';
+//import { Review } 			from '../data/models/Review.mjs';
 
 /**
  * Initialize all the models within the system
