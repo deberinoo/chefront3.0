@@ -571,10 +571,11 @@ async function account_confirmation_business_process(req, res) {
 	//	Create new user, now that all the test above passed
 	try {
         User.create({
-			"name":  Name,
-			"email":    Email,
-			"contact":  Contact,
-			"password":  Password,
+			"name": Name,
+			"email": Email,
+			"contact": Contact,
+			"password": Password,
+			"document": req.file.path,
 			"role": UserRole.Business
 		})
 		res.redirect("/auth/loginBusiness");

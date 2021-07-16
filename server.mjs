@@ -12,7 +12,6 @@ import FlashMessenger 					from 'flash-messenger';
 import Handlebars 						from 'handlebars';
 import { allowInsecurePrototypeAccess } from '@handlebars/allow-prototype-access';
 
-import Passport from 'passport';
 
 const Server = Express();
 const Port = process.env.PORT || 3000;
@@ -89,7 +88,7 @@ Server.use("/", Routes);
  * Debug Usage
 **/
 import { ListRoutes } from './utils/routes.mjs'
-console.log(`=====Registered Routes=====`);
+console.log("===== Registered Routes =====");
 ListRoutes(Server._router).forEach(route => {
 	console.log(`${route.method.padStart(8)} | /${route.path}`);
 });
