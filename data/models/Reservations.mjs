@@ -8,7 +8,7 @@ export class Reservations extends Model {
             "dateCreated" : { type: DataTypes.DATE(), allowNull: false, defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')},
             "dataUpdated" : { type: DataTypes.DATE(), allowNull: false, defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')},
             "reservation_id" : { type: DataTypes.STRING(5), allowNull: false},// need to find a way to randomize this
-            "business_name" : { type: DataTypes.STRING(64), allowNull: false},
+            "name" : { type: DataTypes.STRING(64), allowNull: false},
             "location" : { type: DataTypes.STRING(64), allowNull: false},
             "user_name" : { type: DataTypes.STRING(64), allowNull: false},
             "user_email" : { type: DataTypes.STRING(64), allowNull: false},

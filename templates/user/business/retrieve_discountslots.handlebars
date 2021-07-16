@@ -7,23 +7,23 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-12 col-lg-12 col-xl-12 mx-auto">
-                <h2 class="h3 mb-4 page-title">{{user.business_name}} Discount Slots</h2>
+                <h2 class="h3 mb-4 page-title">{{user.name}} Discount Slots</h2>
                 <div class="my-4">
                     <ul class="nav nav-tabs mb-4" id="myTab" role="tablist">
                         <li class="nav-item">
-                            <a class="nav-link" id="home-tab" href="/u/b/{{user.business_name}}" role="tab"
+                            <a class="nav-link" id="home-tab" href="/u/b/{{user.name}}" role="tab"
                                 aria-controls="home" aria-selected="false">Profile</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="home-tab" href="/u/b/{{user.business_name}}/view-outlets" role="tab"
+                            <a class="nav-link" id="home-tab" href="/u/b/{{user.name}}/view-outlets" role="tab"
                                 aria-controls="home" aria-selected="false">Outlets</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active" id="home-tab" href="/u/b/{{user.business_name}}/view-discount-slots" role="tab"
+                            <a class="nav-link active" id="home-tab" href="/u/b/{{user.name}}/view-discount-slots" role="tab"
                                 aria-controls="home" aria-selected="false">Discount slots</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="home-tab" href="/u/b/{{user.business_name}}/reservation-status" role="tab"
+                            <a class="nav-link" id="home-tab" href="/u/b/{{user.name}}/reservation-status" role="tab"
                                 aria-controls="home" aria-selected="false">View reservation status</a>
                         </li>
                     </ul>
@@ -59,8 +59,8 @@
                             <td>{{ discount }}</td>
                             <td>{{ expired }}</td>
                             <td>
-                                <a href="../{{business_name}}/edit-discount-slot/{{uuid}}"><i class="material-icons" title="Edit">&#xE254;</i></a>
-                                <a href="/u/b/{{business_name}}/delete-discount-slot/{{uuid}}" class="delete" ><i class="material-icons" title="Delete">&#xE872;</i></a>                                      
+                                <a href="../{{ name }}/edit-discount-slot/{{ uuid }}"><i class="material-icons" title="Edit">&#xE254;</i></a>
+                                <a href="/u/b/{{ name }}/delete-discount-slot/{{ uuid }}" class="delete" ><i class="material-icons" title="Delete">&#xE872;</i></a>                                      
                             </td>
                         </tr>
                     {{/each}}
@@ -76,7 +76,7 @@
       btnAdd: {
         icon: 'fa-plus',
         event: function () {
-          window.location.href = "http://localhost:3000/u/b/{{user.business_name}}/create-discount-slot";  
+          window.location.href = "http://localhost:3000/u/b/{{user.name}}/create-discount-slot";  
         },
         attributes: {
           title: 'Add a new discount slot'

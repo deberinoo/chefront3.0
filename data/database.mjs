@@ -6,13 +6,6 @@ const { Sequelize } = ORM;
 export const { DataTypes, Model, Op } = ORM;
 
 import { initialize_models }    from '../data/models.mjs';
-import { BusinessUser }         from '../data/Business.mjs';
-import { CustomerUser }         from '../data/Customer.mjs';
-import { Outlets }              from '../data/Outlets.mjs';
-import { Reservations }         from '../data/Reservations.mjs';
-import { DiscountSlot }         from '../data/DiscountSlot.mjs';
-import { Feedback }             from '../data/Feedback.mjs'
-import { User }                 from '../data/Users.mjs';
 
 /**
  * Database configuration

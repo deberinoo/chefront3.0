@@ -10,29 +10,29 @@
                 <div class="my-4">
                     <ul class="nav nav-tabs mb-4" id="myTab" role="tablist">
                         <li class="nav-item">
-                            <a class="nav-link" id="home-tab" href="/u/b/{{user.business_name}}" role="tab"
+                            <a class="nav-link" id="home-tab" href="/u/b/{{user.name}}" role="tab"
                                 aria-controls="home" aria-selected="false">Profile</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="home-tab" href="/u/b/{{user.business_name}}/view-outlets" role="tab"
+                            <a class="nav-link" id="home-tab" href="/u/b/{{user.name}}/view-outlets" role="tab"
                                 aria-controls="home" aria-selected="false">Outlets</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active" id="home-tab" href="/u/b/{{user.business_name}}/view-discount-slots" role="tab"
+                            <a class="nav-link active" id="home-tab" href="/u/b/{{user.name}}/view-discount-slots" role="tab"
                                 aria-controls="home" aria-selected="false">Discount slots</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="home-tab" href="/u/b/{{user.business_name}}/reservation-status" role="tab"
+                            <a class="nav-link" id="home-tab" href="/u/b/{{user.name}}/reservation-status" role="tab"
                                 aria-controls="home" aria-selected="false">View reservation status</a>
                         </li>
                     </ul>
-                    <form action="/u/b/{{user.business_name}}/create-discount-slot" method="post">
+                    <form action="/u/b/{{user.name}}/create-discount-slot" method="post">
                         {{#if user}}
                             <div class="form-group row">
                                 <label for="staticBusinessName" class="col-sm-2 col-form-label">Outlet Name</label>
                                 <div class="col-sm-10">
                                     <input type="text" readonly class="form-control-plaintext" id="staticBusinessName"
-                                        value="{{user.business_name}}" name="BusinessName">
+                                        value="{{user.name}}" name="Name">
                                 </div>
                             </div>
                             <div class="form-group row">

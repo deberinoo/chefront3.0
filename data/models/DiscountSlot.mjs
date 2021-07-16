@@ -7,7 +7,7 @@ export class DiscountSlot extends Model {
             "uuid" : { type: DataTypes.CHAR(36), primaryKey: true, defaultValue: DataTypes.UUIDV4},
             "dateCreated" : { type: DataTypes.DATE(), allowNull: false, defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')},
             "dataUpdated" : { type: DataTypes.DATE(), allowNull: false, defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')},
-            "business_name" : { type: DataTypes.STRING(64), allowNull: false},
+            "name" : { type: DataTypes.STRING(64), allowNull: false},
             "location" : { type: DataTypes.STRING(64), allowNull: false},
             "time" : { type: DataTypes.STRING(64), allowNull: false},
             "discount" : { type: DataTypes.STRING(64), allowNull: false},

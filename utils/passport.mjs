@@ -1,8 +1,8 @@
 import Passport 	from 'passport';
 import { Strategy } from 'passport-local';
 import Hash 		from 'hash.js';
-import { BusinessUser } from '../data/Business.mjs';
-import { CustomerUser } from '../data/Customer.mjs'; 
+import { User } 	from '../data/models/Users.mjs';
+
 
 /**
  * Initialize the passport and configure local strategy
@@ -16,18 +16,12 @@ export function initialize_passport(server) {
 	});
 	Passport.deserializeUser(async function (uid, done) {
 		try {
-			const business = await BusinessUser.findByPk(uid);
-			if (business == null) {
-				const customer = await CustomerUser.findByPk(uid);
-				if (customer == null) {
-					throw new Error ("Invalid user id");
-				}
-				else {
-					return done(null, customer);
-				}
+			const user = await User.findByPk(uid);
+			if (user == null) {
+				throw new Error ("Invalid user id");
 			}
 			else {
-				return done(null, business);
+				return done(null, user);
 			}
 		}
 		catch (error) {
@@ -47,28 +41,17 @@ const LocalStrategy = new Strategy ({
 }, async function (email, password, done) {
 
 	try {
-		var user = await BusinessUser.findOne({
+		var user = await User.findOne({
 			where: {
 				Email:    email,
 				Password: Hash.sha256().update(password).digest('hex')
 			}
 		});
 		if (user == null) {
-			var user = await CustomerUser.findOne({
-			where: {
-					Email:    email,
-					Password: Hash.sha256().update(password).digest('hex')
-				}
-			});
-			if (user == null) {
-				throw new Error ("Invalid Credentials");
-			}
-			else {
-				return done(null, user);
-			}
+			throw new Error ("Invalid Credentials");	
 		}
 		else {
-			 return done(null, user);
+			return done(null, user);
 		}
 	}
 	catch (error) {

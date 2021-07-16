@@ -1,9 +1,9 @@
 import { Router }       	from 'express';
 import { flashMessage } 	from '../utils/flashmsg.mjs';
-import { Feedback } 		from '../data/Feedback.mjs';
-import { Outlets } 			from '../data/Outlets.mjs';
-import { Reservations } 	from '../data/Reservations.mjs';
-import { DiscountSlot }     from '../data/DiscountSlot.mjs';
+import { Feedback } 		from '../data/models/Feedback.mjs';
+import { Outlets } 			from '../data/models/Outlets.mjs';
+import { Reservations } 	from '../data/models/Reservations.mjs';
+import { DiscountSlot }     from '../data/models/DiscountSlot.mjs';
 
 
 import ORM             		from 'sequelize';
@@ -32,8 +32,8 @@ router.post("/home",     							   create_feedback_process);
 
 // Restaurant routes
 router.get("/restaurants",                             view_restaurants_page); 
-router.get("/restaurant/:business_name/:location",     view_individual_restaurant_page);
-router.post("/restaurant/:business_name/:location",    create_reservation_process);
+router.get("/restaurant/:name/:location",     		   view_individual_restaurant_page);
+router.post("/restaurant/:name/:location",    		   create_reservation_process);
 
 // Payment routes
 router.get("/payment",                                 view_payment_page);
@@ -200,7 +200,7 @@ function view_payment_page(req, res) {
 async function view_restaurants_page(req, res) {
 	const restaurants = await Outlets.findAll({
         where: {
-            "business_name": {
+            "name": {
                 [Op.ne]:"null"
             }
         }
@@ -227,13 +227,13 @@ async function view_restaurants_page(req, res) {
 async function view_individual_restaurant_page(req, res) {
     const restaurant = await Outlets.findOne({
 		where: {
-            "business_name": req.params.business_name,
+            "name": req.params.name,
 			"location": req.params.location
         }
 	});
 	const discountslot = await DiscountSlot.findAll({
 		where: {
-            "business_name": req.params.business_name,
+            "name": req.params.name,
 			"location": req.params.location
         }
 	});
@@ -278,7 +278,7 @@ async function create_reservation_process(req, res) {
 
     const reservation = await Reservations.create({
 		"reservation_id":  String(getId()),
-		"business_name":  BusinessName,
+		"name":  BusinessName,
         "location":  Location,
 		"res_date": ResDate,
 		"pax": Pax,

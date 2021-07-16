@@ -1,26 +1,29 @@
 import ORM from 'sequelize'
+import { Outlets }          from '../data/Outlets.mjs';
+
 const {Sequelize, DataTypes,Model} = ORM;
 
-export class Outlets extends Model {
+export class BusinessRole {
+    static get User() {return "business"}
+}
+
+export class BusinessUser extends Model {
     static initialize(database){
-        Outlets.init({
+        BusinessUser.init({
             "uuid" : { type: DataTypes.CHAR(36), primaryKey: true, defaultValue: DataTypes.UUIDV4},
             "dateCreated" : { type: DataTypes.DATE(), allowNull: false, defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')},
             "dataUpdated" : { type: DataTypes.DATE(), allowNull: false, defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')},
             "business_name" : { type: DataTypes.STRING(64), allowNull: false},
-            "location" : { type: DataTypes.STRING(64), allowNull: false},
-            "address" : { type: DataTypes.STRING(64), allowNull: false},
-            "postal_code" : { type: DataTypes.INTEGER(6), allowNull: false},
-            "price" : { type: DataTypes.INTEGER(3), allowNull: false},
-            "contact" : { type: DataTypes.INTEGER(8), allowNull: false},
-            "description" : { type: DataTypes.STRING(300), allowNull: false},
-            "thumbnail" : { type: DataTypes.CHAR(255), allowNull: false},
+            "contact" : { type: DataTypes.INTEGER(16), allowNull: false},
+            "email" : { type: DataTypes.STRING(128), allowNull: false},
+            "password" : { type: DataTypes.STRING(64), allowNull: false},
+            "role" : { type: DataTypes.ENUM(BusinessRole.User), defaultValue: "business", allowNull: false},
             "verified" : {type: DataTypes.BOOLEAN, allowNull:false, defaultValue: false}
         }, {
             "sequelize" : database,
-            "modelName" : "Outlets",
+            "modelName" : "BusinessUser",
             "hooks"     : {
-                "afterUpdate" : Outlets._auto_update_timestamp
+                "afterUpdate" : BusinessUser._auto_update_timestamp
             }
         })
     }
@@ -31,7 +34,9 @@ export class Outlets extends Model {
     get role() { return this.getDataValue("role"); }
     get uuid() { return this.getDataValue("uuid"); }
     get email() { return this.getDataValue("email"); }
-    get name() { return this.getDataValue("name"); }
-
-    set name(name) { return this.setDataValue("name", name); }
 }
+
+//BusinessUser.hasMany(Outlets, {
+//    foreignKey: 'business_name',
+//    onDelete 
+//})

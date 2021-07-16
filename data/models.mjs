@@ -2,13 +2,11 @@ import ORM from 'sequelize';
 const { Sequelize, OP } = ORM;
 
 //  Import models
-import { BusinessUser }     from '../data/Business.mjs';
-import { CustomerUser }     from '../data/Customer.mjs';
-import { Outlets }          from '../data/Outlets.mjs';
-import { Reservations }     from '../data/Reservations.mjs';
-import { DiscountSlot }     from '../data/DiscountSlot.mjs';
-import { Feedback }         from '../data/Feedback.mjs'
-import { User }             from '../data/Users.mjs';
+import { User }             from '../data/models/Users.mjs';
+import { Outlets }          from '../data/models/Outlets.mjs';
+import { Reservations }     from '../data/models/Reservations.mjs';
+import { DiscountSlot }     from '../data/models/DiscountSlot.mjs';
+import { Feedback }         from '../data/models/Feedback.mjs'
 
 /**
  * Initialize all the models within the system
@@ -18,8 +16,6 @@ import { User }             from '../data/Users.mjs';
 	try {
 		console.log("Initializing ORM models");
 		//	Initialize models
-        BusinessUser.initialize(database);
-		CustomerUser.initialize(database);
         DiscountSlot.initialize(database);
         Outlets.initialize(database);
         Feedback.initialize(database);
@@ -30,9 +26,26 @@ import { User }             from '../data/Users.mjs';
 		//	Create relations between models or tables
 		//	Setup foreign keys, indexes etc
 
-		//	Check foregin key in your database after writing all these stuff
-		//BusinessUser   .belongsToMany(ModelProduct, { through: ModelCart, foreignKey: "uuid_user" });
-		//ModelProduct.belongsToMany(ModelUser,    { through: ModelCart, foreignKey: "uuid_product" });
+		//	Check foreign key in your database after writing all these stuff
+		User.hasMany(Outlets, {
+			scope: {
+				role: UserRole.Business
+			},
+			onUpdate: "CASCADE",
+			onDelete: "CASCADE",
+		});
+
+		Outlets.belongsTo(User, {
+			scope: {
+				role: UserRole.Business
+			},
+			onUpdate: "CASCADE",
+			onDelete: "CASCADE",
+			foreignKey: "uuid_user"
+		});
+		
+		BusinessUser.belongsToMany(ModelProduct, { through: ModelCart, foreignKey: "uuid_user" });
+		ModelProduct.belongsToMany(ModelUser,    { through: ModelCart, foreignKey: "uuid_product" });
 	
 		console.log("Adding initialization hooks");
 		//	Run once hooks during initialization

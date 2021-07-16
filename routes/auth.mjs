@@ -1,8 +1,6 @@
-import { Router }       from 'express';
-import { flashMessage } from '../utils/flashmsg.mjs'
-import { BusinessUser } from '../data/Business.mjs';
-import { CustomerUser } from '../data/Customer.mjs';
-import { User } 		from '../data/Users.mjs'
+import { Router }       		from 'express';
+import { flashMessage } 		from '../utils/flashmsg.mjs'
+import { User, UserRole } 		from '../data/models/Users.mjs'
 import { sendMail,sendMailPasswordChange, sendMailPasswordChangeBusiness } from '../data/mail.mjs';
 
 import Passport         from 'passport';
@@ -37,8 +35,8 @@ router.get("/forgetPasswordBusiness", 					forget_password_business_page)
 router.post("/forgetPasswordBusiness", 					forget_password_business_process)
 router.get("/resetPasswordBusiness/:email", 			reset_password_business_page)
 router.put("/resetPasswordBusinessProcess/:email", 		reset_password_business_process)
-router.get("/accountConfirmationBusiness", 															account_confirmation_business_page)
-router.post("/accountConfirmationBusiness/:code/:business_name/:address/:contact/:email/:password", account_confirmation_business_process)
+router.get("/accountConfirmationBusiness", 												account_confirmation_business_page)
+router.post("/accountConfirmationBusiness/:code/:name/:contact/:email/:password", 		account_confirmation_business_process)
 
 // Customer routes
 router.get("/loginCustomer",    						customer_login_page);
@@ -51,7 +49,7 @@ router.post("/forgetPasswordCustomer", 					forget_password_customer_process)
 router.get("/resetPasswordCustomer/:email", 			reset_password_customer_page)
 router.put("/resetPasswordCustomerProcess/:email", 		reset_password_customer_process)
 router.get("/accountConfirmationCustomer", 															account_confirmation_customer_page)
-router.post("/accountConfirmationCustomer/:code/:first_name/:last_name/:contact/:email/:password",  account_confirmation_customer_process)
+router.post("/accountConfirmationCustomer/:code/:name/:contact/:email/:password",  					account_confirmation_customer_process)
 
 // ----------------
 // Check user role
@@ -101,10 +99,11 @@ async function business_login_process(req, res, next) {
 
 	let errors = [];
 	try {
-		const user = await BusinessUser.findOne({
+		const user = await User.findOne({
 			where: {
 				"email": Email,
-				"password": Hash.sha256().update(Password).digest('hex')
+				"password": Hash.sha256().update(Password).digest('hex'),
+				"role": UserRole.Business
 			}
 		});
 		if (user == null) {
@@ -121,15 +120,16 @@ async function business_login_process(req, res, next) {
 		return res.render('auth/loginBusiness', { errors: errors });
 	}
 
-	const user = await BusinessUser.findOne({
+	const user = await User.findOne({
         where: {
             "email": Email,
-			"password": Hash.sha256().update(Password).digest('hex')
+			"password": Hash.sha256().update(Password).digest('hex'),
+			"role": UserRole.Business
         }
 	});
 
 	return Passport.authenticate('local', {
-		successRedirect: "/u/b/" + user.business_name,
+		successRedirect: "/u/b/" + user.name,
 		failureRedirect: "/auth/loginBusiness",
 		failureFlash:    true
 	})(req, res, next);
@@ -144,10 +144,11 @@ async function customer_login_process(req, res, next) {
 	
 	let errors = [];
 	try {
-		const user = await CustomerUser.findOne({
+		const user = await User.findOne({
 			where: {
 				"email": Email,
-				"password": Hash.sha256().update(Password).digest('hex')
+				"password": Hash.sha256().update(Password).digest('hex'),
+				"role": UserRole.Customer
 			}
 		});
 		if (user == null) {
@@ -161,10 +162,11 @@ async function customer_login_process(req, res, next) {
 		return res.render('auth/loginCustomer', { errors: errors });
 	}
 
-	const user = await CustomerUser.findOne({
+	const user = await User.findOne({
 		where: {
 			"email": Email,
-			"password": Hash.sha256().update(Password).digest('hex')
+			"password": Hash.sha256().update(Password).digest('hex'),
+			"role": UserRole.Customer
 		}
 	});
 
@@ -190,7 +192,7 @@ async function forget_password_business_process(req, res, next) {
 			errors = errors.concat({ text: "Invalid email address!" });
 		}
 		else {
-			const user = await BusinessUser.findOne({where: {email: Email}});
+			const user = await User.findOne({where: {email: Email, role: UserRole.Business}});
 			if (user == null) {
 				errors = errors.concat({ text: "This email does not exist!" });
 			}
@@ -206,7 +208,7 @@ async function forget_password_business_process(req, res, next) {
 	}
 
 	try {
-		const user = await BusinessUser.findOne({where: {email: Email}});
+		const user = await User.findOne({where: {email: Email, role: UserRole.Business}});
 		const email = Email
 		sendMailPasswordChangeBusiness(email)
 			.then((result) => console.log('Email sent...', result))
@@ -236,7 +238,7 @@ async function forget_password_customer_process(req, res, next) {
 			errors = errors.concat({ text: "Invalid email address!" });
 		}
 		else {
-			const user = await CustomerUser.findOne({where: {email: Email}});
+			const user = await User.findOne({where: {email: Email, role: UserRole.Customer}});
 			if (user == null) {
 				errors = errors.concat({ text: "This email does not exist!" });
 			}
@@ -252,7 +254,7 @@ async function forget_password_customer_process(req, res, next) {
 	}
 
 	try {
-		const user = await CustomerUser.findOne({where: {email: Email}});
+		const user = await User.findOne({where: {email: Email, role: UserRole.Customer}});
 		const email = Email
 		sendMailPasswordChange(email)
 			.then((result) => console.log('Email sent...', result))
@@ -295,11 +297,11 @@ function reset_password_business_process(req, res, next) {
 	}
 
 	try {
-		BusinessUser.update({
+		User.update({
 			"password" : Hash.sha256().update(InputPassword).digest('hex'),
 		}, {
 			where: {
-				email : req.params.email
+				email : req.params.email,
 			}
 		});
 		console.log("Pass changed")
@@ -342,7 +344,7 @@ function reset_password_customer_process(req, res, next) {
 	}
 
 	try {
-		CustomerUser.update({
+		User.update({
 			"password" : Hash.sha256().update(InputPassword).digest('hex'),
 		}, {
 			where: {
@@ -370,10 +372,10 @@ function register_business_page(req, res) {
 async function register_business_process(req, res) {
     let errors = [];
     
-    let { BusinessName, Address, Contact, Email, InputPassword, ConfirmPassword } = req.body;
+    let { Name, Contact, Email, InputPassword, ConfirmPassword } = req.body;
 
 	try {
-		if (! regexName.test(BusinessName)) {
+		if (! regexName.test(Name)) {
 			errors = errors.concat({ text: "Invalid name provided! It must be minimum 3 characters and starts with a alphabet." });
 		}
 
@@ -414,7 +416,7 @@ async function register_business_process(req, res) {
 			.then((result) => console.log('Email sent...', result))
 			.catch((error) => console.log(error.message));
 		flashMessage(res, 'success', 'Please check your email for the code', 'fas fa-sign-in-alt', false);
-        return res.render('auth/accountConfirmationBusiness', { code : code, business_name : BusinessName, address : Address, contact : Contact, email : Email, password : Password });
+        return res.render('auth/accountConfirmationBusiness', { code:code, name:Name, contact:Contact, email:Email, password:Password });
 	}
 	catch (error) {
 		//	Else internal server error
@@ -431,14 +433,10 @@ function register_customer_page(req, res) {
 async function register_customer_process(req, res) {
 	let errors = [];
     
-    let { FirstName, LastName, Contact, Email, InputPassword, ConfirmPassword } = req.body;
+    let { Name, Contact, Email, InputPassword, ConfirmPassword } = req.body;
 
 	try {
-		if (! regexName.test(FirstName)) {
-			errors = errors.concat({ text: "Invalid name provided! It must be minimum 3 characters and starts with a alphabet." });
-		}
-
-		if (! regexName.test(LastName)) {
+		if (! regexName.test(Name)) {
 			errors = errors.concat({ text: "Invalid name provided! It must be minimum 3 characters and starts with a alphabet." });
 		}
 
@@ -481,7 +479,7 @@ async function register_customer_process(req, res) {
 			.then((result) => console.log('Email sent...', result))
 			.catch((error) => console.log(error.message));
 		flashMessage(res, 'success', 'Please check your email for the code', 'fas fa-sign-in-alt', false);
-        return res.render('auth/accountConfirmationCustomer', { code : code, first_name : FirstName, last_name : LastName, contact : Contact, email : Email, password : Password });
+        return res.render('auth/accountConfirmationCustomer', { code : code, name:Name , contact : Contact, email : Email, password : Password });
 	}
 	catch (error) {
 		//	Else internal server error
@@ -501,8 +499,7 @@ function account_confirmation_customer_process(req, res) {
     let errors = [];
     let generatedCode = req.params.code
 	let Email = req.params.email
-	let FirstName = req.params.first_name
-	let LastName = req.params.last_name
+	let Name = req.params.name
 	let Contact = req.params.contact
 	let Password = req.params.password
     let { confirmationCode } = req.body;
@@ -518,22 +515,17 @@ function account_confirmation_customer_process(req, res) {
 	catch (error) {
 		console.error("There is errors with the registration form body.");
 		console.error(error);
-		return res.render('auth/accountConfirmationCustomer', { errors: errors, code : generatedCode, first_name : FirstName, last_name : LastName, contact : Contact, email : Email, password : Password  });
+		return res.render('auth/accountConfirmationCustomer', { errors: errors, code:generatedCode, name:Name, contact:Contact, email:Email, password:Password });
 	}
 
 	//	Create new user, now that all the test above passed
 	try {
 		User.create({
-			"email" : Email,
-			"role" : "customer"
-		})
-		CustomerUser.create({
-			"first_name":  FirstName,
-			"last_name":  LastName,
+			"name":  Name,
 			"contact":  Contact,
 			"email":    Email,
 			"password":  Password,
-			"role": "customer"
+			"role": UserRole.Customer
 		})
 		res.redirect("/auth/loginCustomer");
 
@@ -554,13 +546,13 @@ function account_confirmation_business_page(req, res) {
 
 async function account_confirmation_business_process(req, res) {
     let errors = [];
-    let generatedCode = req.params.code
+    let generatedCode = req.params.code;
+    let { confirmationCode } = req.body;
+
+	let Name = req.params.name
 	let Email = req.params.email
-	let BusinessName = req.params.business_name
-	let Address = req.params.address
 	let Contact = req.params.contact
 	let Password = req.params.password
-    let { confirmationCode } = req.body;
 
 	try {
 		if (confirmationCode !== generatedCode) {
@@ -573,23 +565,18 @@ async function account_confirmation_business_process(req, res) {
 	catch (error) {
 		console.error("There is errors with the registration form body.");
 		console.error(error);
-		return res.render('auth/accountConfirmationBusiness', { errors: errors, code : generatedCode, business_name : BusinessName, address : Address, contact : Contact, email : Email, password : Password  });
+		return res.render('auth/accountConfirmationBusiness', { errors: errors, code:generatedCode, name:Name, contact:Contact, email:Email, password:Password });
 	}
 
 	//	Create new user, now that all the test above passed
 	try {
-		User.create({
-			"email" : Email,
-			"role" : "business"
+        User.create({
+			"name":  Name,
+			"email":    Email,
+			"contact":  Contact,
+			"password":  Password,
+			"role": UserRole.Business
 		})
-        const user = await BusinessUser.create({
-            "business_name":  BusinessName,
-            "address":  Address,
-            "contact":  Contact,
-            "email":    Email,
-            "password": Password,
-			"role": "business"
-        });
 		res.redirect("/auth/loginBusiness");
 
 		flashMessage(res, 'success', 'Successfully created an account. Please login', 'fas fa-sign-in-alt', false);
@@ -617,7 +604,7 @@ function makeid(length) {
 }
 
 
-//Admin login
+// Admin login
 router.get("/adminlogin",     admin_login_page);
 router.post("/adminlogin",    	admin_login_process);
 
@@ -630,7 +617,7 @@ async function admin_login_process(req, res, next) {
 	
 	let errors = [];
 	try {
-		const user = await BusinessUser.findOne({
+		const user = await User.findOne({
 			where:{
 			"email": "chefrontceo@gmail.com",
 			}

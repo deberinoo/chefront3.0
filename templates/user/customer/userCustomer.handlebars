@@ -1,4 +1,4 @@
-<title>Chefront - {{user.first_name}} {{user.last_name}}</title>
+<title>Chefront - {{user.name}}</title>
 
 <link rel="stylesheet" href="/public/css/profile.css">
 
@@ -33,7 +33,7 @@
                             <div class="col">
                                 <div class="row align-items-center">
                                     <div class="col-md-7">
-                                        <h4 class="mb-1">{{user.first_name}} {{user.last_name}} </h4>
+                                        <h4 class="mb-1">{{user.name}} </h4>
                                     </div>
                                 </div>
                                 <div class="row mb-4">
@@ -47,12 +47,8 @@
                         <hr class="my-4" />
                         <div class="form-row">
                             <div class="form-group col-md-6">
-                                <label for="firstname">First Name</label>
-                                <input type="text" id="firstname" readonly class="form-control-plaintext text-dark" value="{{user.first_name}}" />
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label for="lastname">Last Name</label>
-                                <input type="text" id="lastname" readonly class="form-control-plaintext text-dark" value="{{user.last_name}}" />
+                                <label for="firstname">Name</label>
+                                <input type="text" id="firstname" readonly class="form-control-plaintext text-dark" value="{{user.name}}" />
                             </div>
                         </div>
                         <div class="form-group">

@@ -1,14 +1,12 @@
 import { Router }       from 'express';
 import { flashMessage } from '../utils/flashmsg.mjs';
-import { BusinessUser } from '../data/Business.mjs';
-import { CustomerUser } from '../data/Customer.mjs';
-import { Outlets }      from '../data/Outlets.mjs';
 
-import { User }         from '../data/Users.mjs';
-import { Feedback }     from '../data/Feedback.mjs'
+import { User }         from '../data/models/Users.mjs';
+import { Outlets }      from '../data/models/Outlets.mjs';
+import { Feedback }     from '../data/models/Feedback.mjs'
 
 import ORM              from 'sequelize';
-const { Sequelize, DataTypes, Model, Op } = ORM;
+const { Op } = ORM;
 
 const router = Router();
 export default router;

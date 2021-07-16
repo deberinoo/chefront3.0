@@ -27,12 +27,12 @@
                     <div class="d-flex flex-wrap justify-content-center">
                         {{#each restaurants}}
                             <div class="card mr-3 mb-5">
-                                <a href="/restaurant/{{business_name}}/{{location}}">
+                                <a href="/restaurant/{{name}}/{{location}}">
                                     <img class="card-img-top img-fluid"
                                         src="/{{thumbnail}}"
                                         alt="Card image cap" width="300">
                                     <div class="card-body">
-                                        <h4 class="card-title">{{business_name}}</h4>
+                                        <h4 class="card-title">{{name}}</h4>
                                         <p class="card-text">{{location}} • ${{price}}</p>
                                         <p class="card-text"></p>
                                     </div>

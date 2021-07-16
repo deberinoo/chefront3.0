@@ -14,7 +14,7 @@
                             </div>
 							<div class="card pt-2 p-3 mb-2">
                                 <div>
-                                    <h3>{{reservation.business_name}}</h3>
+                                    <h3>{{reservation.name}}</h3>
                                     <h5>{{restaurant.location}} • ${{restaurant.price}}</h5>
                                 </div>
                             </div>
@@ -25,12 +25,12 @@
 							<form action="../../{{ reservation.user_email }}/save-reservation/{{ reservation.reservation_id }}?_method=PUT" method="post">
                                 <span class="form-label" style="font-size: larger">Reservation Details</span>
                                 <br><br>
-                                <input type="hidden" value="{{reservation.business_name}}" name="BusinessName">
+                                <input type="hidden" value="{{reservation.name}}" name="BusinessName">
                                 <input type="hidden" value="{{reservation.location}}" name="Location">
                                 {{#if user}}
                                     <div class="form-group">
                                         <span class="form-label">Your Name</span>
-                                        <input class="form-control" type="text" value="{{user.first_name}} {{user.last_name}}" name="Name">
+                                        <input class="form-control" type="text" value="{{user.name}}" name="Name">
                                     </div>
                                     <div class="row">
                                         <div class="col-sm-6">

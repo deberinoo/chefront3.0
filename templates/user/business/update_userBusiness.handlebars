@@ -10,23 +10,23 @@
                 <div class="my-4">
                     <ul class="nav nav-tabs mb-4" id="myTab" role="tablist">
                         <li class="nav-item">
-                            <a class="nav-link active" id="home-tab" href="/u/b/{{user.business_name}}" role="tab"
+                            <a class="nav-link active" id="home-tab" href="/u/b/{{user.name}}" role="tab"
                                 aria-controls="home" aria-selected="false">Profile</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="home-tab" href="/u/b/{{user.business_name}}/view-outlets" role="tab"
+                            <a class="nav-link" id="home-tab" href="/u/b/{{user.name}}/view-outlets" role="tab"
                                 aria-controls="home" aria-selected="false">Outlets</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="home-tab" href="/u/b/{{user.business_name}}/view-discount-slots" role="tab"
+                            <a class="nav-link" id="home-tab" href="/u/b/{{user.name}}/view-discount-slots" role="tab"
                                 aria-controls="home" aria-selected="false">Discount slots</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="home-tab" href="/u/b/{{user.business_name}}/reservation-status" role="tab"
+                            <a class="nav-link" id="home-tab" href="/u/b/{{user.name}}/reservation-status" role="tab"
                                 aria-controls="home" aria-selected="false">View reservation status</a>
                         </li>
                     </ul>
-                    <form class="col-12" action="/u/b/saveUser/{{user.business_name}}?_method=PUT" method="post">
+                    <form class="col-12" action="/u/b/saveUser/{{user.name}}?_method=PUT" method="post">
                         <input type="hidden" name="_method" value="PUT">
                         {{#if user}}
                             <div class="row mt-5 align-items-center">
@@ -39,7 +39,7 @@
                                 <div class="col">
                                     <div class="row align-items-center">
                                         <div class="col-md-7">
-                                            <h4 class="mb-1">{{user.business_name}}</h4>
+                                            <h4 class="mb-1">{{user.name}}</h4>
                                         </div>
                                     </div>
                                     <div class="row mb-4">
@@ -54,15 +54,11 @@
                             <hr class="my-4" />
                             <div class="form-group">
                                 <label for="inputEmail4">Business Name</label>
-                                <input type="text" name="BusinessName" class="form-control text-dark" id="businessName" value="{{user.business_name}}" />
+                                <input type="text" name="Name" class="form-control text-dark" id="businessName" value="{{user.name}}" />
                             </div>
                             <div class="form-group">
                                 <label for="inputEmail4">Email</label>
                                 <input type="email" name="Email" class="form-control text-dark" id="inputEmail4" value="{{user.email}}"/>
-                            </div>
-                            <div class="form-group">
-                                <label for="inputAddress5">Address</label>
-                                <input type="text" name="Address" class="form-control text-dark" id="inputAddress5" value="{{user.address}}"/>
                             </div>
                             <div class="form-group">
                                 <label for="inputAddress5">Contact Number</label>
@@ -96,7 +92,7 @@
                                     </ul>
                                 </div>
                             </div>
-                            <a href="/u/{{user.business_name}}"><button type="button" class="btn btn-outline-danger mr-3">Cancel</button></a>   
+                            <a href="/u/{{user.name}}"><button type="button" class="btn btn-outline-danger mr-3">Cancel</button></a>   
                             <button type="submit" class="btn btn-danger">Save Changes</button>
                         {{/if}}
                     </form>

@@ -1,4 +1,4 @@
-<title>Chefront - {{user.business_name}}</title>
+<title>Chefront - {{user.name}}</title>
 
 <link rel="stylesheet" href="/public/css/profile.css">
 
@@ -10,19 +10,19 @@
                 <div class="my-4">
                     <ul class="nav nav-tabs mb-4" id="myTab" role="tablist">
                         <li class="nav-item">
-                            <a class="nav-link active" id="home-tab" href="/u/b/{{user.business_name}}" role="tab"
+                            <a class="nav-link active" id="home-tab" href="/u/b/{{user.name}}" role="tab"
                                 aria-controls="home" aria-selected="false">Profile</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="home-tab" href="/u/b/{{user.business_name}}/view-outlets" role="tab"
+                            <a class="nav-link" id="home-tab" href="/u/b/{{user.name}}/view-outlets" role="tab"
                                 aria-controls="home" aria-selected="false">Outlets</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="home-tab" href="/u/b/{{user.business_name}}/view-discount-slots" role="tab"
+                            <a class="nav-link" id="home-tab" href="/u/b/{{user.name}}/view-discount-slots" role="tab"
                                 aria-controls="home" aria-selected="false">Discount slots</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="home-tab" href="/u/b/{{user.business_name}}/reservation-status" role="tab"
+                            <a class="nav-link" id="home-tab" href="/u/b/{{user.name}}/reservation-status" role="tab"
                                 aria-controls="home" aria-selected="false">View reservation status</a>
                         </li>
                     </ul>
@@ -38,7 +38,7 @@
                                 <div class="col">
                                     <div class="row align-items-center">
                                         <div class="col-md-7">
-                                            <h4 class="mb-1">{{user.business_name}}</h4>
+                                            <h4 class="mb-1">{{user.name}}</h4>
                                         </div>
                                     </div>
                                     <div class="row mb-4">
@@ -53,22 +53,18 @@
                             <hr class="my-4" />
                             <div class="form-group">
                                 <label for="inputEmail4">Business Name</label>
-                                <input type="text" readonly class="form-control-plaintext text-dark" id="businessName" value="{{user.business_name}}" />
+                                <input type="text" readonly class="form-control-plaintext text-dark" id="businessName" value="{{user.name}}" />
                             </div>
                             <div class="form-group">
                                 <label for="inputEmail4">Email</label>
                                 <input type="email" readonly class="form-control-plaintext text-dark" id="inputEmail4" value="{{user.email}}" placeholder="" />
                             </div>
                             <div class="form-group">
-                                <label for="inputAddress5">Address</label>
-                                <input type="text" readonly class="form-control-plaintext text-dark" id="inputAddress5" value="{{user.address}}" placeholder="" />
-                            </div>
-                            <div class="form-group">
                                 <label for="inputAddress5">Contact Number</label>
                                 <input type="text" readonly class="form-control-plaintext text-dark" id="inputAddress5" value="{{user.contact}}" placeholder="" />
                             </div>
                         {{/if}}
-                        <a class="btn btn-danger mt-3" href="../b/edit/{{user.business_name}}">
+                        <a class="btn btn-danger mt-3" href="../b/edit/{{user.name}}">
                             Edit Profile
                         </a>
                         <a class="btn btn-danger mt-3" href="../b/delete/{{user.email}}">

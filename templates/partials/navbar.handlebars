@@ -24,13 +24,13 @@
 						{{#if business}}
 						<button class="btn btn-lg btn-outline-danger dropdown-toggle" type="button" id="dropdownMenuButton"
 							data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-							{{user.business_name}}
+							{{user.name}}
 						</button>
 						<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-							<a class="dropdown-item" href="/u/b/{{user.business_name}}">Profile</a>
-							<a class="dropdown-item" href="/u/b/{{user.business_name}}/view-outlets">Outlets</a>
-							<a class="dropdown-item" href="/u/b/{{user.business_name}}/view-discount-slots">Discount Slots</a>
-							<a class="dropdown-item" href="/u/b/{{user.business_name}}/reservation-status">Reservation Status</a>
+							<a class="dropdown-item" href="/u/b/{{user.name}}">Profile</a>
+							<a class="dropdown-item" href="/u/b/{{user.name}}/view-outlets">Outlets</a>
+							<a class="dropdown-item" href="/u/b/{{user.name}}/view-discount-slots">Discount Slots</a>
+							<a class="dropdown-item" href="/u/b/{{user.name}}/reservation-status">Reservation Status</a>
 							<div class="dropdown-divider"></div>
 							<a class="dropdown-item" href="/auth/logout">Sign out</a>
 						</div>
@@ -38,7 +38,7 @@
 						{{#if customer}}
 							<button class="btn btn-lg btn-outline-danger dropdown-toggle" type="button" id="dropdownMenuButton"
 								data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-								{{user.first_name}} {{user.last_name}}
+								{{user.name}}
 							</button>
 							<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
 								<a class="dropdown-item" href="/u/c/{{user.email}}">Profile</a>
