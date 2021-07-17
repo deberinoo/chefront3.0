@@ -1,7 +1,7 @@
-import { Router }       		from 'express';
-import { flashMessage } 		from '../utils/flashmsg.mjs'
-import { User, UserRole } 		from '../data/models/Users.mjs'
-import { sendMail,sendMailPasswordChange, sendMailPasswordChangeBusiness } from '../data/mail.mjs';
+import { Router }       					from 'express';
+import { flashMessage } 					from '../utils/flashmsg.mjs'
+import { User, UserRole } 					from '../data/models/Users.mjs'
+import { sendMail, sendMailPasswordChange } from '../data/mail.mjs';
 
 import Passport         from 'passport';
 import Hash             from 'hash.js';
@@ -21,35 +21,27 @@ export default router;
  const regexPwd = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/
 
 // General routes
-router.get("/login",     								login_page);
-router.get("/register",    								register_page);
-router.get("/logout",     								logout_process);
+router.get("/login",     					login_page);
+router.post("/login", 						login_process);
+router.get("/register",    					register_page);
+router.get("/logout",     					logout_process);
+
+router.get("/forgetPassword", 				forget_password_page)
+router.post("/forgetPassword", 				forget_password_process)
+router.get("/resetPassword/:email", 		reset_password_page)
+router.put("/resetPassword/:email", 		reset_password_process)
 
 // Business routes
-router.get("/loginBusiness", 							business_login_page);
-router.post("/loginBusiness", 							business_login_process);
-router.get("/registerBusiness",     					register_business_page);
-router.post("/registerBusiness",    					register_business_process);
-
-router.get("/forgetPasswordBusiness", 					forget_password_business_page)
-router.post("/forgetPasswordBusiness", 					forget_password_business_process)
-router.get("/resetPasswordBusiness/:email", 			reset_password_business_page)
-router.put("/resetPasswordBusinessProcess/:email", 		reset_password_business_process)
-router.get("/accountConfirmationBusiness", 												account_confirmation_business_page)
-router.post("/accountConfirmationBusiness/:code/:name/:contact/:email/:password", 		account_confirmation_business_process)
+router.get("/registerBusiness",     												register_business_page);
+router.post("/registerBusiness",    												register_business_process);
+router.get("/accountConfirmationBusiness", 											account_confirmation_business_page)
+router.post("/accountConfirmationBusiness/:code/:name/:contact/:email/:password", 	account_confirmation_business_process)
 
 // Customer routes
-router.get("/loginCustomer",    						customer_login_page);
-router.post("/loginCustomer",    						customer_login_process);
-router.get("/registerCustomer",     					register_customer_page);
-router.post("/registerCustomer",    					register_customer_process);
-
-router.get("/forgetPasswordCustomer", 					forget_password_customer_page)
-router.post("/forgetPasswordCustomer", 					forget_password_customer_process)
-router.get("/resetPasswordCustomer/:email", 			reset_password_customer_page)
-router.put("/resetPasswordCustomerProcess/:email", 		reset_password_customer_process)
-router.get("/accountConfirmationCustomer", 															account_confirmation_customer_page)
-router.post("/accountConfirmationCustomer/:code/:name/:contact/:email/:password",  					account_confirmation_customer_process)
+router.get("/registerCustomer",     												register_customer_page);
+router.post("/registerCustomer",    												register_customer_process);
+router.get("/accountConfirmationCustomer", 											account_confirmation_customer_page)
+router.post("/accountConfirmationCustomer/:code/:name/:contact/:email/:password",  	account_confirmation_customer_process)
 
 // ----------------
 // Check user role
@@ -74,9 +66,54 @@ function getRole(role) {
 // ----------------
 
 // General - Login, Register, Logout
-
 function login_page(req, res) {
 	return res.render('auth/login');
+}
+
+async function login_process(req, res, next) {
+    let { Email, Password } = req.body;
+
+	let errors = [];
+	try {
+		const user = await User.findOne({
+			where: {
+				"email": Email,
+				"password": Hash.sha256().update(Password).digest('hex'),
+			}
+		});
+		if (user == null) {
+			errors = errors.concat({ text: "Invalid user credentials!" });
+			return res.render('auth/login', { errors: errors });
+		}
+		if (errors.length > 0) {
+			throw new Error("There are validation errors");
+		}
+	}
+	catch (error) {
+		console.error("There is errors with the login form body.");
+		console.error(error);
+		return res.render('auth/login', { errors: errors });
+	}
+
+	const user = await User.findOne({
+        where: {
+            "email": Email,
+			"password": Hash.sha256().update(Password).digest('hex'),
+        }
+	});
+
+	let id = '';
+	if (user.role == 'business') {
+		id = 'b';
+	} else if (user.role == 'customer') {
+		id = 'c';
+	}
+
+	return Passport.authenticate('local', {
+		successRedirect: "/u/" + id + "/" + user.name,
+		failureRedirect: "/auth/login",
+		failureFlash:    true
+	})(req, res, next);
 }
 
 function register_page(req, res) {
@@ -88,102 +125,13 @@ function logout_process(req, res) {
 	return res.redirect("/home");
 }
 
-// Login
-
-function business_login_page(req, res) {
-	return res.render('auth/loginBusiness');
-}
-
-async function business_login_process(req, res, next) {
-    let { Email, Password } = req.body;
-
-	let errors = [];
-	try {
-		const user = await User.findOne({
-			where: {
-				"email": Email,
-				"password": Hash.sha256().update(Password).digest('hex'),
-				"role": UserRole.Business
-			}
-		});
-		if (user == null) {
-			errors = errors.concat({ text: "Invalid user credentials!" });
-			return res.render('auth/loginBusiness', { errors: errors });
-		}
-		if (errors.length > 0) {
-			throw new Error("There are validation errors");
-		}
-	}
-	catch (error) {
-		console.error("There is errors with the login form body.");
-		console.error(error);
-		return res.render('auth/loginBusiness', { errors: errors });
-	}
-
-	const user = await User.findOne({
-        where: {
-            "email": Email,
-			"password": Hash.sha256().update(Password).digest('hex'),
-			"role": UserRole.Business
-        }
-	});
-
-	return Passport.authenticate('local', {
-		successRedirect: "/u/b/" + user.name,
-		failureRedirect: "/auth/loginBusiness",
-		failureFlash:    true
-	})(req, res, next);
-}
-
-function customer_login_page(req, res) {
-	return res.render('auth/loginCustomer');
-}
-
-async function customer_login_process(req, res, next) {
-    let { Email, Password } = req.body;
-	
-	let errors = [];
-	try {
-		const user = await User.findOne({
-			where: {
-				"email": Email,
-				"password": Hash.sha256().update(Password).digest('hex'),
-				"role": UserRole.Customer
-			}
-		});
-		if (user == null) {
-			errors = errors.concat({ text: "Invalid user credentials!" });
-			return res.render('auth/loginCustomer', { errors: errors });
-		}
-	}
-	catch (error) {
-		console.error("There is errors with the login form body.");
-		console.error(error);
-		return res.render('auth/loginCustomer', { errors: errors });
-	}
-
-	const user = await User.findOne({
-		where: {
-			"email": Email,
-			"password": Hash.sha256().update(Password).digest('hex'),
-			"role": UserRole.Customer
-		}
-	});
-
-	return Passport.authenticate('local', {
-		successRedirect: "/u/c/"+ user.email,
-		failureRedirect: "/auth/loginCustomer",
-		failureFlash:    true
-	})(req, res, next);
-}
 
 // Forgot Password
-
-function forget_password_business_page(req, res) {
-	return res.render('auth/forgetPasswordBusiness');
+function forget_password_page(req, res) {
+	return res.render('auth/forgetPassword');
 }
 
-async function forget_password_business_process(req, res, next) {
+async function forget_password_process(req, res, next) {
     let { Email } = req.body;
 	
 	let errors = [];
@@ -192,7 +140,7 @@ async function forget_password_business_process(req, res, next) {
 			errors = errors.concat({ text: "Invalid email address!" });
 		}
 		else {
-			const user = await User.findOne({where: {email: Email, role: UserRole.Business}});
+			const user = await User.findOne({where: {email: Email}});
 			if (user == null) {
 				errors = errors.concat({ text: "This email does not exist!" });
 			}
@@ -204,57 +152,11 @@ async function forget_password_business_process(req, res, next) {
 	catch (error) {
 		console.error("There is errors with the login form body.");
 		console.error(error);
-		return res.render('auth/forgetPasswordBusiness', { errors: errors });
+		return res.render('auth/forgetPassword', { errors: errors });
 	}
 
 	try {
-		const user = await User.findOne({where: {email: Email, role: UserRole.Business}});
-		const email = Email
-		sendMailPasswordChangeBusiness(email)
-			.then((result) => console.log('Email sent...', result))
-			.catch((error) => console.log(error.message));
-
-		flashMessage(res, 'success', 'Email successfully sent. Please check your email to change your password.', 'fa fa-envelope', false);
-		res.redirect("/auth/login");
-	}
-	catch (error) {
-		//	Else internal server error
-		console.error(`Failed to send email to  ${Email} `);
-		console.error(error);
-		return res.status(500).end();
-	}
-}
-
-function forget_password_customer_page(req, res) {
-	return res.render('auth/forgetPasswordCustomer');
-}
-
-async function forget_password_customer_process(req, res, next) {
-    let { Email } = req.body;
-	
-	let errors = [];
-	try {
-		if (! regexEmail.test(Email)) {
-			errors = errors.concat({ text: "Invalid email address!" });
-		}
-		else {
-			const user = await User.findOne({where: {email: Email, role: UserRole.Customer}});
-			if (user == null) {
-				errors = errors.concat({ text: "This email does not exist!" });
-			}
-		}
-		if (errors.length > 0) {
-			throw new Error("There are validation errors");
-		}
-	}
-	catch (error) {
-		console.error("There is errors with the login form body.");
-		console.error(error);
-		return res.render('auth/forgetPasswordCustomer', { errors: errors });
-	}
-
-	try {
-		const user = await User.findOne({where: {email: Email, role: UserRole.Customer}});
+		const user = await User.findOne({where: {email: Email}});
 		const email = Email
 		sendMailPasswordChange(email)
 			.then((result) => console.log('Email sent...', result))
@@ -272,11 +174,11 @@ async function forget_password_customer_process(req, res, next) {
 }
 
 // Reset Password
-function reset_password_business_page(req, res) {
-	return res.render('auth/resetPasswordBusiness', { email : req.params.email});
+function reset_password_page(req, res) {
+	return res.render('auth/resetPassword', { email : req.params.email});
 }
 
-function reset_password_business_process(req, res, next) {
+function reset_password_process(req, res, next) {
     let { InputPassword } = req.body;
 	
 	let errors = [];
@@ -293,7 +195,7 @@ function reset_password_business_process(req, res, next) {
 		console.log("form error")
 		console.error("There is errors with the login form body.");
 		console.error(error);
-		return res.render('auth/resetPasswordBusiness', { errors: errors });
+		return res.render('auth/resetPassword', { errors: errors });
 	}
 
 	try {
@@ -306,54 +208,7 @@ function reset_password_business_process(req, res, next) {
 		});
 		console.log("Pass changed")
 		flashMessage(res, 'success', 'Password successfully changed. Please login.', 'fas fa-sign-in-alt', false);
-		res.redirect("/auth/loginBusiness");
-	}
-	catch (error) {
-		//	Else internal server error
-		console.log("Pass changing error")
-		console.error(`Failed to update email for ${Email} `);
-		console.error(error);
-		return res.status(500).end();
-	}
-}
-
-function reset_password_customer_page(req, res) {
-	console.log("reset page shown")
-	return res.render('auth/resetPasswordCustomer', { email : req.params.email});
-}
-
-function reset_password_customer_process(req, res, next) {
-	console.log("resetting process started")
-    let { InputPassword } = req.body;
-	
-	let errors = [];
-	try {
-		if (! regexPwd.test(InputPassword)) {
-			errors = errors.concat({ text: "Password requires minimum eight characters, at least one uppercase letter, one lowercase letter and one number!" });
-		}
-		
-		if (errors.length > 0) {
-			throw new Error("There are validation errors");
-		}
-	}
-	catch (error) {
-		console.log("form error")
-		console.error("There is errors with the login form body.");
-		console.error(error);
-		return res.render('auth/resetPasswordCustomer', { errors: errors });
-	}
-
-	try {
-		User.update({
-			"password" : Hash.sha256().update(InputPassword).digest('hex'),
-		}, {
-			where: {
-				email : req.params.email
-			}
-		});
-		console.log("Pass changed")
-		flashMessage(res, 'success', 'Password successfully changed. Please login.', 'fas fa-sign-in-alt', false);
-		res.redirect("/auth/loginCustomer");
+		res.redirect("/auth/login");
 	}
 	catch (error) {
 		//	Else internal server error
@@ -490,54 +345,6 @@ async function register_customer_process(req, res) {
 };
 
 // Account Confirmation
-
-function account_confirmation_customer_page(req, res) {
-	return res.render('auth/accountConfirmationCustomer');
-}
-
-function account_confirmation_customer_process(req, res) {
-    let errors = [];
-    let generatedCode = req.params.code
-	let Email = req.params.email
-	let Name = req.params.name
-	let Contact = req.params.contact
-	let Password = req.params.password
-    let { confirmationCode } = req.body;
-
-	try {
-		if (confirmationCode !== generatedCode) {
-			errors = errors.concat({ text: "Codes do not match!" });
-		}
-		if (errors.length > 0) {
-			throw new Error("There are validation errors");
-		}
-	}
-	catch (error) {
-		console.error("There is errors with the registration form body.");
-		console.error(error);
-		return res.render('auth/accountConfirmationCustomer', { errors: errors, code:generatedCode, name:Name, contact:Contact, email:Email, password:Password });
-	}
-
-	//	Create new user, now that all the test above passed
-	try {
-		User.create({
-			"name":  Name,
-			"contact":  Contact,
-			"email":    Email,
-			"password":  Password,
-			"role": UserRole.Customer
-		})
-		flashMessage(res, 'success', 'Successfully created an account. Please login', 'fas fa-sign-in-alt', false);
-		res.redirect("/auth/loginCustomer");
-	}
-	catch (error) {
-		//	Else internal server error
-		console.error(`Failed to create a new user: ${Email} `);
-		console.error(error);
-		return res.status(500).end();
-	}
-};
-
 function account_confirmation_business_page(req, res) {
 	return res.render('auth/accountConfirmationBusiness');
 }
@@ -576,7 +383,54 @@ async function account_confirmation_business_process(req, res) {
 			"role": UserRole.Business
 		})
 		flashMessage(res, 'success', 'Successfully created an account. Please login', 'fas fa-sign-in-alt', false);
-		res.redirect("/auth/loginBusiness");
+		res.redirect("/auth/login");
+	}
+	catch (error) {
+		//	Else internal server error
+		console.error(`Failed to create a new user: ${Email} `);
+		console.error(error);
+		return res.status(500).end();
+	}
+};
+
+function account_confirmation_customer_page(req, res) {
+	return res.render('auth/accountConfirmationCustomer');
+}
+
+function account_confirmation_customer_process(req, res) {
+    let errors = [];
+    let generatedCode = req.params.code
+	let Email = req.params.email
+	let Name = req.params.name
+	let Contact = req.params.contact
+	let Password = req.params.password
+    let { confirmationCode } = req.body;
+
+	try {
+		if (confirmationCode !== generatedCode) {
+			errors = errors.concat({ text: "Codes do not match!" });
+		}
+		if (errors.length > 0) {
+			throw new Error("There are validation errors");
+		}
+	}
+	catch (error) {
+		console.error("There is errors with the registration form body.");
+		console.error(error);
+		return res.render('auth/accountConfirmationCustomer', { errors: errors, code:generatedCode, name:Name, contact:Contact, email:Email, password:Password });
+	}
+
+	//	Create new user, now that all the test above passed
+	try {
+		User.create({
+			"name":  Name,
+			"contact":  Contact,
+			"email":    Email,
+			"password":  Password,
+			"role": UserRole.Customer
+		})
+		flashMessage(res, 'success', 'Successfully created an account. Please login', 'fas fa-sign-in-alt', false);
+		res.redirect("/auth/login");
 	}
 	catch (error) {
 		//	Else internal server error

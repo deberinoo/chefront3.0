@@ -19,13 +19,20 @@ export class Feedback extends Model {
             }            
         })
     }
-    get dateCreated() { return this.getDataValue("dateCreated"); }
-    get uuid() { return this.getDataValue("uuid"); }
-    get email() { return this.getDataValue("email"); }
-    get name() { return this.getDataValue("name"); }
-    get phone() { return this.getDataValue("phone"); }
-    get message() { return this.getDataValue("message"); }
-    get read() { return this.getDataValue("read"); }
+    get uuid()     { return String(this.getDataValue("uuid")); }
+    get email()    { return String(this.getDataValue("email")); }
+    get name()     { return String(this.getDataValue("name")); }
+    get phone()    { return String(this.getDataValue("phone")); }
+    get message()  { return String(this.getDataValue("message")); }
+    get read()     { return Boolean(this.getDataValue("read")); }
+    get dateCreated() { return new Date(this.getDataValue("dateCreated")); }
+    get dateUpdated() { return new Date(this.getDataValue("dateUpdated")); }
 
-    set name(name) { return this.setDataValue("name", name); }
+
+    set uuid(uuid)        { this.setDataValue("uuid", uuid); }
+    set name(name)        { this.setDataValue("name", name); }
+    set phone(phone)      { this.setDataValue("phone", phone); }
+    set email(email)      { this.setDataValue("email", email); }
+    set message(message)  { this.setDataValue("message", message); }
+    set read(read)        { this.setDataValue("read", read); }
 }

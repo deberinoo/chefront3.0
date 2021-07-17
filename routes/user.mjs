@@ -5,6 +5,7 @@ import { User, UserRole }   from '../data/models/Users.mjs'
 import { DiscountSlot }     from '../data/models/DiscountSlot.mjs';
 import { Outlets }          from '../data/models/Outlets.mjs';
 import { Reservations } 	from '../data/models/Reservations.mjs';
+
 import { UploadFile }       from '../utils/multer.mjs';
 
 import ORM             from 'sequelize';
@@ -99,6 +100,13 @@ function edit_user_business_page(req, res) {
 function save_edit_user_business(req, res) {
     let { Name, Email, Address, Contact } = req.body;
 
+    const user = User.findOne({
+        where: {
+            role: UserRole.Business,
+            name: req.params.name
+        }
+    })
+
     User.update({
         name: Name,
         email: Email,
@@ -110,6 +118,7 @@ function save_edit_user_business(req, res) {
             name: req.params.name
         }
         }).then(() => {
+            console.log(`user name saved as ${Name}`);
             res.redirect(`/u/b/${Name}`);
     }).catch(err => console.log(err));  
 };
@@ -119,17 +128,6 @@ function delete_business_user(req, res) {
         where: {
             email : req.params.user_email
         },
-    }).then((user) => {
-        if (user != null) {
-            User.destroy({
-                where: {
-                    email : req.params.user_email
-                }
-            })
-        }
-        else {
-	    res.redirect('/404');
-    }
     }).then((user) => {
         if (user != null) {
             User.destroy({
@@ -621,7 +619,7 @@ function save_edit_reservation(req, res){
         user_name : Name,
         user_email : Email,
         user_contact : Contact,
-        res_date : ResDate,
+        date : ResDate,
         pax : Pax
     }, {
         where: {
