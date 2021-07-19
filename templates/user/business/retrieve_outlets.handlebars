@@ -2,6 +2,11 @@
 
 <link rel="stylesheet" href="/public/css/profile.css">
 <script src="https://unpkg.com/bootstrap-table@1.18.3/dist/bootstrap-table.min.js"></script>
+<link href="https://unpkg.com/bootstrap-table@1.18.3/dist/bootstrap-table.min.css" rel="stylesheet">
+<script src="https://unpkg.com/bootstrap-table@1.18.3/dist/extensions/addrbar/bootstrap-table-addrbar.min.js"></script>
+<script src="https://unpkg.com/bootstrap-table@1.18.3/dist/extensions/filter-control/bootstrap-table-filter-control.min.js"></script>
+<!--<script src="https://unpkg.com/tableexport.jquery.plugin/tableExport.min.js"></script>-->
+<script src="https://unpkg.com/bootstrap-table@1.18.3/dist/extensions/export/bootstrap-table-export.min.js"></script>
 
 <section>
     <div class="container">
@@ -44,18 +49,18 @@
                 data-search="true">
                 <thead class="thead-dark">
                     <tr>
-                        <th scope="col" data-sortable="true">Location</th>
-                        <th scope="col" data-sortable="true">Address</th>
-                        <th scope="col" data-sortable="true">Postal Code</th>
-                        <th scope="col" data-sortable="true">Price</th>
-                        <th scope="col" data-sortable="true">Contact</th>
-                        <th scope="col" data-sortable="true">Description</th>
-                        <th scope="col" data-sortable="true">Thumbnail</th>
+                        <th scope="col" data-sortable="true" data-field="location">Location</th>
+                        <th scope="col" data-sortable="true" data-field="address">Address</th>
+                        <th scope="col" data-sortable="true" data-field="postal_code">Postal Code</th>
+                        <th scope="col" data-sortable="true" data-field="price">Price</th>
+                        <th scope="col" data-sortable="true" data-field="contact">Contact</th>
+                        <th scope="col" data-sortable="true" data-field="description">Description</th>
+                        <th scope="col" data-sortable="true" data-field="thumbnail">Thumbnail</th>
                         <th scope="col">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {{#each outlet}}
+                   {{#each outlet}}
                         <tr>
                             <td>{{ location }}</td>
                             <td>{{ address }}</td>
