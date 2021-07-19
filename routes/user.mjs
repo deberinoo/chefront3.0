@@ -34,7 +34,7 @@ router.get("/b/:name/delete-discount-slot/:uuid",       delete_discount_slot);
 router.get("/b/:name/create-outlet",                    create_outlet_page);
 router.post("/b/:name/create-outlet",                   UploadFile.single("Thumbnail"), create_outlet_process);
 router.get("/b/:name/view-outlets",                     view_outlets_page);
-//router.get("/outlets-data",                             outlets_data);
+//router.get("/outlets-data",                           outlets_data);
 router.get("/b/:name/edit-outlet/:postal_code",         edit_outlet_page);
 router.put("/b/:name/saveOutlet/:postal_code",          UploadFile.single("Thumbnail"), save_edit_outlet);
 router.get("/b/:name/delete-outlet/:postal_code",       delete_outlet);
