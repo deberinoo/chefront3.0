@@ -24,10 +24,19 @@ export class DiscountSlot extends Model {
         instance.dateUpdated = Sequelize.literal('CURRENT_TIMESTAMP');
     }
 
-    get id() { return this.getDataValue("id"); }
-    get business_name() { return this.getDataValue("business_name"); }
-    get location() { return this.getDataValue("location"); }
-    get time() { return this.getDataValue("time"); }
-    get discount() { return this.getDataValue("discount"); }
-    get expired() { return this.getDataValue("expired"); }
+    get uuid()      { return String(this.getDataValue("uuid")); }
+    get name()      { return String(this.getDataValue("name")); }
+    get location()  { return String(this.getDataValue("location")); }
+    get time()      { return String(this.getDataValue("time")); }
+    get discount()  { return String(this.getDataValue("discount")); }
+    get expired()   { return String(this.getDataValue("expired")); }
+    get dateCreated() { return new Date(this.getDataValue("dateCreated")); }
+    get dateUpdated() { return new Date(this.getDataValue("dateUpdated")); }
+
+    set uuid(uuid)         { this.setDataValue("uuid", uuid); }
+    set name(name)         { this.setDataValue("name", name); }
+    set location(location) { this.setDataValue("location", location); }
+    set time(time)         { this.setDataValue("time", time); }
+    set discount(discount) { this.setDataValue("discount", discount); }
+    set expired(expired)   { this.setDataValue("expired", expired); }
 }

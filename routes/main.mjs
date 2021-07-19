@@ -280,7 +280,7 @@ async function create_reservation_process(req, res) {
 		"reservation_id":  String(getId()),
 		"name":  BusinessName,
         "location":  Location,
-		"res_date": ResDate,
+		"date": ResDate,
 		"pax": Pax,
 		"time": timediscount[0],
 		"discount": timediscount[1],

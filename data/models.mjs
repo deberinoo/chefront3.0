@@ -2,7 +2,7 @@ import ORM from 'sequelize';
 const { Sequelize, OP } = ORM;
 
 //  Import models
-import { User }             from '../data/models/Users.mjs';
+import { User, UserRole }   from '../data/models/Users.mjs';
 import { Outlets }          from '../data/models/Outlets.mjs';
 import { Reservations }     from '../data/models/Reservations.mjs';
 import { DiscountSlot }     from '../data/models/DiscountSlot.mjs';
@@ -43,12 +43,8 @@ import { Feedback }         from '../data/models/Feedback.mjs';
 			},
 			onUpdate: "CASCADE",
 			onDelete: "CASCADE",
-			foreignKey: "uuid_user"
 		});
 		
-		BusinessUser.belongsToMany(ModelProduct, { through: ModelCart, foreignKey: "uuid_user" });
-		ModelProduct.belongsToMany(ModelUser,    { through: ModelCart, foreignKey: "uuid_product" });
-	
 		console.log("Adding initialization hooks");
 		//	Run once hooks during initialization
 	}
