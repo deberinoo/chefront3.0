@@ -6,7 +6,7 @@ import { DiscountSlot }     from '../data/models/DiscountSlot.mjs';
 import { Outlets }          from '../data/models/Outlets.mjs';
 import { Reservations } 	from '../data/models/Reservations.mjs';
 
-import { UploadFile }       from '../utils/multer.mjs';
+import { UploadFile, DeleteFilePath }       from '../utils/multer.mjs';
 
 import ORM             from 'sequelize';
 const { Op } = ORM;
@@ -444,6 +444,8 @@ function edit_outlet_page(req, res){
 function save_edit_outlet(req, res){
     let { Name, Location, Address, Postalcode, Price, Contact, Description } = req.body;
 
+    
+
     Outlets.update({
         name:  Name,
         location:  Location,
@@ -457,7 +459,12 @@ function save_edit_outlet(req, res){
         where: {
             postal_code : req.params.postal_code
         }
-        }).then(() => {
+        }).then(() => {if (req.files.length > 0) {
+            console.log(`Replaced profile image ${thumbnail} with ${req.files[0].path}`)
+            //	Delete old file
+            DeleteFilePath(`${process.cwd()}/${thumbnail}`);
+            thumbnail = req.files[0].path;
+        }
             res.redirect(`/u/b/${Name}/view-outlets`);
     }).catch(err => console.log(err)); 
 };

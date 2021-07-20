@@ -47,3 +47,18 @@ export async function DeleteFile(...files) {
 			console.warn(`Attempting to delete non-existing file(s) ${file}`);
 	}
 }
+
+/**
+ * Function to delete a uploaded file
+ * @param files {...string}
+**/
+export function DeleteFilePath(...files) {
+	for (let file of files) {
+		if (FileSys.existsSync(file)) {
+			console.log(`Removing from server: ${file}`);
+			return FileSys.unlinkSync(file);
+		}
+		else
+			console.warn(`Attempting to delete non-existing file(s) ${file}`);
+	}
+}
