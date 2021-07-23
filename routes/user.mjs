@@ -318,19 +318,10 @@ async function create_outlet_process(req, res) {
 };
 
 async function view_outlets_page(req, res) {
-    const outlet = await Outlets.findAll({
-        where: {
-            "name": {
-                [Op.eq]: req.params.name
-            }
-        }
-    });
+    const user    = req.user;
+    const outlets = await user.getOutlets();
+    const owner   = await (outlets[0].getOwner());
 
-    const user = User.findOne({
-        where: {
-            "name": req.params.name
-        }
-    })
     var role = getRole(req.user.role);
     var admin = role[0];
     var business = role[1];

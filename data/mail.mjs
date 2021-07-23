@@ -2,9 +2,9 @@ import nodemailer 						from 'nodemailer';
 import { google } 						from 'googleapis';
 
 const CLIENT_ID = '393014126046-dt545klaqnl5gielf5p7ojur8eteb12v.apps.googleusercontent.com'
-const CLIENT_SECRET = 'Z5O9RwV9KoOooQi6OAg0o8XK'
+const CLIENT_SECRET = 'OFlTJIN5MWEFMrFZY9KD7CUj'
 const REDIRECT_URI = 'https://developers.google.com/oauthplayground'
-const REFRESH_TOKEN = '1//04ZoGJhDAAyXiCgYIARAAGAQSNwF-L9Ir7F5Q__mPxkm4ODFc-xElOIYmBiqaLQgRNgWLQ5zcauw64wqIZGinicUIUXvM8RVsSsM'
+const REFRESH_TOKEN = '1//04ANTgFwaSjqqCgYIARAAGAQSNwF-L9Ir1tR1z_Vnhw-SyfUfwbdbusbGai03t6G6C25O4QWHCsXBnxX6dGnMa7QbQ5-ccpL1Td8'
 
 const oAuth2Client = new google.auth.OAuth2(
 	CLIENT_ID,
