@@ -27,6 +27,7 @@ router.get("/b/delete/:user_email",                     delete_business_user);
 router.get("/b/:name/create-discount-slot",             create_discount_slot_page);
 router.post("/b/:name/create-discount-slot",            create_discount_slot_process);
 router.get("/b/:name/view-discount-slots",              view_discount_slots_page);
+router.get("/b/:name/discounts-data",                   discounts_data);
 router.get("/b/:name/edit-discount-slot/:uuid",         edit_discount_slot_page);
 router.put("/b/:name/saveDiscountSlot/:uuid",           save_edit_discount_slot);
 router.get("/b/:name/delete-discount-slot/:uuid",       delete_discount_slot);
@@ -35,9 +36,9 @@ router.get("/b/:name/delete-discount-slot/:uuid",       delete_discount_slot);
 router.get("/b/:name/create-outlet",                    create_outlet_page);
 router.post("/b/:name/create-outlet",                   UploadFile.single("Thumbnail"), create_outlet_process);
 router.get("/b/:name/view-outlets",                     view_outlets_page);
-//router.get("/outlets-data",                           outlets_data);
+router.get("/b/:name/outlets-data",                     outlets_data);
 router.get("/b/:name/edit-outlet/:postal_code",         edit_outlet_page);
-router.put("/b/:name/saveOutlet/:postal_code",          UploadFile.single("Thumbnail"), save_edit_outlet);
+router.put("/b/:name/saveOutlet/:postal_code",          UploadFile.any("Thumbnail"), save_edit_outlet);
 router.get("/b/:name/delete-outlet/:postal_code",       delete_outlet);
 
 // Reservations
@@ -183,31 +184,100 @@ async function create_discount_slot_process(req, res) {
     res.redirect(`/u/b/${Name}/view-discount-slots`);
 };
 
-async function view_discount_slots_page(req, res) {
-    const user = User.findOne({
-        where: {
-            "name": req.params.name
-        }
-    })
-    var role = getRole(req.user.role);
-    var admin = role[0];
-    var business = role[1];
-    var customer = role[2];
+// async function view_discount_slots_page(req, res) {
+//     const user = User.findOne({
+//         where: {
+//             "name": req.params.name
+//         }
+//     })
+//     var role = getRole(req.user.role);
+//     var admin = role[0];
+//     var business = role[1];
+//     var customer = role[2];
     
-    const discountslot = await DiscountSlot.findAll({
-        where: {
-            "name": {
-                [Op.eq]: req.params.name
+//     const discountslot = await DiscountSlot.findAll({
+//         where: {
+//             "name": {
+//                 [Op.eq]: req.params.name
+//             }
+//         }
+//     });
+//     return res.render('user/business/retrieve_discountslots', {
+//         discountslot: discountslot,
+//         admin: admin,
+//         business: business,
+//         customer: customer
+//     });
+// };
+
+async function view_discount_slots_page(req, res) {
+    //    const user    = req.user;
+    //    const outlets = await user.getOutlets();
+    //    const owner   = await (outlets[0].getOwner());
+    
+        var role = getRole(req.user.role);
+        var admin = role[0];
+        var business = role[1];
+        var customer = role[2];
+        
+        return res.render('user/business/retrieve_discountslots', {
+            admin: admin,
+            business: business,
+            customer: customer
+        });
+    };
+
+    /**
+* Provides bootstrap table with data
+* @param {import('express')Request}  req Express Request handle
+* @param {import('express')Response} res Express Response handle
+*/
+async function discounts_data(req, res) {
+    try {
+        console.log('finding discount data');
+        let pageSize = parseInt(req.query.limit);
+        let offset = parseInt(req.query.offset);
+        let sortBy = req.query.sort ? req.query.sort : "dateCreated";
+        let sortOrder = req.query.order ? req.query.order : "desc";
+        let search = req.query.search;
+        if (pageSize < 0) {
+            throw new HttpError(400, "Invalid page size");
+        }
+        if (offset < 0) {
+            throw new HttpError(400, "Invalid offset index");
+        }
+        
+        /** @type {import('sequelize/types').WhereOptions} */
+        const conditions = 
+        {name :req.user.name}
+        ? {
+            [Op.or]: {
+                location: { [Op.substring]: search},
+                time: { [Op.substring]: search},
+                discount: { [Op.substring]: search}
             }
         }
-    });
-    return res.render('user/business/retrieve_discountslots', {
-        discountslot: discountslot,
-        admin: admin,
-        business: business,
-        customer: customer
-    });
-};
+        : undefined;
+        const total = await DiscountSlot.count({ where: conditions });
+        const pageTotal = Math.ceil(total / pageSize);
+ 
+        const pageContents = await DiscountSlot.findAll({
+            offset: offset,
+            limit: pageSize,
+            order: [[sortBy, sortOrder.toUpperCase()]],
+            where: conditions,
+            raw: true, // Data only, model excluded
+        });
+        return res.json({
+            total: total,
+            rows: pageContents,
+        });
+    } catch (error) {
+        console.error("Failed to retrieve all Discounts");
+        console.error(error);
+        return res.status(500).end();
+    }
+ }
 
 async function edit_discount_slot_page(req, res){
     const outlet = await Outlets.findAll({
@@ -329,7 +399,6 @@ async function view_outlets_page(req, res) {
     var customer = role[2];
     
 	return res.render('user/business/retrieve_outlets', {
-        outlet: outlet,
         admin: admin,
         business: business,
         customer: customer
@@ -351,61 +420,62 @@ async function view_outlets_page(req, res) {
 //
 //}
 //
-///**
-// * Provides bootstrap table with data
-// * @param {import('express')Request}  req Express Request handle
-// * @param {import('express')Response} res Express Response handle
-// */
-//async function outlets_data(req, res) {
-//    try {
-//        console.log('finding data');
-//        let pageSize = parseInt(req.query.limit);
-//        let offset = parseInt(req.query.offset);
-//        let sortBy = req.query.sort ? req.query.sort : "dateCreated";
-//        let sortOrder = req.query.order ? req.query.order : "desc";
-//        let search = req.query.search;
-//        if (pageSize < 0) {
-//            throw new HttpError(400, "Invalid page size");
-//        }
-//        if (offset < 0) {
-//            throw new HttpError(400, "Invalid offset index");
-//        }
-//        
-//        /** @type {import('sequelize/types').WhereOptions} */
-//        const conditions = search
-//            ? {
-//                [Op.or]: {
-//                    name: { [Op.substring]: search },
-//                    location: { [Op.substring]: search},
-//                    address: { [Op.substring]: search},
-//                    postal_code: { [Op.substring]: search},
-//                    price: { [Op.substring]: search},
-//                    contact: { [Op.substring]: search},
-//                    description: { [Op.substring]: search}  
-//                }
-//            }
-//            : undefined;
-//        const total = await Outlets.count({ where: conditions });
-//        const pageTotal = Math.ceil(total / pageSize);
-//
-//        const pageContents = await Outlets.findAll({
-//            offset: offset,
-//            limit: pageSize,
-//            order: [[sortBy, sortOrder.toUpperCase()]],
-//            where: conditions,
-//            raw: true, // Data only, model excluded
-//        });
-//        return res.json({
-//            total: total,
-//            rows: pageContents,
-//        });
-//    } catch (error) {
-//        console.error("Failed to retrieve all Outlets");
-//        console.error(error);
-//        return res.status(500).end();
-//    }
-//}
-//
+/**
+* Provides bootstrap table with data
+* @param {import('express')Request}  req Express Request handle
+* @param {import('express')Response} res Express Response handle
+*/
+async function outlets_data(req, res) {
+   try {
+       console.log('finding data');
+       let pageSize = parseInt(req.query.limit);
+       let offset = parseInt(req.query.offset);
+       let sortBy = req.query.sort ? req.query.sort : "dateCreated";
+       let sortOrder = req.query.order ? req.query.order : "desc";
+       let search = req.query.search;
+       if (pageSize < 0) {
+           throw new HttpError(400, "Invalid page size");
+       }
+       if (offset < 0) {
+           throw new HttpError(400, "Invalid offset index");
+       }
+       
+       /** @type {import('sequelize/types').WhereOptions} */
+       const conditions = 
+       {name :req.user.name}
+       ? {
+           [Op.or]: {
+               name: { [Op.substring]: search },
+               location: { [Op.substring]: search},
+               address: { [Op.substring]: search},
+               postal_code: { [Op.substring]: search},
+               price: { [Op.substring]: search},
+               contact: { [Op.substring]: search},
+               description: { [Op.substring]: search}  
+           }
+       }
+       : undefined;
+       const total = await Outlets.count({ where: conditions });
+       const pageTotal = Math.ceil(total / pageSize);
+
+       const pageContents = await Outlets.findAll({
+           offset: offset,
+           limit: pageSize,
+           order: [[sortBy, sortOrder.toUpperCase()]],
+           where: conditions,
+           raw: true, // Data only, model excluded
+       });
+       return res.json({
+           total: total,
+           rows: pageContents,
+       });
+   } catch (error) {
+       console.error("Failed to retrieve all Outlets");
+       console.error(error);
+       return res.status(500).end();
+   }
+}
+
 function edit_outlet_page(req, res){
     const user = User.findOne({
         where: {

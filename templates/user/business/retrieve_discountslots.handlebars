@@ -3,6 +3,13 @@
 <link rel="stylesheet" href="/public/css/profile.css">
 <script src="https://unpkg.com/bootstrap-table@1.18.3/dist/bootstrap-table.min.js"></script>
 
+<script src="https://unpkg.com/bootstrap-table@1.18.3/dist/bootstrap-table.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/bootstrap-table@1.18.3/dist/extensions/export/bootstrap-table-export.min.js"></script>
+<script src="https://unpkg.com/bootstrap-table@1.18.3/dist/extensions/addrbar/bootstrap-table-addrbar.min.js"></script>
+<script src="https://unpkg.com/bootstrap-table@1.18.3/dist/extensions/filter-control/bootstrap-table-filter-control.min.js"></script>
+<!--<script src="https://unpkg.com/tableexport.jquery.plugin/tableExport.min.js"></script>-->
+
 <section>
     <div class="container">
         <div class="row justify-content-center">
@@ -41,18 +48,20 @@
                 data-show-columns-toggle-all="true"
                 data-show-pagination-switch="true"
                 data-show-fullscreen="true"
-                data-search="true">
+                data-search="true"
+                data-url="/u/b/{{user.name}}/discounts-data"
+                data-side-pagination="server">
                 <thead class="thead-dark">
                     <tr>
-                        <th scope="col" data-sortable="true">Location</th>
-                        <th scope="col" data-sortable="true">Time</th>
-                        <th scope="col" data-sortable="true">Discount</th>
-                        <th scope="col" data-sortable="true">Expired</th>
+                        <th scope="col" data-sortable="true" data-field="location">Location</th>
+                        <th scope="col" data-sortable="true" data-field="time">Time</th>
+                        <th scope="col" data-sortable="true" data-field="discount">Discount</th>
+                        <th scope="col" data-sortable="true" data-field="expired">Expired</th>
                         <th scope="col">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {{#each discountslot}}
+                    <!--{{#each discountslot}}
                         <tr>
                             <td>{{ location }}</td>
                             <td>{{ time }}</td>
@@ -63,7 +72,7 @@
                                 <a href="/u/b/{{ name }}/delete-discount-slot/{{ uuid }}" class="delete" ><i class="material-icons" title="Delete">&#xE872;</i></a>                                      
                             </td>
                         </tr>
-                    {{/each}}
+                    {{/each}}-->
                 </tbody>
             </table>
         </div>
