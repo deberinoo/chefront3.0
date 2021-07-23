@@ -319,9 +319,9 @@ async function create_outlet_process(req, res) {
 };
 
 async function view_outlets_page(req, res) {
-    const user    = req.user;
-    const outlets = await user.getOutlets();
-    const owner   = await (outlets[0].getOwner());
+//    const user    = req.user;
+//    const outlets = await user.getOutlets();
+//    const owner   = await (outlets[0].getOwner());
 
     var role = getRole(req.user.role);
     var admin = role[0];
