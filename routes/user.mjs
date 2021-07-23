@@ -6,7 +6,7 @@ import { DiscountSlot }     from '../data/models/DiscountSlot.mjs';
 import { Outlets }          from '../data/models/Outlets.mjs';
 import { Reservations } 	from '../data/models/Reservations.mjs';
 
-import { UploadFile }       from '../utils/multer.mjs';
+import { UploadFile, DeleteFilePath }       from '../utils/multer.mjs';
 
 import ORM             from 'sequelize';
 const { Op } = ORM;
@@ -35,6 +35,7 @@ router.get("/b/:name/delete-discount-slot/:uuid",       delete_discount_slot);
 router.get("/b/:name/create-outlet",                    create_outlet_page);
 router.post("/b/:name/create-outlet",                   UploadFile.single("Thumbnail"), create_outlet_process);
 router.get("/b/:name/view-outlets",                     view_outlets_page);
+//router.get("/outlets-data",                           outlets_data);
 router.get("/b/:name/edit-outlet/:postal_code",         edit_outlet_page);
 router.put("/b/:name/saveOutlet/:postal_code",          UploadFile.single("Thumbnail"), save_edit_outlet);
 router.get("/b/:name/delete-outlet/:postal_code",       delete_outlet);
@@ -335,6 +336,76 @@ async function view_outlets_page(req, res) {
     });
 };
 
+//async function view_outlets_page(req, res) {
+//    console.log("Looking at all the outlets ");
+//    var role = getRole(req.user.role);
+//    var admin = role[0];
+//    var business = role[1];
+//    var customer = role[2];
+//    
+//    //const outlet = await Outlets.findAll({raw:true});
+//    return res.render('user/business/retrieve_outlets', {
+//        admin: admin,
+//        business: business,
+//        customer: customer});
+//
+//}
+//
+///**
+// * Provides bootstrap table with data
+// * @param {import('express')Request}  req Express Request handle
+// * @param {import('express')Response} res Express Response handle
+// */
+//async function outlets_data(req, res) {
+//    try {
+//        console.log('finding data');
+//        let pageSize = parseInt(req.query.limit);
+//        let offset = parseInt(req.query.offset);
+//        let sortBy = req.query.sort ? req.query.sort : "dateCreated";
+//        let sortOrder = req.query.order ? req.query.order : "desc";
+//        let search = req.query.search;
+//        if (pageSize < 0) {
+//            throw new HttpError(400, "Invalid page size");
+//        }
+//        if (offset < 0) {
+//            throw new HttpError(400, "Invalid offset index");
+//        }
+//        
+//        /** @type {import('sequelize/types').WhereOptions} */
+//        const conditions = search
+//            ? {
+//                [Op.or]: {
+//                    name: { [Op.substring]: search },
+//                    location: { [Op.substring]: search},
+//                    address: { [Op.substring]: search},
+//                    postal_code: { [Op.substring]: search},
+//                    price: { [Op.substring]: search},
+//                    contact: { [Op.substring]: search},
+//                    description: { [Op.substring]: search}  
+//                }
+//            }
+//            : undefined;
+//        const total = await Outlets.count({ where: conditions });
+//        const pageTotal = Math.ceil(total / pageSize);
+//
+//        const pageContents = await Outlets.findAll({
+//            offset: offset,
+//            limit: pageSize,
+//            order: [[sortBy, sortOrder.toUpperCase()]],
+//            where: conditions,
+//            raw: true, // Data only, model excluded
+//        });
+//        return res.json({
+//            total: total,
+//            rows: pageContents,
+//        });
+//    } catch (error) {
+//        console.error("Failed to retrieve all Outlets");
+//        console.error(error);
+//        return res.status(500).end();
+//    }
+//}
+//
 function edit_outlet_page(req, res){
     const user = User.findOne({
         where: {
@@ -364,6 +435,8 @@ function edit_outlet_page(req, res){
 function save_edit_outlet(req, res){
     let { Name, Location, Address, Postalcode, Price, Contact, Description } = req.body;
 
+    
+
     Outlets.update({
         name:  Name,
         location:  Location,
@@ -377,7 +450,12 @@ function save_edit_outlet(req, res){
         where: {
             postal_code : req.params.postal_code
         }
-        }).then(() => {
+        }).then(() => {if (req.files.length > 0) {
+            console.log(`Replaced profile image ${thumbnail} with ${req.files[0].path}`)
+            //	Delete old file
+            DeleteFilePath(`${process.cwd()}/${thumbnail}`);
+            thumbnail = req.files[0].path;
+        }
             res.redirect(`/u/b/${Name}/view-outlets`);
     }).catch(err => console.log(err)); 
 };

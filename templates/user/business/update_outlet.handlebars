@@ -93,11 +93,22 @@
                                     </div>
                                 </div>
                             </div>
+                            <br>
+                            <br>
+                            <br>
                             <div class="form-group row">
-                                <label for="thumbnail" class="col-sm-2 col-form-label"></label>
-                                <div class="col-sm-10">
-                                    <input type="file" class="form-control text-dark" id="thumbnail"
-                                    name="Thumbnail" value="c:/{{outlet.thumbnail}}">
+                                <label for="thumbnail" class="col-sm-2 col-form-label">Thumbnail</label>
+                                <div class="col-sm-5">
+                                    <input type="file" onchange="readURL(this);" class="form-control" id="thumbnail"
+                                    name="Thumbnail" class="file-input" accept="image/png, image/jpg, image/jpeg, image/svg">
+                                    <p><i>Only upload images with the following format:</i> .PNG/.JPG/.JPEG/.SVG</p>
+                                </div>
+                                <div class="col-sm-4 image-preview">
+                                    <center>
+                                        <p>Image Preview:</p>
+                                        <img id="blah" src="/{{outlet.thumbnail}}" alt=" " class="inside-preview" 
+                                        onerror="this.src=`/public/img/placeholderpng`;"/>
+                                    </center>
                                 </div>
                             </div>
                         {{/if}}
@@ -119,4 +130,22 @@
 
         current.text(characterCount);
     });
+
+     function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $('#blah')
+                        .attr('src', e.target.result);
+                };
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+    function image_profile_preview(event) {
+		document.getElementById("blah").src = event.target.result;
+	}
+
 </script>

@@ -45,3 +45,20 @@ section {
     font-size: 16px;
     color:black;
 }
+
+.image-preview {
+    outline: 2px solid lightgrey;
+    border-radius: 25px;
+    margin-top: -90px;
+    margin-left: 50px;
+    overflow:hidden;
+    width: 400px;
+    height: 350px;
+}
+
+.inside-preview{
+    width: 350px;
+    height: 250px;
+    padding: 5px 5px 5px 5px;
+    align-self: center;
+}
