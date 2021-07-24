@@ -55,8 +55,14 @@
                             <div class="form-group row">
                                 <label for="contact" class="col-sm-2 col-form-label">Discount</label>
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control text-dark" id="discount"
-                                        placeholder="" name="Discount" value="{{discount_slot.discount}}">
+                                    <select class="form-control text-dark form-select" id="discount" name="Discount">
+                                        <option selected>Select discount</option>
+                                        <option value="10">10%</option>
+                                        <option value="20">20%</option>
+                                        <option value="30">30%</option>
+                                        <option value="40">40%</option>
+                                        <option value="50">50%</option>
+                                    </select>
                                 </div>
                             </div>
                         {{/if}}

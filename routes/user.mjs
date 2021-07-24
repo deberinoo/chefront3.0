@@ -248,8 +248,8 @@ async function discounts_data(req, res) {
         }
         
         /** @type {import('sequelize/types').WhereOptions} */
-        const conditions = 
-        {name :req.user.name}
+        const conditions = {name : req.user.name}
+        search
         ? {
             [Op.or]: {
                 location: { [Op.substring]: search},
@@ -441,17 +441,12 @@ async function outlets_data(req, res) {
        }
        
        /** @type {import('sequelize/types').WhereOptions} */
-       const conditions = 
-       {name :req.user.name}
-       ? {
+       const conditions = {name: req.user.name}
+       search
+       ?{
            [Op.or]: {
-               name: { [Op.substring]: search },
                location: { [Op.substring]: search},
-               address: { [Op.substring]: search},
-               postal_code: { [Op.substring]: search},
-               price: { [Op.substring]: search},
-               contact: { [Op.substring]: search},
-               description: { [Op.substring]: search}  
+               postal_code: { [Op.substring]: search}  
            }
        }
        : undefined;
@@ -504,8 +499,6 @@ function edit_outlet_page(req, res){
 
 function save_edit_outlet(req, res){
     let { Name, Location, Address, Postalcode, Price, Contact, Description } = req.body;
-
-    
 
     Outlets.update({
         name:  Name,
