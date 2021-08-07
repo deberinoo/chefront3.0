@@ -59,8 +59,8 @@
                         <th scope="col" data-sortable="true" data-field="price">Price</th>
                         <th scope="col" data-sortable="true" data-field="contact">Contact</th>
                         <th scope="col" data-sortable="true" data-field="description">Description</th>
-                        <th scope="col" data-formatter="table_thumbnail" data-field="thumbnail">Thumbnail</th>
-                        <th scope="col">Actions</th>
+                        <th scope="col" data-formatter="table_thumbnail">Thumbnail</th>
+                        <th scope="col" data-formatter="table_row_edit">Actions</th>
                     </tr>
                 </thead>
                <tbody>
@@ -95,8 +95,18 @@
         current.text(characterCount);
     });
 
-    /*function table_thumbnail(value, row, index){
-        return
-        <img src="/dynamic/file/{{outlet.table_thumbnail}}">;
-    }*/
+    function table_thumbnail(value, row, index) {
+		return `
+		<img src="/${row.thumbnail}" 
+        style="width: 75px; height: 50px; padding-bottom: 5px;"
+        alt="Thumbnail" class="w3-hover-opacity">
+		`;
+	}
+
+    function table_row_edit(value, row, index) {
+		return `
+		<a href="../${row.name}/edit-outlet/${row.postal_code}"><i class="material-icons" title="Edit">&#xE254;</i></a>
+        <a href="/u/b/${row.name}/delete-outlet/${row.postal_code}" class="delete"><i class="material-icons" title="Delete">&#xE872;</i></a>
+		`;
+	}
 </script>

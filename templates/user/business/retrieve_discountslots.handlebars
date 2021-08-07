@@ -57,22 +57,11 @@
                         <th scope="col" data-sortable="true" data-field="time">Time</th>
                         <th scope="col" data-sortable="true" data-field="discount">Discount</th>
                         <th scope="col" data-sortable="true" data-field="expired">Expired</th>
-                        <th scope="col">Actions</th>
+                        <th scope="col" data-formatter="table_row_edit">Actions</th>
+
                     </tr>
                 </thead>
                 <tbody>
-                    <!--{{#each discountslot}}
-                        <tr>
-                            <td>{{ location }}</td>
-                            <td>{{ time }}</td>
-                            <td>{{ discount }}</td>
-                            <td>{{ expired }}</td>
-                            <td>
-                                <a href="../{{ name }}/edit-discount-slot/{{ uuid }}"><i class="material-icons" title="Edit">&#xE254;</i></a>
-                                <a href="/u/b/{{ name }}/delete-discount-slot/{{ uuid }}" class="delete" ><i class="material-icons" title="Delete">&#xE872;</i></a>                                      
-                            </td>
-                        </tr>
-                    {{/each}}-->
                 </tbody>
             </table>
         </div>
@@ -93,4 +82,10 @@
       }
     }
   }
+  function table_row_edit(value, row, index) {
+		return `
+		<a href="../${row.name}/edit-discount-slot/${row.uuid}"><i class="material-icons" title="Edit">&#xE254;</i></a>
+        <a href="/u/b/${row.name}/delete-discount-slot/${row.uuid}" class="delete" ><i class="material-icons" title="Delete">&#xE872;</i></a>
+		`;
+	}
 </script>
