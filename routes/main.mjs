@@ -315,9 +315,6 @@ function view_success_page(req, res) {
 
 // ---------------- 
 // Error page routing
-router.use(function (req, res, next) {
-	res.status(403).render('403')
-});
 
 router.use(function (req, res, next) {
 	res.status(404).render('404')

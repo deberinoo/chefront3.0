@@ -91,9 +91,9 @@
 							</div>
 							<div id="net-banking" class="tab-pane pt-3">
 								<div class="form-group ">
-										<input class="form-control" type="hidden" name="amount" id="price" value="1">
-										<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" id="qr_code">
-								</div>								
+									<input class="form-control" type="hidden" name="amount" id="price" value="1">
+									<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" id="qr_code">
+								</div>
 								<p class="text-muted">Note: After scanning the QR Code, you will be directed to a secure
 									gateway for payment. After completing the payment process, you will be redirected back
 									to the website to view details of your order. </p>
@@ -110,6 +110,19 @@
 	$(function () {
         $('[data-toggle="tooltip"]').tooltip()
     })
+
+	function changeSuccessImage(a) {
+		document.getElementById("qr_code").src=a;
+		document.getElementById("qr_code").width="250";
+		document.getElementById("qr_code").height="283";
+	}
+
+	function changeErrorImage(a) {
+		document.getElementById("qr_code").src=a;
+		document.getElementById("qr_code").width="250";
+		document.getElementById("qr_code").height="250";
+	}
+
 	/**
 	 * Make a request to generate the QR code
 	 * @param {InputEvent} event
@@ -178,10 +191,12 @@
 
 				case 1: 
 					console.log(`Payment succeeded`);
+					changeSuccessImage("https://about.iamhere.app/wp-content/uploads/2019/06/green-check-mark-icon-in-a-circle-tick-symbol-in-vector-23713629-1.jpg")
 				break;
 
 				case -1:
 					console.log(`Payment cancelled`);
+					changeErrorImage("https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/Cross_red_circle.svg/1024px-Cross_red_circle.svg.png")
 				break;
 			}
 		}
@@ -208,7 +223,10 @@
 				})
 			});
 
-			if (!response.ok) { throw new Error ("Failed to void transaction"); }
+			if (!response.ok) { 
+				changeErrorImage("https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/Cross_red_circle.svg/1024px-Cross_red_circle.svg.png")
+				throw new Error ("Failed to void transaction");
+			}
 			const content = await response.json();
 			const status  = content.status;
 			

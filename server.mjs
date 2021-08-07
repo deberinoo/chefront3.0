@@ -14,7 +14,6 @@ import Handlebars 						from 'handlebars';
 import { allowInsecurePrototypeAccess } from '@handlebars/allow-prototype-access';
 
 
-
 const Server = Express();
 const Port = process.env.PORT || 3000;
 
