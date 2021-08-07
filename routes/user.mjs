@@ -1,14 +1,14 @@
-import { Router }           from 'express';
-import { flashMessage }     from '../utils/flashmsg.mjs';
+import { Router }                           from 'express';
+import { flashMessage }                     from '../utils/flashmsg.mjs';
 
-import { User, UserRole }   from '../data/models/Users.mjs'
-import { DiscountSlot }     from '../data/models/DiscountSlot.mjs';
-import { Outlets }          from '../data/models/Outlets.mjs';
-import { Reservations } 	from '../data/models/Reservations.mjs';
+import { User, UserRole }                   from '../data/models/Users.mjs'
+import { DiscountSlot }                     from '../data/models/DiscountSlot.mjs';
+import { Outlets }                          from '../data/models/Outlets.mjs';
+import { Reservations } 	                from '../data/models/Reservations.mjs';
 
 import { UploadFile, DeleteFilePath }       from '../utils/multer.mjs';
 
-import ORM             from 'sequelize';
+import ORM                                  from 'sequelize';
 const { Op } = ORM;
 
 const router = Router();
@@ -184,37 +184,10 @@ async function create_discount_slot_process(req, res) {
     res.redirect(`/u/b/${Name}/view-discount-slots`);
 };
 
-// async function view_discount_slots_page(req, res) {
-//     const user = User.findOne({
-//         where: {
-//             "name": req.params.name
-//         }
-//     })
-//     var role = getRole(req.user.role);
-//     var admin = role[0];
-//     var business = role[1];
-//     var customer = role[2];
-    
-//     const discountslot = await DiscountSlot.findAll({
-//         where: {
-//             "name": {
-//                 [Op.eq]: req.params.name
-//             }
-//         }
-//     });
-//     return res.render('user/business/retrieve_discountslots', {
-//         discountslot: discountslot,
-//         admin: admin,
-//         business: business,
-//         customer: customer
-//     });
-// };
-
 async function view_discount_slots_page(req, res) {
     //    const user    = req.user;
     //    const outlets = await user.getOutlets();
     //    const owner   = await (outlets[0].getOwner());
-    
         var role = getRole(req.user.role);
         var admin = role[0];
         var business = role[1];
@@ -405,21 +378,6 @@ async function view_outlets_page(req, res) {
     });
 };
 
-//async function view_outlets_page(req, res) {
-//    console.log("Looking at all the outlets ");
-//    var role = getRole(req.user.role);
-//    var admin = role[0];
-//    var business = role[1];
-//    var customer = role[2];
-//    
-//    //const outlet = await Outlets.findAll({raw:true});
-//    return res.render('user/business/retrieve_outlets', {
-//        admin: admin,
-//        business: business,
-//        customer: customer});
-//
-//}
-//
 /**
 * Provides bootstrap table with data
 * @param {import('express')Request}  req Express Request handle
@@ -653,8 +611,6 @@ function delete_customer_user(req, res) {
 };
 
 async function create_reservation_process(req, res) {
-    let errors = [];
-    
     let { reservation_id, name, location, user_name, user_email, user_contact, date, pax, time, discount } = req.body;
 
     const reservation = await Reservations.create({
