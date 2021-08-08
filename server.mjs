@@ -101,3 +101,37 @@ console.log(`===========================`);
 Server.listen(Port, function() {
 	console.log(`Server listening at port ${Port}`);
 });
+
+// import { sendMail,sendMailUpdateUser,sendMailDeleteUser,sendMailUpdateOutlet,sendMailDeleteOutlet,sendMailBannedAccount,sendMailFeedbackResponse,sendMailMakeReservation, sendMailDeleteReservation,sendMailPasswordChange } from './data/mail.mjs';
+// const email = "geoffreypagdilao@gmail.com"
+// const code = "test"
+// sendMail(email,code)
+// 			.then((result) => console.log('Email sent...', result))
+// 			.catch((error) => console.log(error.message));
+// sendMailDeleteUser(email)
+// 			.then((result) => console.log('Email sent...', result))
+// 			.catch((error) => console.log(error.message));
+// sendMailUpdateUser(email)
+// 			.then((result) => console.log('Email sent...', result))
+// 			.catch((error) => console.log(error.message));
+// sendMailUpdateOutlet(email,code)
+// 			.then((result) => console.log('Email sent...', result))
+// 			.catch((error) => console.log(error.message));
+// sendMailDeleteReservation(email,code)
+// 			.then((result) => console.log('Email sent...', result))
+// 			.catch((error) => console.log(error.message));
+// sendMailDeleteOutlet(email,code)
+// 			.then((result) => console.log('Email sent...', result))
+// 			.catch((error) => console.log(error.message));
+// sendMailBannedAccount(email,code)
+// 			.then((result) => console.log('Email sent...', result))
+// 			.catch((error) => console.log(error.message));
+// sendMailFeedbackResponse(email,code)
+// 			.then((result) => console.log('Email sent...', result))
+// 			.catch((error) => console.log(error.message));
+// sendMailMakeReservation(email,code)
+// 			.then((result) => console.log('Email sent...', result))
+// 			.catch((error) => console.log(error.message));
+// sendMailPasswordChange(email,code)
+// 			.then((result) => console.log('Email sent...', result))
+// 			.catch((error) => console.log(error.message));
