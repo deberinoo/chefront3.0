@@ -42,7 +42,8 @@ router.put("/b/:name/saveOutlet/:postal_code",          UploadFile.any("Thumbnai
 router.get("/b/:name/delete-outlet/:postal_code",       delete_outlet);
 
 // Reservations
-router.get("/b/:name/reservation-status",               view_reservation_status_page);
+router.get("/b/:name/select-outlet",                    view_select_outlet_page);
+router.get("/b/:name/:location/reservation-status",     view_reservation_status_page);
 
 // ----------------
 // Check user role
@@ -503,17 +504,39 @@ function delete_outlet(req, res) {
     });
 };
 
-function view_reservation_status_page(req, res) {
-    const user = User.findOne({
-        where: {
-            "name": req.params.name
-        }
-    })
+async function view_select_outlet_page(req, res) {
     var role = getRole(req.user.role);
     var admin = role[0];
     var business = role[1];
     var customer = role[2];
+
+    const outlet = await Outlets.findAll({
+        where: {
+            "name" : req.params.name,
+        }
+    })
+	return res.render('user/business/select_outlet', {
+        outlet: outlet,
+        admin: admin,
+        business: business,
+        customer: customer
+    });
+};
+
+async function view_reservation_status_page(req, res) {
+    var role = getRole(req.user.role);
+    var admin = role[0];
+    var business = role[1];
+    var customer = role[2];
+
+    const reservation = await Reservations.findAll({
+        where: {
+            "name" : req.params.name,
+            "location" : req.params.location
+        }
+    })
 	return res.render('user/business/retrieve_reservationBusiness', {
+        reservation: reservation,
         admin: admin,
         business: business,
         customer: customer
