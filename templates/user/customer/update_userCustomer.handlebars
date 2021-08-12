@@ -13,9 +13,14 @@
                             <a class="nav-link active" id="home-tab" href="/u/c/{{user.email}}" role="tab"
                                 aria-controls="home" aria-selected="false">Profile</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" id="home-tab" href="/u/c/my-reservations/{{user.email}}" role="tab"
-                                aria-controls="home" aria-selected="false">Reservations</a>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Reservations
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="/u/c/my-reservations/upcoming/{{user.email}}">Upcoming</a>
+                            <a class="dropdown-item" href="/u/c/my-reservations/historical/{{user.email}}">Historical</a>
+                            </div>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" id="home-tab" href="#home" role="tab"
