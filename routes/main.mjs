@@ -270,31 +270,44 @@ async function create_reservation_process(req, res) {
 		var customer = role[2];
 	}
 
-    let errors = [];
-    
-    let { BusinessName, Location, ResDate, Pax, Slot, Name, Email, Contact } = req.body;
-
-	const timediscount = Slot.split(",")
-
-    const reservation = await Reservations.create({
-		"reservation_id":  String(getId()),
-		"name":  BusinessName,
-        "location":  Location,
-		"date": ResDate,
-		"pax": Pax,
-		"time": timediscount[0],
-		"discount": timediscount[1],
-		"user_name": Name,
-		"user_email": Email,
-		"user_contact": Contact,
-		
-    });
-    res.render("success", {
-		admin:admin,
-		business:business,
-		customer:customer,
-		reservation:reservation
+	// check if user has reserved before
+	const reservations = await Reservations.count({
+		where: {
+            "name": req.params.name,
+        }
 	});
+
+	if (reservations > 0) {
+		let { BusinessName, Location, ResDate, Pax, Slot, Name, Email, Contact } = req.body;
+
+		const timediscount = Slot.split(",")
+
+		const reservation = await Reservations.create({
+			"reservation_id":  String(getId()),
+			"name":  BusinessName,
+			"location":  Location,
+			"date": ResDate,
+			"pax": Pax,
+			"time": timediscount[0],
+			"discount": timediscount[1],
+			"user_name": Name,
+			"user_email": Email,
+			"user_contact": Contact,
+		});
+		res.render("success", {
+			admin:admin,
+			business:business,
+			customer:customer,
+			reservation:reservation
+		});
+	} else {
+		res.render("payment", {
+			admin:admin,
+			business:business,
+			customer:customer,
+		});
+	}
+
 };
 
 function view_success_page(req, res) {
