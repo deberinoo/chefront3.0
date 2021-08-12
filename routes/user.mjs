@@ -42,7 +42,8 @@ router.put("/b/:name/saveOutlet/:postal_code",          UploadFile.any("Thumbnai
 router.get("/b/:name/delete-outlet/:postal_code",       delete_outlet);
 
 // Reservations
-router.get("/b/:name/reservation-status",               view_reservation_status_page);
+router.get("/b/:name/select-outlet",                    view_select_outlet_page);
+router.get("/b/:name/:location/reservation-status",     view_reservation_status_page);
 
 // ----------------
 // Check user role
@@ -505,17 +506,39 @@ function delete_outlet(req, res) {
     });
 };
 
-function view_reservation_status_page(req, res) {
-    const user = User.findOne({
-        where: {
-            "name": req.params.name
-        }
-    })
+async function view_select_outlet_page(req, res) {
     var role = getRole(req.user.role);
     var admin = role[0];
     var business = role[1];
     var customer = role[2];
+
+    const outlet = await Outlets.findAll({
+        where: {
+            "name" : req.params.name,
+        }
+    })
+	return res.render('user/business/select_outlet', {
+        outlet: outlet,
+        admin: admin,
+        business: business,
+        customer: customer
+    });
+};
+
+async function view_reservation_status_page(req, res) {
+    var role = getRole(req.user.role);
+    var admin = role[0];
+    var business = role[1];
+    var customer = role[2];
+
+    const reservation = await Reservations.findAll({
+        where: {
+            "name" : req.params.name,
+            "location" : req.params.location
+        }
+    })
 	return res.render('user/business/retrieve_reservationBusiness', {
+        reservation: reservation,
         admin: admin,
         business: business,
         customer: customer
@@ -533,7 +556,9 @@ router.get("/c/delete/:user_email",                 delete_customer_user);
 // Customer reservation
 
 router.post("c/create-reservation",                                                create_reservation_process);
-router.get("/c/my-reservations/:user_email",                                       view_reservations_page);
+router.get("/c/my-reservations/upcoming/:user_email",                              view_upcoming_reservations_page);
+router.get("/c/my-reservations/historical/:user_email",                            view_historical_reservations_page);
+
 router.get("/c/my-reservations/:user_email/edit-reservation/:reservation_id",      edit_reservation_page);
 router.put("/c/my-reservations/:user_email/save-reservation/:reservation_id",      save_edit_reservation);
 router.get("/c/my-reservations/:user_email/cancel-reservation/:reservation_id",    delete_reservation);
@@ -630,11 +655,15 @@ async function create_reservation_process(req, res) {
     res.redirect("/retrieve_reservation/:user_email");
 };
 
-async function view_reservations_page(req, res) {
+async function view_upcoming_reservations_page(req, res) {
+    var time = Date.now()
 	const reservation = await Reservations.findAll({
         where: {
             "user_email": {
                 [Op.eq]: req.params.user_email
+            },
+            "date": {
+                [Op.gt]: time
             }
         }
     });
@@ -647,7 +676,36 @@ async function view_reservations_page(req, res) {
     var admin = role[0];
     var business = role[1];
     var customer = role[2];
-    return res.render('user/customer/retrieve_reservationCustomer', {
+    return res.render('user/customer/retrieve_upcomingreservationCustomer', {
+        reservation: reservation,
+        admin: admin,
+        business: business,
+        customer: customer
+    });
+};
+
+async function view_historical_reservations_page(req, res) {
+    var time = Date.now()
+	const reservation = await Reservations.findAll({
+        where: {
+            "user_email": {
+                [Op.eq]: req.params.user_email
+            },
+            "date": {
+                [Op.lt]: time
+            }
+        }
+    });
+    const user = User.findOne({
+        where: {
+            "email": req.params.user_email
+        }
+    })
+    var role = getRole(req.user.role);
+    var admin = role[0];
+    var business = role[1];
+    var customer = role[2];
+    return res.render('user/customer/retrieve_historicalreservationCustomer', {
         reservation: reservation,
         admin: admin,
         business: business,

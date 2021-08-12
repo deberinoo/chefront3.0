@@ -1,4 +1,4 @@
-<title>Chefront - Reservation Status</title>
+<title>Chefront - Select Outlet</title>
 
 <link rel="stylesheet" href="/public/css/profile.css">
 <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">
@@ -31,38 +31,22 @@
                     </ul>
                 </div>
             </div>
-            <table
-                id="table"
-                data-toggle="table"
-                data-width = "50px" 
-                data-pagination="true"
-                data-page-size="10"
-                data-search="true">
-                <thead class="thead-dark">
-                    <tr>
-                    <th scope="col" data-sortable="true">Date</th>
-                    <th scope="col" data-sortable="true">Customer Name</th>
-                    <th scope="col" data-sortable="true">Reservation ID</th>
-                    <th scope="col" data-sortable="true">Timing</th>
-                    <th scope="col" data-sortable="true">Discount</th>
-                    <th scope="col" data-sortable="true">Pax</th>
-                    <th scope="col" data-sortable="true">Attended?</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {{#each reservation}}
-                        <tr>
-                            <td>{{ date }}</td>
-                            <td>{{ user_name }}</td>
-                            <td>{{ reservation_id }}</td>
-                            <td>{{ time }}</td>
-                            <td>{{ discount }}%</td>
-                            <td>{{ pax }}</td>
-                            <td><input type="checkbox" checked data-on="No" data-off="Yes" data-toggle="toggle" data-onstyle="outline-danger" data-offstyle="outline-success"></td>
-                        </tr>
-                    {{/each}}
-                </tbody>
-            </table>
+            <div class="row">
+                {{#each outlet}}
+                        <div class="card col-sm-6 mr-4 mb-4" style="width: 25rem;">
+                            <a href="../{{ name }}/{{ location }}/reservation-status">
+                            <img class="card-img-top img-fluid"
+                                src="/{{thumbnail}}"
+                                alt="Card image cap" width="300">
+                            <div class="card-body">
+                                <h4 class="card-title">{{name}}</h4>
+                                <p class="card-text">{{location}}</p>
+                                <p class="card-text"></p>
+                            </div>
+                            </a>
+                        </div>
+                {{/each}}
+            </div>
         </div>
     </div>
 </section>

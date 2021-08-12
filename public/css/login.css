@@ -16,3 +16,7 @@
 .custom-btn {
   width: 350px;
 }
+
+::-webkit-input-placeholder { /* WebKit browsers */
+  text-transform: none;
+}
