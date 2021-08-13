@@ -5,12 +5,16 @@ import Hash    from 'hash.js';
 import Moment  from 'moment';
 
 import { nets_api_key, nets_api_skey, nets_api_gateway } from './payment-config.mjs';
+import { Reservations } 	from '../../data/models/Reservations.mjs';
 
 const router = Router();
 export default router;
+
 router.post("/generate", nets_generate);
 router.post("/query",    nets_query);
 router.post("/void",     nets_void);
+
+router.post("/deposit",  create_reservation);
 
 let   nets_stan     = 0;	//	Counter id for nets, keep this in database
 
@@ -117,6 +121,23 @@ async function nets_generate(req, res) {
  * @param {import('express').Request} req 
  * @param {import('express').Response} res 
  */
+
+async function create_reservation(req,res) {
+	const reservation = await Reservations.create({
+		"reservation_id": req.body.Id,
+		"name":  req.body.BusinessName,
+		"location":  req.body.Location,
+		"date": req.body.ResDate,
+		"pax": req.body.Pax,
+		"time": req.body.Time[0],
+		"discount": req.body.Discount,
+		"user_name": req.body.Name,
+		"user_email": req.body.Email,
+		"user_contact": req.body.Contact,
+	});
+	return res.render("success", {reservation:reservation})
+}
+
 async function nets_query(req, res) {
 	try {
 
@@ -157,6 +178,7 @@ async function nets_query(req, res) {
 
 			//	Okay
 			case "00":
+				create_reservation()
 				return res.json({
 					status : 1
 				});
