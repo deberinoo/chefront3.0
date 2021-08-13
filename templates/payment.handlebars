@@ -24,9 +24,22 @@
 												class="fas fa-mobile-alt mr-2"></i> NetsQR </a> </li>
 								</ul>
 							</div>
-							
 							<div id="net-banking" class="tab-pane show active pt-3">
-								<div class="form-group ">
+								<div class="form-group">
+									<form action="/payment/deposit" method="post" name="form1">
+										<input type="hidden" name="Id" value="{{reservation.reservation_id}}">
+										<input type="hidden" name="BusinessName" value="{{reservation.name}}">
+										<input type="hidden" name="Location" value="{{reservation.location}}">
+										<input type="hidden" name="ResDate" value="{{reservation.date}}">
+										<input type="hidden" name="Pax" value="{{reservation.pax}}">
+										<input type="hidden" name="Time" value="{{reservation.time}}">
+										<input type="hidden" name="Discount" value="{{reservation.discount}}">
+										<input type="hidden" name="Name" value="{{reservation.user_name}}">
+										<input type="hidden" name="Time" value="{{reservation.time}}">
+										<input type="hidden" name="Email" value="{{reservation.user_email}}">
+										<input type="hidden" name="Contact" value="{{reservation.user_contact}}">
+									</form>
+									
 									<input class="form-control" type="hidden" name="amount" id="price" value="1">
 									<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" id="qr_code">
 								</div>
@@ -80,6 +93,7 @@
 			//	Start auto ping
 			setTimeout(ping_transaction_status, 1000, 0, content);
 		}
+		res.status(200).send('testing');
 	}
 	
 	/**
@@ -125,9 +139,11 @@
 					return setTimeout(ping_transaction_status, 1000, attempt + 1, transaction);
 				break;
 
-				case 1: 
+				case 1:
 					console.log(`Payment succeeded`);
-					changeSuccessImage("https://about.iamhere.app/wp-content/uploads/2019/06/green-check-mark-icon-in-a-circle-tick-symbol-in-vector-23713629-1.jpg")
+					changeSuccessImage("https://about.iamhere.app/wp-content/uploads/2019/06/green-check-mark-icon-in-a-circle-tick-symbol-in-vector-23713629-1.jpg");
+					document.form1.submit();
+
 				break;
 
 				case -1:

@@ -122,7 +122,34 @@ async function nets_generate(req, res) {
  * @param {import('express').Response} res 
  */
 
+
+// ----------------
+// Check user role
+function getRole(role) {
+	if (role == 'admin') {
+		var admin = true;
+		var business = false;
+		var customer = false;
+	}
+	else if (role == 'business') {
+		var admin = false;
+		var business = true;
+		var customer = false;
+	}
+	else if (role == 'customer') {
+		var admin = false;
+		var business = false;
+		var customer = true;
+	}
+	return [admin, business, customer];
+}
+
 async function create_reservation(req,res) {
+	var role = getRole(req.user.role);
+	var admin = role[0];
+	var business = role[1];
+	var customer = role[2];
+
 	const reservation = await Reservations.create({
 		"reservation_id": req.body.Id,
 		"name":  req.body.BusinessName,
@@ -135,7 +162,12 @@ async function create_reservation(req,res) {
 		"user_email": req.body.Email,
 		"user_contact": req.body.Contact,
 	});
-	return res.render("success", {reservation:reservation})
+	return res.render("success", {
+		admin:admin,
+		business:business,
+		customer:customer,
+		reservation:reservation
+	});
 }
 
 async function nets_query(req, res) {

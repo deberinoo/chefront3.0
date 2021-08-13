@@ -7,7 +7,7 @@ import { DiscountSlot }     from '../data/models/DiscountSlot.mjs';
 
 
 import ORM             		from 'sequelize';
-const { Sequelize, DataTypes, Model, Op } = ORM;
+const { Op } = ORM;
 
 const router = Router();
 export default router;
@@ -180,23 +180,6 @@ async function create_feedback_process(req,res) {
 	return res.redirect("/home");
 };
 
-function view_payment_page(req, res) {
-	if (req.user == undefined) {
-		return res.render('payment')
-	} else {
-		var role = getRole(req.user.role);
-		var admin = role[0];
-		var business = role[1];
-		var customer = role[2];
-	}
-
-	return res.render('payment', {
-		admin: admin,
-		business: business,
-		customer: customer
-	});
-};
-
 async function view_restaurants_page(req, res) {
 	const restaurants = await Outlets.findAll({
         where: {
@@ -258,7 +241,24 @@ async function view_individual_restaurant_page(req, res) {
 function getId() {
     const rand = Math.random().toString(16).substr(2, 6); 
 	return rand.toUpperCase();
-}
+};
+
+function view_payment_page(req, res) {
+	if (req.user == undefined) {
+		return res.render('payment')
+	} else {
+		var role = getRole(req.user.role);
+		var admin = role[0];
+		var business = role[1];
+		var customer = role[2];
+	}
+
+	return res.render('payment', {
+		admin: admin,
+		business: business,
+		customer: customer
+	});
+};
 
 async function create_reservation_process(req, res) {
 	if (req.user == undefined) {
@@ -277,11 +277,10 @@ async function create_reservation_process(req, res) {
         }
 	});
 
+	let { BusinessName, Location, ResDate, Pax, Slot, Name, Email, Contact } = req.body;
+	const timediscount = Slot.split(",")
+
 	if (reservations > 0) {
-		let { BusinessName, Location, ResDate, Pax, Slot, Name, Email, Contact } = req.body;
-
-		const timediscount = Slot.split(",")
-
 		const reservation = await Reservations.create({
 			"reservation_id":  String(getId()),
 			"name":  BusinessName,
@@ -301,13 +300,25 @@ async function create_reservation_process(req, res) {
 			reservation:reservation
 		});
 	} else {
+		const reservation = {
+			"reservation_id":  String(getId()),
+			"name":  BusinessName,
+			"location":  Location,
+			"date": ResDate,
+			"pax": Pax,
+			"time": timediscount[0],
+			"discount": timediscount[1],
+			"user_name": Name,
+			"user_email": Email,
+			"user_contact": Contact,
+		};
 		res.render("payment", {
 			admin:admin,
 			business:business,
 			customer:customer,
+			reservation:reservation
 		});
 	}
-
 };
 
 function view_success_page(req, res) {
