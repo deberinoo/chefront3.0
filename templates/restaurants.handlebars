@@ -53,9 +53,9 @@
     };
 
     $('#search').keyup(function () {
-        $('div .card a').removeClass('d-none'); //
+        $('.card ').removeClass('d-none'); //
         var filter = $(this).val(); // get the value of the input, which we filter on
-        $('.carddeck').find('div .card a .card-body h4:not(:contains("' + filter + '"))').parent().parent()
+        $('.carddeck').find('.card a .card-body h4:not(:contains("' + filter + '"))').parent().parent().parent()
             .addClass('d-none');
     })
 </script>

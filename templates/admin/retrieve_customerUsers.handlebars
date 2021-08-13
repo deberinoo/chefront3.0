@@ -36,33 +36,35 @@
                 data-width = "50px" 
                 data-pagination="true"
                 data-page-size="10"
+                data-buttons="buttons"
                 data-show-columns="true"
                 data-show-refresh="true"
                 data-show-columns-toggle-all="true"
                 data-show-pagination-switch="true"
                 data-show-fullscreen="true"
-                data-search="true">
+                data-search="true"
+                data-url="/admin/all-customer-data"
+                data-side-pagination="server">
                 <thead class="thead-dark">
                     <tr>
-                        <th scope="col" data-sortable="true">First Name</th>
-                        <th scope="col" data-sortable="true">Last Name</th>
-                        <th scope="col" data-sortable="true">Email</th>
-                        <th scope="col" data-sortable="true">Phone Number</th>
-                        <th></th>
+                        <th scope="col" data-sortable="true" data-field="name">Name</th>
+                        <th scope="col" data-sortable="true" data-field="contact">Contact</th>
+                        <th scope="col" data-sortable="true" data-field="email">Email</th>
+                        <th scope="col" data-sortable="true" data-field="role">Role</th>
+                        <th scope="col" data-formatter="table_row_delete">Delete</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {{#each user}}
-                        <tr>
-                            <td>{{ first_name }}</td>
-                            <td>{{ last_name }}</td>
-                            <td>{{ email }}</td>
-                            <td>{{ contact }}</td>
-                            <td><a href="/admin/deleteCustomerUser/{{email}}"><i class="material-icons" title="Delete">&#xE872;</i></a></td>
-                        </tr>
-                        {{/each}}
                 </tbody>
             </table>
         </div>
     </div>
 </section>
+
+<script>
+   function table_row_delete(value, row, index) {
+		return `
+        <a href="/admin/deleteCustomerUser/${row.email}" class="delete"><i class="material-icons" title="Delete">&#xE872;</i></a>
+		`;
+	}
+</script>
