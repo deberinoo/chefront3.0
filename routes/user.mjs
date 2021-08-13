@@ -775,7 +775,7 @@ function save_edit_reservation(req, res){
             reservation_id: req.params.reservation_id
         }
         }).then(() => {
-            res.redirect(`/u/c/my-reservations/${req.params.user_email}`);
+            res.redirect(`/u/c/my-reservations/upcoming/${req.params.user_email}`);
     }).catch(err => console.log(err)); 
 };
 
@@ -793,7 +793,7 @@ function delete_reservation(req, res) {
                     "reservation_id": req.params.reservation_id
                 },
             }).then(() => {
-                res.redirect(`/u/c/my-reservations/${req.params.user_email}`);
+                res.redirect(`/u/c/my-reservations/upcoming/${req.params.user_email}`);
             }).catch( err => console.log(err));
         } else {
 	    res.redirect('/404');
