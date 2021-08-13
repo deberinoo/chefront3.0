@@ -472,15 +472,17 @@ function save_edit_outlet(req, res){
         where: {
             postal_code : req.params.postal_code
         }
-        }).then(() => {if (req.files.length > 0) {
-            console.log(`Replaced profile image ${thumbnail} with ${req.files[0].path}`)
-            //	Delete old file
-            DeleteFilePath(`${process.cwd()}/${thumbnail}`);
-            thumbnail = req.files[0].path;
-        }
+        }).then(() => {
             res.redirect(`/u/b/${Name}/view-outlets`);
     }).catch(err => console.log(err)); 
 };
+
+// //if (req.files.length > 0) {
+//     console.log(`Replaced profile image ${thumbnail} with ${req.files[0].path}`)
+//     //	Delete old file
+//     DeleteFilePath(`${process.cwd()}/${thumbnail}`);
+//     thumbnail = req.files[0].path;
+// }
 
 function delete_outlet(req, res) {
     Outlets.findOne({
