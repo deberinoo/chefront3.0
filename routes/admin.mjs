@@ -1,15 +1,17 @@
-import { Router }       from 'express';
-import { flashMessage } from '../utils/flashmsg.mjs';
+import { Router }           from 'express';
+import { flashMessage }     from '../utils/flashmsg.mjs';
 
-import { User }         from '../data/models/Users.mjs';
-import { Outlets }      from '../data/models/Outlets.mjs';
-import { Feedback }     from '../data/models/Feedback.mjs';
-import { Categories }   from '../data/models/Categories.mjs';
+import { User }             from '../data/models/Users.mjs';
+import { Outlets }          from '../data/models/Outlets.mjs';
+import { Feedback }         from '../data/models/Feedback.mjs';
+import { Categories }       from '../data/models/Categories.mjs';
+import { Reservations } 	from '../data/models/Reservations.mjs';
+import { DiscountSlot }     from '../data/models/DiscountSlot.mjs';
 
 import { UploadFile, DeleteFilePath }       from '../utils/multer.mjs';
 
 
-import ORM              from 'sequelize';
+import ORM                  from 'sequelize';
 const { Op } = ORM;
 
 const router = Router();
@@ -128,10 +130,10 @@ function delete_customer_user(req, res) {
         if (user != null) {
             User.destroy({
                 where: {
-                    "email" : user.email
+                    "email" : req.params.email
                 }
             });
-            User.destroy({
+            Reservations.destroy({
                 where: {
                     "email" : req.params.email
                 }
@@ -209,7 +211,7 @@ function delete_business_user(req, res) {
         if (user != null) {
             User.destroy({
                 where: {
-                    "name" : user.name
+                    "name" : req.params.name
                 }
             });
             Outlets.destroy({
@@ -217,7 +219,12 @@ function delete_business_user(req, res) {
                     "name" : req.params.name
                 }
             });
-            User.destroy({
+            Reservations.destroy({
+                where: {
+                    "name" : req.params.name
+                }
+            });
+            DiscountSlot.destroy({
                 where: {
                     "name" : req.params.name
                 }

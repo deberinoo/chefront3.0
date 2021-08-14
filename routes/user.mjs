@@ -618,10 +618,10 @@ function save_edit_user_customer(req, res) {
     }, { where: {email: req.params.user_email}}
     ),
     Reservations.update({
-        name: Name,
-        email: Email,
+        user_name: Name,
+        user_email: Email,
         contact: Contact
-    }, { where: {email: req.params.user_email}}
+    }, { where: {user_email: req.params.user_email}}
     ).then(() => {
             res.redirect(`/u/c/${Email}`);
     }).catch(err => console.log(err));  
@@ -640,7 +640,7 @@ function delete_customer_user(req, res) {
                 }
             }),
             Reservations.destroy({
-                where: {"email": req.params.user_email}
+                where: {"user_email": req.params.user_email}
             }).then(() => {
                 flashMessage(res,'success', 'Customer account deleted', 'fa fa-trash', true );
                 req.logout();

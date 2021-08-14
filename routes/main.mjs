@@ -164,9 +164,9 @@ async function view_category_page(req, res) {
             }
         }
 	});
-	const category = await Outlets.findOne({
+	const category = await Categories.findOne({
 		where: {
-			"category":req.params.category
+			"name":req.params.category
 		}
 	});
 	if (req.user == undefined) {
