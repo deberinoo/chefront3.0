@@ -50,6 +50,8 @@ router.put("/save-category/:name",                  UploadFile.any("Thumbnail"),
 router.get("/all-categories-data",                  all_categories_data);
 router.get("/deleteCategory/:name",                 delete_category);
 
+// ----------------
+// Authentication
 function ensure_auth(req, res, next) {
     if (!req.isAuthenticated()) {
         return res.redirect("/auth/adminlogin");
@@ -57,7 +59,7 @@ function ensure_auth(req, res, next) {
     else {
         return next();
     }
-}
+};
 
 function ensure_admin(req, res, next) {
     /** @type {ModelUser} */
@@ -68,7 +70,8 @@ function ensure_admin(req, res, next) {
     else {
         return res.sendStatus(403);
     }
-}
+};
+// ----------------
 
 function view_customer_users_page(req, res) {
 	return res.render('admin/retrieve_customerUsers');
@@ -122,7 +125,7 @@ async function all_customer_data(req, res) {
  }
 
 function delete_customer_user(req, res) {
-    User.findOne({
+    const user = User.findOne({
         where: {
             "email" : req.params.email
         },
@@ -135,7 +138,7 @@ function delete_customer_user(req, res) {
             });
             Reservations.destroy({
                 where: {
-                    "email" : req.params.email
+                    "user_email" : req.params.email
                 }
             }).then(() => {
                 res.redirect('/admin/customerUsers');
