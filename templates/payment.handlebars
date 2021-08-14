@@ -25,7 +25,7 @@
 								</ul>
 							</div>
 							<div id="net-banking" class="tab-pane show active pt-3">
-								<div class="form-group">
+								<div class="form-group" style="text-align: center;">
 									<form action="/payment/deposit" method="post" name="form1">
 										<input type="hidden" name="Id" value="{{reservation.reservation_id}}">
 										<input type="hidden" name="BusinessName" value="{{reservation.name}}">
@@ -43,9 +43,8 @@
 									<input class="form-control" type="hidden" name="amount" id="price" value="1">
 									<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" id="qr_code">
 								</div>
-								<p class="text-muted">Note: After scanning the QR Code, you will be directed to a secure
-									gateway for payment. After completing the payment process, you will be redirected back
-									to the website to view details of your order. </p>
+								<p class="text-muted">Note: Upon successful payment, you will be redirected back
+									to the website to view details of your reservation. </p>
 							</div>
 						</div>
 					</div>

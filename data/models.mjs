@@ -27,24 +27,6 @@ import { Categories }   from '../data/models/Categories.mjs';
 		Categories.initialize(database);
 
 		console.log("Building ORM model relations and indices");
-		//	Create relations between models or tables
-		//	Setup foreign keys, indexes etc
-
-		//	Check foreign key in your database after writing all these stuff
-		//User.hasMany(Outlets, {
-		//	as:		    "outlets",
-		//	foreignKey: "ownerID",
-		//	onUpdate:   "CASCADE",
-		//	onDelete:   "CASCADE",
-		//});
-
-		//Outlets.belongsTo(User, {
-		//	as:			"owner",
-		//	foreignKey: "ownerID",
-		//	onUpdate:   "CASCADE",
-		//	onDelete:   "CASCADE",
-		//});
-		
 		console.log("Adding initialization hooks");
 		//	Run once hooks during initialization
 	}

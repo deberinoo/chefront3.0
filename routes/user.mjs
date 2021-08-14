@@ -91,53 +91,65 @@ function edit_user_business_page(req, res) {
         var admin = role[0];
         var business = role[1];
         var customer = role[2];
-
         res.render('user/business/update_userBusiness', {
             user,
             admin: admin,
             business: business,
-            customer: customer // passes user object to handlebar
+            customer: customer
         });
-    }).catch(err => console.log(err)); // To catch no user ID
+    }).catch(err => console.log(err));
 };
 
 function save_edit_user_business(req, res) {
-    let { Name, Email, Address, Contact } = req.body;
-
+    let { Name, Email, Contact } = req.body;
     const user = User.findOne({
         where: {
             role: UserRole.Business,
             name: req.params.name
         }
-    })
+    });
 
     User.update({
         name: Name,
         email: Email,
-        address: Address,
         contact: Contact
-    }, {
-        where: {
-            role: UserRole.Business,
-            name: req.params.name
-        }
-        }).then(() => {
-            console.log(`user name saved as ${Name}`);
-            res.redirect(`/u/b/${Name}`);
+    }, { where: {role: UserRole.Business, name: req.params.name}}
+    ), 
+    Outlets.update({
+        name: Name
+    }, { where: {name: req.params.name}}
+    ),
+    DiscountSlot.update({
+        name: Name
+    }, { where: {name: req.params.name}}
+    ),
+    Reservations.update({
+        name: Name
+    }, { where: {name: req.params.name}} 
+    ).then(() => {
+        console.log(`user name saved as ${Name}`);
+        res.redirect(`/u/b/${Name}`);
     }).catch(err => console.log(err));  
 };
 
 function delete_business_user(req, res) {
-    User.findOne({
+    const user = User.findOne({
         where: {
             email : req.params.user_email
         },
     }).then((user) => {
         if (user != null) {
             User.destroy({
-                where: {
-                    "email" : req.params.user_email
-                }
+                where: {"email" : req.params.user_email}
+            }),
+            Outlets.destroy({
+                where: {"name": user.name}
+            }),
+            DiscountSlot.destroy({
+                where: {"name": user.name}
+            }),
+            Reservations.destroy({
+                where: {"name": user.name}
             }).then(() => {
                 flashMessage(res,'success', 'Business account deleted', 'fa fa-trash', true );
                 req.logout();
@@ -152,15 +164,11 @@ function delete_business_user(req, res) {
 async function create_discount_slot_page(req, res) {
     const outlet = await Outlets.findAll({
         where: {
-            "name": {
-                [Op.eq]: req.params.name
-            }
+            "name": {[Op.eq]: req.params.name}
         }
     });
     const user = User.findOne({
-        where: {
-            "name": req.params.name
-        }
+        where: {"name": req.params.name}
     });
     var role = getRole(req.user.role);
     var admin = role[0];
@@ -187,9 +195,6 @@ async function create_discount_slot_process(req, res) {
 };
 
 async function view_discount_slots_page(req, res) {
-    //    const user    = req.user;
-    //    const outlets = await user.getOutlets();
-    //    const owner   = await (outlets[0].getOwner());
         var role = getRole(req.user.role);
         var admin = role[0];
         var business = role[1];
@@ -241,7 +246,7 @@ async function discounts_data(req, res) {
             limit: pageSize,
             order: [[sortBy, sortOrder.toUpperCase()]],
             where: conditions,
-            raw: true, // Data only, model excluded
+            raw: true,
         });
         return res.json({
             total: total,
@@ -285,7 +290,7 @@ async function edit_discount_slot_page(req, res){
             customer: customer,
             outlet: outlet
         });
-    }).catch(err => console.log(err)); // To catch no user ID
+    }).catch(err => console.log(err));
 };
 
 function save_edit_discount_slot(req, res){
@@ -361,16 +366,12 @@ async function create_outlet_process(req, res) {
         "price":  Price,
         "contact":  Contact,
         "description": Description,
-        "thumbnail" : req.file.path
+        "thumbnail": req.file.path
     });
     res.redirect(`/u/b/${Name}/view-outlets`);
 };
 
 async function view_outlets_page(req, res) {
-//    const user    = req.user;
-//    const outlets = await user.getOutlets();
-//    const owner   = await (outlets[0].getOwner());
-
     var role = getRole(req.user.role);
     var admin = role[0];
     var business = role[1];
@@ -421,7 +422,7 @@ async function outlets_data(req, res) {
            limit: pageSize,
            order: [[sortBy, sortOrder.toUpperCase()]],
            where: conditions,
-           raw: true, // Data only, model excluded
+           raw: true,
        });
        return res.json({
            total: total,
@@ -432,14 +433,14 @@ async function outlets_data(req, res) {
        console.error(error);
        return res.status(500).end();
    }
-}
+};
 
 function edit_outlet_page(req, res){
     const user = User.findOne({
         where: {
             "name": req.params.name
         }
-    })
+    });
     var role = getRole(req.user.role);
     var admin = role[0];
     var business = role[1];
@@ -455,9 +456,9 @@ function edit_outlet_page(req, res){
             outlet,
             admin: admin,
             business: business,
-            customer: customer // passes user object to handlebar
+            customer: customer
         });
-    }).catch(err => console.log(err)); // To catch no user ID
+    }).catch(err => console.log(err));
 };
 
 function save_edit_outlet(req, res){
@@ -502,6 +503,9 @@ function delete_outlet(req, res) {
                     "name" : req.params.name,
                     "postal_code" : req.params.postal_code
                 }
+            }),
+            DiscountSlot.destroy({
+                where: {"name": req.params.name}
             }).then(() => {
                 res.redirect(`/u/b/${req.params.name}/view-outlets`);
             }).catch( err => console.log(err));
@@ -599,23 +603,26 @@ function edit_user_customer_page(req, res) {
             user,
             admin: admin,
             business: business,
-            customer: customer // passes user object to handlebar
+            customer: customer
         });
-    }).catch(err => console.log(err)); // To catch no user ID
+    }).catch(err => console.log(err));
 };
  
 function save_edit_user_customer(req, res) {
     let { Name, Contact, Email } = req.body;
 
     User.update({
-        name : Name,
+        name: Name,
         email: Email,
         contact: Contact
-    }, {
-        where: {
-            email : req.params.user_email
-        }
-        }).then(() => {
+    }, { where: {email: req.params.user_email}}
+    ),
+    Reservations.update({
+        name: Name,
+        email: Email,
+        contact: Contact
+    }, { where: {email: req.params.user_email}}
+    ).then(() => {
             res.redirect(`/u/c/${Email}`);
     }).catch(err => console.log(err));  
 };
@@ -631,6 +638,9 @@ function delete_customer_user(req, res) {
                 where: {
                     "email" : req.params.user_email
                 }
+            }),
+            Reservations.destroy({
+                where: {"email": req.params.user_email}
             }).then(() => {
                 flashMessage(res,'success', 'Customer account deleted', 'fa fa-trash', true );
                 req.logout();
@@ -760,20 +770,20 @@ async function edit_reservation_page(req, res){
             business: business,
             customer: customer 
         });
-    }).catch(err => console.log(err)); // To catch no user ID
+    }).catch(err => console.log(err));
 };
 
 function save_edit_reservation(req, res){
     let { BusinessName, Location, Name, ResDate, Pax, Email, Contact } = req.body;
 
     Reservations.update({
-        name : BusinessName,
-        location : Location,
-        user_name : Name,
-        user_email : Email,
-        user_contact : Contact,
-        date : ResDate,
-        pax : Pax
+        name: BusinessName,
+        location: Location,
+        user_name: Name,
+        user_email: Email,
+        user_contact: Contact,
+        date: ResDate,
+        pax: Pax
     }, {
         where: {
             user_email: req.params.user_email,
@@ -805,4 +815,3 @@ function delete_reservation(req, res) {
     }
     });
 };
-
