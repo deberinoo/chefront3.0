@@ -167,7 +167,6 @@ function view_contact_page(req, res) {
 async function create_feedback_process(req,res) {
 	let { Name, Email, Phone, Message, Read } = req.body;
 
-	//CREATE
 	const feedbacks = await Feedback.create({
 		"name" : Name,
 		"email" : Email,
