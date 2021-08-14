@@ -5,6 +5,7 @@ import { User, UserRole }                   from '../data/models/Users.mjs'
 import { DiscountSlot }                     from '../data/models/DiscountSlot.mjs';
 import { Outlets }                          from '../data/models/Outlets.mjs';
 import { Reservations } 	                from '../data/models/Reservations.mjs';
+import { Categories }                       from '../data/models/Categories.mjs';
 
 import { UploadFile, DeleteFilePath }       from '../utils/multer.mjs';
 
@@ -326,7 +327,8 @@ function delete_discount_slot(req, res) {
     });
 };
 
-function create_outlet_page(req, res) {
+async function create_outlet_page(req, res) {
+    const category = await Categories.findAll();
     const user = User.findOne({
         where: {
             "name": req.params.name
@@ -339,18 +341,20 @@ function create_outlet_page(req, res) {
 	return res.render('user/business/create_outlet', {
         admin: admin,
         business: business,
-        customer: customer
+        customer: customer,
+        category: category
     });
 };
 
 async function create_outlet_process(req, res) {
     let errors = [];
     
-    let { Name, Location, Address, Postalcode, Price, Contact, Description } = req.body;
+    let { Name, Category, Location, Address, Postalcode, Price, Contact, Description } = req.body;
     console.log(`${req.file.path}`)
 
     const outlet = await Outlets.create({
         "name":  Name,
+        "category" : Category,
         "location":  Location,
         "address":  Address,
         "postal_code":  Postalcode,
@@ -457,17 +461,18 @@ function edit_outlet_page(req, res){
 };
 
 function save_edit_outlet(req, res){
-    let { Name, Location, Address, Postalcode, Price, Contact, Description } = req.body;
+    let { Name, Category, Location, Address, Postalcode, Price, Contact, Description } = req.body;
 
     Outlets.update({
         name:  Name,
+        category: Category,
         location:  Location,
         address:  Address,
         postal_code:  Postalcode,
         price:  Price,
         contact:  Contact,
         description: Description,
-        thumbnail: req.file.path
+        thumbnail: req.path.file
     }, {
         where: {
             postal_code : req.params.postal_code

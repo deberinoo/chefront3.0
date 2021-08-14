@@ -3,7 +3,11 @@ import { flashMessage } from '../utils/flashmsg.mjs';
 
 import { User }         from '../data/models/Users.mjs';
 import { Outlets }      from '../data/models/Outlets.mjs';
-import { Feedback }     from '../data/models/Feedback.mjs'
+import { Feedback }     from '../data/models/Feedback.mjs';
+import { Categories }   from '../data/models/Categories.mjs';
+
+import { UploadFile, DeleteFilePath }       from '../utils/multer.mjs';
+
 
 import ORM              from 'sequelize';
 const { Op } = ORM;
@@ -35,6 +39,15 @@ router.get("/feedback",                             view_feedback_page);
 router.get("/all-feedbacks-data",                   all_feedbacks_data);
 router.get("/deleteFeedback/:uuid",                 delete_feedback);
 
+// Categories management routes
+router.get("/create-category",                      create_category_page);
+router.post("/create-category",                     UploadFile.single("Thumbnail"), create_category_process);
+router.get("/categories",                           view_categories_page);
+router.get("/edit-category/:name",                  edit_category_page);
+router.put("/save-category/:name",                  UploadFile.any("Thumbnail"), save_edit_category);
+router.get("/all-categories-data",                  all_categories_data);
+router.get("/deleteCategory/:name",                 delete_category);
+
 function ensure_auth(req, res, next) {
     if (!req.isAuthenticated()) {
         return res.redirect("/auth/adminlogin");
@@ -55,7 +68,7 @@ function ensure_admin(req, res, next) {
     }
 }
 
-async function view_customer_users_page(req, res) {
+function view_customer_users_page(req, res) {
 	return res.render('admin/retrieve_customerUsers');
 };
 
@@ -131,7 +144,7 @@ function delete_customer_user(req, res) {
     });
 };
 
-async function view_business_users_page(req, res) {
+function view_business_users_page(req, res) {
 	return res.render('admin/retrieve_businessUsers');
 };
 
@@ -217,9 +230,9 @@ function delete_business_user(req, res) {
     });
 };
 
-async function view_outlets_page(req, res) {
-        return res.render('admin/retrieve_allOutlets');
-    };
+function view_outlets_page(req, res) {
+    return res.render('admin/retrieve_allOutlets');
+};
 
 /**
 * Provides bootstrap table with data
@@ -291,7 +304,7 @@ function delete_outlet(req, res) {
     });
 };
 
-async function view_feedback_page(req, res) {
+function view_feedback_page(req, res) {
 	return res.render('admin/retrieve_feedback');
 };
 
@@ -366,3 +379,111 @@ function delete_feedback(req, res) {
     });
 };
 
+function view_categories_page(req, res) {
+    return res.render('admin/retrieve_allCategories');
+};
+
+function create_category_page(req, res) {
+    return res.render('admin/create_category');
+};
+
+async function create_category_process(req, res) {
+    let { Name, Description } = req.body;
+
+    const category = await Categories.create({
+        "name":  Name,
+        "description": Description,
+        "thumbnail" : req.file.path
+    });
+    res.redirect('/admin/categories');
+};
+
+function edit_category_page(req, res){
+    Categories.findOne({
+        where: {
+            "name" : req.params.name
+        }
+    }).then((categories) => {
+        res.render(`admin/update_category`,{categories:categories});
+    }).catch(err => console.log(err)); // To catch no user ID
+};
+
+function save_edit_category(req, res){
+    let { Name, Description } = req.body;
+
+    Categories.update({
+        name: Name,
+        description: Description,
+        thumbnail: req.path.file
+    }, {
+        where: {
+            name : req.params.name
+        }
+        }).then(() => {
+            res.redirect('/admin/categories');
+    }).catch(err => console.log(err)); 
+};
+
+async function all_categories_data(req, res) {
+    try {
+        console.log('finding data');
+        let pageSize = parseInt(req.query.limit);
+        let offset = parseInt(req.query.offset);
+        let sortBy = req.query.sort ? req.query.sort : "dateCreated";
+        let sortOrder = req.query.order ? req.query.order : "desc";
+        let search = req.query.search;
+        if (pageSize < 0) {
+            throw new HttpError(400, "Invalid page size");
+        }
+        if (offset < 0) {
+            throw new HttpError(400, "Invalid offset index");
+        }
+        
+        /** @type {import('sequelize/types').WhereOptions} */
+        const conditions = search
+        ?{
+            [Op.or]: {
+                name: { [Op.substring]: search}
+            }
+        }
+        : undefined;
+        const total = await Categories.count({ where: conditions });
+        const pageTotal = Math.ceil(total / pageSize);
+ 
+        const pageContents = await Categories.findAll({
+            offset: offset,
+            limit: pageSize,
+            order: [[sortBy, sortOrder.toUpperCase()]],
+            where: conditions,
+            raw: true, // Data only, model excluded
+        });
+        return res.json({
+            total: total,
+            rows: pageContents,
+        });
+    } catch (error) {
+        console.error("Failed to retrieve all Categories");
+        console.error(error);
+        return res.status(500).end();
+    }
+ }
+ 
+function delete_category(req, res) {
+    Categories.findOne({
+        where: {
+            "name" : req.params.name,
+        },
+    }).then((categories) => {
+        if (categories!= null) {
+            categories.destroy({
+                where: {
+                    "name" : req.params.name
+                }
+            }).then(() => {
+                res.redirect('/admin/categories');
+            }).catch( err => console.log(err));
+        } else {
+	    res.redirect('/404');
+    }
+    });
+};

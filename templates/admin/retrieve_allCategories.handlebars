@@ -1,4 +1,4 @@
-<title>Chefront - Retrieve All Outlets</title>
+<title>Chefront - Retrieve All Categories</title>
 
 <link rel="stylesheet" href="/public/css/profile.css">
 <script src="https://unpkg.com/bootstrap-table@1.18.3/dist/bootstrap-table.min.js"></script>
@@ -7,7 +7,7 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-12 col-lg-12 col-xl-12 mx-auto">
-                <h2 class="h3 mb-4 page-title">Retrieve All Outlets</h2>
+                <h2 class="h3 mb-4 page-title">Retrieve All Categories</h2>
                 <div class="my-4">
                     <ul class="nav nav-tabs mb-4" id="myTab" role="tablist">
                         <li class="nav-item dropdown">
@@ -19,11 +19,11 @@
                             </div>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="home-tab" href="/admin/categories" role="tab"
+                            <a class="nav-link active" id="home-tab" href="/admin/categories" role="tab"
                                 aria-controls="home" aria-selected="false">View categories</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active" id="home-tab" href="/admin/allOutlets" role="tab"
+                            <a class="nav-link" id="home-tab" href="/admin/allOutlets" role="tab"
                                 aria-controls="home" aria-selected="false">View outlets</a>
                         </li>
                         <li class="nav-item">
@@ -46,15 +46,11 @@
                     data-show-pagination-switch="true"
                     data-show-fullscreen="true"
                     data-search="true"
-                    data-url="/admin/all-outlets-data"
+                    data-url="/admin/all-categories-data"
                     data-side-pagination="server">
                     <thead class="thead-dark">
                         <tr>
-                            <th scope="col" data-sortable="true" data-field="location">Location</th>
-                            <th scope="col" data-sortable="true" data-field="address">Address</th>
-                            <th scope="col" data-sortable="true" data-field="postal_code">Postal Code</th>
-                            <th scope="col" data-sortable="true" data-field="price">Price</th>
-                            <th scope="col" data-sortable="true" data-field="contact">Contact</th>
+                            <th scope="col" data-sortable="true" data-field="name">Name</th>
                             <th scope="col" data-sortable="true" data-field="description">Description</th>
                             <th scope="col" data-formatter="table_thumbnail">Thumbnail</th>
                             <th scope="col" data-formatter="table_row_delete">Actions</th>
@@ -78,7 +74,22 @@
 
     function table_row_delete(value, row, index) {
 		return `
-        <a href="/admin/deleteOutlet/${row.postal_code}" class="delete"><i class="material-icons" title="Delete">&#xE872;</i></a>
+		<a href="../admin/edit-category/${row.name}"><i class="material-icons" title="Edit">&#xE254;</i></a>
+        <a href="/admin/deleteCategory/${row.name}" class="delete"><i class="material-icons" title="Delete">&#xE872;</i></a>
 		`;
 	}
+
+    function buttons () {
+    return {
+      btnAdd: {
+        icon: 'fa-plus',
+        event: function () {
+          window.location.href = "http://localhost:3000/admin/create-category";  
+        },
+        attributes: {
+          title: 'Add a new category'
+        }
+      }
+    }
+  }
 </script>

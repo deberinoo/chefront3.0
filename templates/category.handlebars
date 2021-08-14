@@ -5,10 +5,8 @@
 <section id="home" class="py-1 active pr-5">
 	<div class="container position-relative">
 		<div class="row align-items-center min-vh-60 my-lg-7 h-24">
-            <img src="../public/img/restaurants/search.png" style="height: 450px; width:450px;">
 			<div class="col-md-7 col-lg-7 text-center text-md-start py-8 px-5">
-				<h1 class="ml-1 mb-4 display-2 lh-sm">Search for your <br class="d-block d-lg-none d-xl-block" />favourite cuisines!
-				</h1>
+				<h1 class="ml-1 mb-4 display-2 lh-sm"> {{category.category}} <br class="d-block d-lg-none d-xl-block"/>cuisine</h1>
                 <div class="search">
                     <input type="search" id="search" class="form-control text-dark"
                     placeholder="Search for a restaurant, location or cuisine" style="height: 3.5rem; border-radius:50px;padding: 0 25px">
@@ -25,14 +23,15 @@
             <div class="col">
                 <div class="carddeck">
                     <div class="d-flex flex-wrap justify-content-center">
-                        {{#each category}}
+                        {{#each restaurants}}
                             <div class="card mr-3 mb-5">
-                                <a href="/category/{{name}}">
+                                <a href="/restaurant/{{name}}/{{location}}">
                                     <img class="card-img-top img-fluid"
                                         src="/{{thumbnail}}"
                                         alt="Card image cap" width="300">
                                     <div class="card-body">
                                         <h4 class="card-title">{{name}}</h4>
+                                        <p class="card-text">{{location}} • ${{price}}</p>
                                     </div>
                                 </a>
                             </div>
