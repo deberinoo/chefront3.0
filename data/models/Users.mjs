@@ -5,8 +5,6 @@ export class UserRole {
     static get Admin()    {return "admin"};
     static get Business() {return "business"};
     static get Customer() {return "customer"};
-    static get BusinessPage() {return "b"};
-    static get CustomerPage() {return "c"};
 }
 
 export class User extends Model {

@@ -1,7 +1,7 @@
 import { Router }           from 'express';
 import { flashMessage }     from '../utils/flashmsg.mjs';
 
-import { User }             from '../data/models/Users.mjs';
+import { User, UserRole }   from '../data/models/Users.mjs';
 import { Outlets }          from '../data/models/Outlets.mjs';
 import { Feedback }         from '../data/models/Feedback.mjs';
 import { Categories }       from '../data/models/Categories.mjs';
@@ -61,16 +61,17 @@ function ensure_auth(req, res, next) {
     }
 };
 
-function ensure_admin(req, res, next) {
+async function ensure_admin(req, res, next) {
     /** @type {ModelUser} */
     const user = req.user;
-    if (user.email == "chefrontceo@gmail.com") {
+    if (user.role == UserRole.Admin) {
         return next();
     }
     else {
         return res.sendStatus(403);
     }
-};
+}
+
 // ----------------
 
 function view_customer_users_page(req, res) {

@@ -109,11 +109,19 @@ async function login_process(req, res, next) {
 		id = 'c';
 	}
 
-	return Passport.authenticate('local', {
-		successRedirect: "/u/" + id + "/" + user.name,
-		failureRedirect: "/auth/login",
-		failureFlash:    true
-	})(req, res, next);
+	if (user.role == 'business' || user.role == 'customer') {
+		return Passport.authenticate('local', {
+			successRedirect: "/u/" + id + "/" + user.name,
+			failureRedirect: "/auth/login",
+			failureFlash:    true
+		})(req, res, next);	
+	} else if (user.role == 'admin') {
+		return Passport.authenticate('local', {
+			successRedirect: "/admin/feedback",
+			failureRedirect: "/auth/login",
+			failureFlash:    true
+		})(req, res, next);
+	}
 }
 
 function register_page(req, res) {

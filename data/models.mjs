@@ -7,9 +7,11 @@ import { Outlets }          from '../data/models/Outlets.mjs';
 import { Reservations }     from '../data/models/Reservations.mjs';
 import { DiscountSlot }     from '../data/models/DiscountSlot.mjs';
 import { Feedback }         from '../data/models/Feedback.mjs';
-import { Categories }   from '../data/models/Categories.mjs';
-//import { Favourites } 		from '../data/models/Favourites.mjs';
-//import { Review } 			from '../data/models/Review.mjs';
+import { Categories }   	from '../data/models/Categories.mjs';
+//import { Favourites } 	from '../data/models/Favourites.mjs';
+//import { Review } 		from '../data/models/Review.mjs';
+import Hash             	from 'hash.js';
+
 
 /**
  * Initialize all the models within the system
@@ -53,3 +55,35 @@ import { Categories }   from '../data/models/Categories.mjs';
 		console.error (error);
 	}
 }
+
+//async function generate_root_account(database, options) {
+// 	//	Remove this callback to ensure it runs only once
+// 	database.removeHook("afterBulkSync", generate_root_account.name);
+// 	//	Create a root user if not exists otherwise update it
+// 	try {
+// 		console.log("Generating root administrator account");
+// 		const root_parameters = {	
+// 			uuid    : "00000000-0000-0000-0000-000000000000",
+// 			name    : "admin",
+// 			email   : "admin@chefront.com",
+// 			contact : "97504802",
+// 			role    : "admin",
+// 			verified: true,
+// 			password: Hash.sha256().update("CEOtings123").digest("hex")
+// 		};
+// 		//	Find for existing account with the same id, create or update
+// 		var account = await User.findOne({where: { "uuid": root_parameters.uuid }});
+		
+// 		account = await ((account) ? account.update(root_parameters): User.create(root_parameters));
+		
+// 		console.log("== Generated root account ==");
+// 		console.log(account.toJSON());
+// 		console.log("============================");
+// 		return Promise.resolve();
+// 	}
+// 	catch (error) {
+// 		console.error ("Failed to generate root administrator user account");
+// 		console.error (error);
+// 		return Promise.reject(error);
+// 	}
+// }
