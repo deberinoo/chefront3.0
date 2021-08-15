@@ -466,60 +466,61 @@ function makeid(length) {
    }
    return result.toUpperCase();
 }
-router.post("/adminlogin",    	admin_login_process);
+
+// router.post("/adminlogin",    	admin_login_process);
 
 
-async function admin_login_process(req, res, next) {
-    let { Email, Password } = req.body;
+// async function admin_login_process(req, res, next) {
+//     let { Email, Password } = req.body;
 	
-	let errors = [];
-	try {
-		const user = await User.findOne({
-			where:{
-			"email": "chefrontceo@gmail.com",
-			}
-		}); 
+// 	let errors = [];
+// 	try {
+// 		const user = await User.findOne({
+// 			where:{
+// 			"email": "chefrontceo@gmail.com",
+// 			}
+// 		}); 
 
-		if (user == null) {
-			errors = errors.concat({ text: "Invalid user credentials!" });
-			return res.render('admin/adminLogin');
-		}
-	}
-	catch (error) {
-		console.error("There is errors with the login form body.");
-		console.error(error);
-		return res.render('admin/adminLogin', { errors: errors });
-	}
-	return Passport.authenticate('local', {
-		successRedirect: "/admin/feedback",
-		failureRedirect: "/auth/adminlogin",
-		failureFlash:    true
-	})(req, res, next);
-}
+// 		if (user == null) {
+// 			errors = errors.concat({ text: "Invalid user credentials!" });
+// 			return res.render('admin/adminLogin');
+// 		}
+// 	}
+// 	catch (error) {
+// 		console.error("There is errors with the login form body.");
+// 		console.error(error);
+// 		return res.render('admin/adminLogin', { errors: errors });
+// 	}
+// 	return Passport.authenticate('local', {
+// 		successRedirect: "/admin/feedback",
+// 		failureRedirect: "/auth/adminlogin",
+// 		failureFlash:    true
+// 	})(req, res, next);
+// }
 
-async function generate_root_account(Database,options) {
-	Database.removeHook("afterBulkSync", generate_root_acount.name);
-	try{
-		console.log("Generating root adminstrator account");
-		const root_parameters = {
-			name : "root_admin",
-			email: "chefrontceo@gmail.com",
-			role: "admin",
-			verified: true,
-			password: Hash.sha256().update("password").digest("hex")
-		};
-		var account = await User.findOne({where:{"email": root_parameters.email}})
+// async function generate_root_account(Database,options) {
+// 	Database.removeHook("afterBulkSync", generate_root_acount.name);
+// 	try{
+// 		console.log("Generating root adminstrator account");
+// 		const root_parameters = {
+// 			name : "root_admin",
+// 			email: "chefrontceo@gmail.com",
+// 			role: "admin",
+// 			verified: true,
+// 			password: Hash.sha256().update("password").digest("hex")
+// 		};
+// 		var account = await User.findOne({where:{"email": root_parameters.email}})
 
-		account = await((account) ? account.update(root_parameters): User.create(root_parameters))
+// 		account = await((account) ? account.update(root_parameters): User.create(root_parameters))
 
-		console.log(" == Generated root account == ");
-		console.log(account.toJSON());
-		console.log("===================")
-		return Promise.resolve();
-	}
-	catch (error){
-		console.error ("Failed to generate root adminstrator user account");
-		console.log(error);
-		return Promise.reject(error);
-	}
-}
+// 		console.log(" == Generated root account == ");
+// 		console.log(account.toJSON());
+// 		console.log("===================")
+// 		return Promise.resolve();
+// 	}
+// 	catch (error){
+// 		console.error ("Failed to generate root adminstrator user account");
+// 		console.log(error);
+// 		return Promise.reject(error);
+// 	}
+// }

@@ -9,6 +9,7 @@ import { Reservations } 	from '../data/models/Reservations.mjs';
 import { DiscountSlot }     from '../data/models/DiscountSlot.mjs';
 
 import { UploadFile, DeleteFilePath }       from '../utils/multer.mjs';
+import Hash             from 'hash.js';
 
 
 import ORM                  from 'sequelize';
@@ -17,10 +18,20 @@ const { Op } = ORM;
 const router = Router();
 export default router;
 
+/**
+ * Regular expressions for form testing
+ **/ 
+ const regexEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+ const regexName  = /^[a-z ,.'-]+$/i;
+ //	Min 8 character, 1 upper, 1 lower, 1 number, 1 symbol
+ //const regexPwd   = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+ 
+ // Min 8 character, 1 letter, 1 number 
+ const regexPwd = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/
+
+
 router.use(ensure_auth)
 router.use(ensure_admin)
-
-//Admin login
 
 // User management routes
 router.get("/businessUsers",                        view_business_users_page);
@@ -30,6 +41,14 @@ router.get("/deleteBusinessUser/:name",             delete_business_user);
 router.get("/customerUsers",                        view_customer_users_page);
 router.get("/all-customer-data",                    all_customer_data);
 router.get("/deleteCustomerUser/:email",            delete_customer_user);
+
+router.get("/adminUsers",                            view_admin_users_page);
+router.get("/all-admin-data",                        all_admin_data);
+router.get("/deleteAdminUser/:name",                 delete_admin_user);
+router.get("/editAdminUser/:name",                   edit_admin_page);
+router.put("/saveAdminUser/:name",                   save_edit_admin_user);
+router.get("/createAdminUser",                       create_admin_user_page);
+router.post("/createAdminUser",                      create_admin_user_process);
 
 // Outlet management routes
 router.get("/outlets",                              view_outlets_page);
@@ -574,4 +593,179 @@ function delete_category(req, res) {
 	    res.redirect('/404');
     }
     });
+};
+
+function view_admin_users_page(req, res) {
+    var role = getRole(req.user.role);
+    var admin = role[0];
+    var business = role[1];
+    var customer = role[2];
+	return res.render('admin/retrieve_adminUsers', {
+        admin: admin,
+        business: business,
+        customer: customer,
+    });
+};
+
+async function all_admin_data(req, res) {
+    try {
+        console.log('finding data');
+        let pageSize = parseInt(req.query.limit);
+        let offset = parseInt(req.query.offset);
+        let sortBy = req.query.sort ? req.query.sort : "dateCreated";
+        let sortOrder = req.query.order ? req.query.order : "desc";
+        let search = req.query.search;
+        if (pageSize < 0) {
+            throw new HttpError(400, "Invalid page size");
+        }
+        if (offset < 0) {
+            throw new HttpError(400, "Invalid offset index");
+        }
+        
+        /** @type {import('sequelize/types').WhereOptions} */
+        const conditions = {role: req.user.role = "admin"}
+        search
+        ?{
+            [Op.or]: {
+                name: { [Op.substring]: search},
+                email: { [Op.substring]: search}
+            }
+        }
+        : undefined;
+        const total = await User.count({ where: conditions });
+        const pageTotal = Math.ceil(total / pageSize);
+ 
+        const pageContents = await User.findAll({
+            offset: offset,
+            limit: pageSize,
+            order: [[sortBy, sortOrder.toUpperCase()]],
+            where: conditions,
+            raw: true, // Data only, model excluded
+        });
+        return res.json({
+            total: total,
+            rows: pageContents,
+        });
+    } catch (error) {
+        console.error("Failed to retrieve all Customers");
+        console.error(error);
+        return res.status(500).end();
+    }
+ }
+
+ function delete_admin_user(req, res) {
+    User.findOne({
+        where: {
+            "name" : req.params.name
+        },
+    }).then((user) => {
+        if (user != null) {
+            User.destroy({
+                where: {
+                    "name" : req.params.name
+                }
+            }).then(() => {
+                res.redirect('/admin/adminUsers');
+            }).catch( err => console.log(err));
+        } else {
+	    res.redirect('/404');
+    }
+    });
+};
+
+function edit_admin_page(req, res) {
+    const user = User.findOne({
+        where: {
+            "name": req.params.name
+        }
+    }).then((user) => {
+        var role = getRole(req.user.role);
+        var admin = role[0];
+        var business = role[1];
+        var customer = role[2];
+        res.render('admin/update_adminUser', {
+            user,
+            admin: admin,
+            business: business,
+            customer: customer
+        });
+    }).catch(err => console.log(err));
+};
+
+function save_edit_admin_user(req, res) {
+    let { Name, Email } = req.body;
+    const user = User.findOne({
+        where: {
+            role: UserRole.Admin,
+            name: req.params.name
+        }
+    });
+    User.update({
+        name: Name,
+        email: Email,
+    }, { where: {role: UserRole.Admin, name: req.params.name}}
+    ).then(() => {
+        console.log(`admin name saved as ${Name}`);
+        res.redirect('/admin/adminUsers');
+    }).catch(err => console.log(err));  
+};
+
+function create_admin_user_page(req,res){
+    return res.render('admin/create_adminUser');
+};
+
+async function create_admin_user_process(req,res){
+    let errors = [];
+    
+    let { Name, Email, InputPassword, ConfirmPassword } = req.body;
+
+	try {
+		if (! regexName.test(Name)) {
+			errors = errors.concat({ text: "Invalid name provided! It must be minimum 3 characters and starts with a alphabet." });
+		}
+
+		if (! regexEmail.test(Email)) {
+			errors = errors.concat({ text: "Invalid email address!" });
+		}
+
+		else {
+			const user = await User.findOne({where: {email: Email}});
+			if (user != null) {
+				errors = errors.concat({ text: "This email cannot be used!" });
+			}
+		}
+
+		if (! regexPwd.test(InputPassword)) {
+			errors = errors.concat({ text: "Password requires minimum eight characters, at least one uppercase letter, one lowercase letter and one number!" });
+		}
+		else if (InputPassword !== ConfirmPassword) {
+			errors = errors.concat({ text: "Password do not match!" });
+		}
+
+		if (errors.length > 0) {
+			throw new Error("There are validation errors");
+		}
+	}
+	catch (error) {
+		console.error("There is errors with the creating form body.");
+		console.error(error);
+		return res.render('admin/create_adminUser', { errors: errors });
+	}
+    try{
+        const Password =  Hash.sha256().update(InputPassword).digest('hex')
+        User.create({
+			"name": Name,
+			"email": Email,
+			"password": Password,
+			"role": UserRole.Admin
+		})
+        flashMessage(res, 'success', 'Successfully created an admin user.', false);
+        res.redirect("/admin/adminUsers");
+    }
+    catch (error) {
+		//	Else internal server error
+		console.error(`Failed to create a new user: ${Email} `);
+		console.error(error);
+		return res.status(500).end();
+	}
 };
