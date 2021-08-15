@@ -32,7 +32,7 @@ router.get("/all-customer-data",                    all_customer_data);
 router.get("/deleteCustomerUser/:email",            delete_customer_user);
 
 // Outlet management routes
-router.get("/allOutlets",                           view_outlets_page);
+router.get("/outlets",                              view_outlets_page);
 router.get("/all-outlets-data",                     all_outlets_data);
 router.get("/deleteOutlet/:postal_code",            delete_outlet);
 
@@ -73,9 +73,37 @@ async function ensure_admin(req, res, next) {
 }
 
 // ----------------
+// Check user role
+function getRole(role) {
+	if (role == 'admin') {
+		var admin = true;
+		var business = false;
+		var customer = false;
+	}
+	else if (role == 'business') {
+		var admin = false;
+		var business = true;
+		var customer = false;
+	}
+	else if (role == 'customer') {
+		var admin = false;
+		var business = false;
+		var customer = true;
+	}
+	return [admin, business, customer];
+}
+// ----------------
 
 function view_customer_users_page(req, res) {
-	return res.render('admin/retrieve_customerUsers');
+    var role = getRole(req.user.role);
+    var admin = role[0];
+    var business = role[1];
+    var customer = role[2];
+	return res.render('admin/retrieve_customerUsers', {
+        admin: admin,
+        business: business,
+        customer: customer,
+    });
 };
 
 async function all_customer_data(req, res) {
@@ -151,7 +179,15 @@ function delete_customer_user(req, res) {
 };
 
 function view_business_users_page(req, res) {
-	return res.render('admin/retrieve_businessUsers');
+    var role = getRole(req.user.role);
+    var admin = role[0];
+    var business = role[1];
+    var customer = role[2];
+	return res.render('admin/retrieve_businessUsers', {
+        admin: admin,
+        business: business,
+        customer: customer,
+    });
 };
 
 /**
@@ -242,7 +278,15 @@ function delete_business_user(req, res) {
 };
 
 function view_outlets_page(req, res) {
-    return res.render('admin/retrieve_allOutlets');
+    var role = getRole(req.user.role);
+    var admin = role[0];
+    var business = role[1];
+    var customer = role[2];
+    return res.render('admin/retrieve_allOutlets', {
+        admin: admin,
+        business: business,
+        customer: customer,
+    });
 };
 
 /**
@@ -316,7 +360,15 @@ function delete_outlet(req, res) {
 };
 
 function view_feedback_page(req, res) {
-	return res.render('admin/retrieve_feedback');
+    var role = getRole(req.user.role);
+    var admin = role[0];
+    var business = role[1];
+    var customer = role[2];
+	return res.render('admin/retrieve_feedback', {
+        admin: admin,
+        business: business,
+        customer: customer,
+    });
 };
 
 /**
@@ -391,11 +443,27 @@ function delete_feedback(req, res) {
 };
 
 function view_categories_page(req, res) {
-    return res.render('admin/retrieve_allCategories');
+    var role = getRole(req.user.role);
+    var admin = role[0];
+    var business = role[1];
+    var customer = role[2];
+    return res.render('admin/retrieve_allCategories', {
+        admin: admin,
+        business: business,
+        customer: customer,
+    });
 };
 
 function create_category_page(req, res) {
-    return res.render('admin/create_category');
+    var role = getRole(req.user.role);
+    var admin = role[0];
+    var business = role[1];
+    var customer = role[2];
+    return res.render('admin/create_category', {
+        admin: admin,
+        business: business,
+        customer: customer,
+    });
 };
 
 async function create_category_process(req, res) {
@@ -410,12 +478,21 @@ async function create_category_process(req, res) {
 };
 
 function edit_category_page(req, res){
+    var role = getRole(req.user.role);
+    var admin = role[0];
+    var business = role[1];
+    var customer = role[2];
     Categories.findOne({
         where: {
             "name" : req.params.name
         }
     }).then((categories) => {
-        res.render(`admin/update_category`,{categories:categories});
+        res.render(`admin/update_category`, {
+            admin: admin,
+            business: business,
+            customer: customer,
+            categories:categories
+        });
     }).catch(err => console.log(err)); // To catch no user ID
 };
 

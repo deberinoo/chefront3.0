@@ -117,7 +117,7 @@ async function login_process(req, res, next) {
 		})(req, res, next);	
 	} else if (user.role == 'admin') {
 		return Passport.authenticate('local', {
-			successRedirect: "/admin/feedback",
+			successRedirect: "/admin/businessUsers",
 			failureRedirect: "/auth/login",
 			failureFlash:    true
 		})(req, res, next);

@@ -301,7 +301,7 @@ function view_payment_page(req, res) {
 
 async function create_reservation_process(req, res) {
 	if (req.user == undefined) {
-		return res.render('auth/loginCustomer')
+		return res.render('auth/login')
 	} else {
 		var role = getRole(req.user.role);
 		var admin = role[0];

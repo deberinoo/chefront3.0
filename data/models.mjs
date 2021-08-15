@@ -56,7 +56,7 @@ import Hash             	from 'hash.js';
 	}
 }
 
-//async function generate_root_account(database, options) {
+// async function generate_root_account(database, options) {
 // 	//	Remove this callback to ensure it runs only once
 // 	database.removeHook("afterBulkSync", generate_root_account.name);
 // 	//	Create a root user if not exists otherwise update it
@@ -64,8 +64,8 @@ import Hash             	from 'hash.js';
 // 		console.log("Generating root administrator account");
 // 		const root_parameters = {	
 // 			uuid    : "00000000-0000-0000-0000-000000000000",
-// 			name    : "admin",
-// 			email   : "admin@chefront.com",
+// 			name    : "root",
+// 			email   : "root@chefront.com",
 // 			contact : "97504802",
 // 			role    : "admin",
 // 			verified: true,
