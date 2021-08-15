@@ -42,8 +42,8 @@ import { Feedback }         from '../data/models/Feedback.mjs';
 		//	onUpdate:   "CASCADE",
 		//	onDelete:   "CASCADE",
 		//});
-		
 		console.log("Adding initialization hooks");
+		database.addHook("afterBulkSync", generate_root_account.name, generate_root_account.bind(User, database))
 		//	Run once hooks during initialization
 	}
 	catch (error) {
