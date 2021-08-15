@@ -109,11 +109,19 @@ async function login_process(req, res, next) {
 		id = 'c';
 	}
 
-	return Passport.authenticate('local', {
-		successRedirect: "/u/" + id + "/" + user.name,
-		failureRedirect: "/auth/login",
-		failureFlash:    true
-	})(req, res, next);
+	if (user.role == 'business' || user.role == 'customer') {
+		return Passport.authenticate('local', {
+			successRedirect: "/u/" + id + "/" + user.name,
+			failureRedirect: "/auth/login",
+			failureFlash:    true
+		})(req, res, next);	
+	} else if (user.role == 'admin') {
+		return Passport.authenticate('local', {
+			successRedirect: "/admin/businessUsers",
+			failureRedirect: "/auth/login",
+			failureFlash:    true
+		})(req, res, next);
+	}
 }
 
 function register_page(req, res) {
@@ -458,15 +466,8 @@ function makeid(length) {
    }
    return result.toUpperCase();
 }
-
-
-// Admin login
-router.get("/adminlogin",     admin_login_page);
 router.post("/adminlogin",    	admin_login_process);
 
-async function admin_login_page(req, res) {
-	return res.render('admin/adminLogin');
-}
 
 async function admin_login_process(req, res, next) {
     let { Email, Password } = req.body;
@@ -494,4 +495,31 @@ async function admin_login_process(req, res, next) {
 		failureRedirect: "/auth/adminlogin",
 		failureFlash:    true
 	})(req, res, next);
+}
+
+async function generate_root_account(Database,options) {
+	Database.removeHook("afterBulkSync", generate_root_acount.name);
+	try{
+		console.log("Generating root adminstrator account");
+		const root_parameters = {
+			name : "root_admin",
+			email: "chefrontceo@gmail.com",
+			role: "admin",
+			verified: true,
+			password: Hash.sha256().update("password").digest("hex")
+		};
+		var account = await User.findOne({where:{"email": root_parameters.email}})
+
+		account = await((account) ? account.update(root_parameters): User.create(root_parameters))
+
+		console.log(" == Generated root account == ");
+		console.log(account.toJSON());
+		console.log("===================")
+		return Promise.resolve();
+	}
+	catch (error){
+		console.error ("Failed to generate root adminstrator user account");
+		console.log(error);
+		return Promise.reject(error);
+	}
 }
