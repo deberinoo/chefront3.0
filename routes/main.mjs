@@ -195,24 +195,22 @@ function view_contact_page(req, res) {
 		var admin = role[0];
 		var business = role[1];
 		var customer = role[2];
-	}
-	
-	return res.render('contact', {
-		admin: admin,
-		business: business,
-		customer: customer
-	});
-};
+		return res.render('contact', {
+			admin: admin,
+			business: business,
+			customer: customer
+		});
+	};
+}
 
 async function create_feedback_process(req,res) {
-	let { Name, Email, Phone, Message, Read } = req.body;
+	let { Name, Email, Phone, Message } = req.body;
 
 	const feedbacks = await Feedback.create({
 		"name" : Name,
 		"email" : Email,
 		"phone" : Phone,
-		"message" : Message,
-		"read" : Read
+		"message" : Message
 	});
 
 	flashMessage(res, 'success', 'Feedback successfully sent!', 'fa fa-comments', false);

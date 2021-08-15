@@ -1,41 +1,49 @@
-<title>Chefront - Register Customer</title>
+<title>Chefront - Reply Message</title>
 
-<link rel="stylesheet" href="/public/css/login.css">
+<link rel="stylesheet" href="/public/css/profile.css">
 
 <section>
-	<div class="container-fluid">
-		<div class="row no-gutter">
-			<div class="col-md-6 d-none d-md-flex bg-image"></div>
-			<div class="col-md-6">
-				<div class="login d-flex align-items-center py-5">
-					<div class="container">
-						<div class="row">
-							<div class="col-lg-10 col-xl-7 mx-auto">
-								<h3 class="display-4 mb-4">Create a customer account</h3>
-								<form action="/admin/reply_feedback_process/{{email}}" method="post">
-                                    <div class="form-group mb-3">
-										<p>
-                                            {{message}}
-                                        </p>
-									</div>
-									<div class="form-group mb-3">
-										<input 
-											id="Reply" 
-											type="text" 
-											placeholder="Input a reply" required="" autofocus="" 
-											minlength="2" maxlength="30" 
-											class="form-control rounded-pill shadow-sm px-4 text-dark"
-											name="Reply"
-										>
-									</div>
-									<button type="Reply"
-										class="btn custom-btn btn-danger btn-block mb-2 rounded-pill shadow-sm">Sign up</button>
-								</form>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-lg-12 col-xl-12 mx-auto">
+                <h2 class="h3 mb-4 page-title">Create reply</h2>
+                <div class="my-4">
+                    <form action="/admin/reply_feedback/{{uuid}}" method="post" enctype="multipart/form-data">
+                        {{#if user}}
+                            <div class="form-group row">
+                                <div class="col-sm-10">
+                                    <p>{{message}}</p>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="reply" class="col-sm-2 col-form-label">Reply</label>
+                                <div class="col-sm-10">
+                                    <textarea class="form-control text-dark" id="reply" rows="5" maxlength="300"
+                                        placeholder="Enter reply" name="Reply"></textarea>
+                                    <div id="word-count">
+                                        <span id="current">0</span>
+                                        <span id="maximum">/ 300</span>
+                                    </div>
+                                </div>
+                            </div>
+    
+                        {{/if}}
+                        <button type="submit" class="btn btn-danger btn-block col-sm-10 rounded-pill shadow-sm" style="margin-left: 125px;">Reply</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </section>
+
+<script>
+    $('textarea').keyup(function () {
+
+        var characterCount = $(this).val().length,
+            current = $('#current'),
+            maximum = $('#maximum'),
+            wordCount = $('#word-count');
+
+        current.text(characterCount);
+    });
+</script>

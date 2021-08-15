@@ -11,27 +11,47 @@
                     <span class="contact100-form-title">
                         Send us a message!
                     </span>
-
+                    {{#if user}}
                     <div class="wrap-input100 validate-input">
                         <input class="input100" type="text" name="Name" placeholder="Full Name" required=""
-                        pattern="[A-Za-z '-]+" title="Name should contain characters only">
+                        pattern="[A-Za-z '-]+" title="Name should contain characters only" value={{user.name}}>
                         <span class="focus-input100"></span>
                     </div>
 
                     <div class="wrap-input100 validate-input">
                         <input class="input100" type="text" name="Email" placeholder="E-mail" required=""
                         pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
-						title="Enter a valid email address (eg. john@example.com)">
+						title="Enter a valid email address (eg. john@example.com)" value={{user.email}}>
                         <span class="focus-input100"></span>
                     </div>
 
                     <div class="wrap-input100 validate-input">
                         <input class="input100" type="text" name="Phone" placeholder="Phone" required=""
                         pattern="[0-9]{8}"
-                        title="Phone number should contain only eight numbers">
+                        title="Phone number should contain only eight numbers" value={{user.contact}}>
+                        <span class="focus-input100"></span>
+                    </div>
+                    {{else}}
+                     <div class="wrap-input100 validate-input">
+                        <input class="input100" type="text" name="Name" placeholder="Full Name" required=""
+                        pattern="[A-Za-z '-]+" title="Name should contain characters only" >
                         <span class="focus-input100"></span>
                     </div>
 
+                    <div class="wrap-input100 validate-input">
+                        <input class="input100" type="text" name="Email" placeholder="E-mail" required=""
+                        pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+						title="Enter a valid email address (eg. john@example.com)" >
+                        <span class="focus-input100"></span>
+                    </div>
+
+                    <div class="wrap-input100 validate-input">
+                        <input class="input100" type="text" name="Phone" placeholder="Phone" required=""
+                        pattern="[0-9]{8}"
+                        title="Phone number should contain only eight numbers" >
+                        <span class="focus-input100"></span>
+                    </div>
+                    {{/if}}
                     <div class="wrap-input100 validate-input">
                         <textarea class="input100" name="Message" required="" placeholder="Your Message"></textarea>
                         <span class="focus-input100"></span>

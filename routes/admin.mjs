@@ -15,8 +15,6 @@ import { sendMailBannedAccount,sendMailFeedbackResponse} from '../data/mail.mjs'
 import ORM              from 'sequelize';
 import { UploadFile, DeleteFilePath }       from '../utils/multer.mjs';
 
-
-import ORM                  from 'sequelize';
 const { Op } = ORM;
 
 const router = Router();
@@ -43,12 +41,12 @@ router.get("/deleteOutlet/:postal_code",            delete_outlet);
 
 // Feedback management routes
 router.get("/feedback",                             view_feedback_page);
-router.get("/reply_feedback/:message",              reply_feedback_page);
-router.post("/reply_feedback/:email",               reply_feedback_process);
+router.get("/reply_feedback/:uuid",              reply_feedback_page);
+router.post("/reply_feedback/:uuid",               reply_feedback_process);
 router.get("/all-feedbacks-data",                   all_feedbacks_data);
 router.get("/deleteFeedback/:uuid",                 delete_feedback);
 
-// Categories management routes
+// Categories managem ent routes
 router.get("/create-category",                      create_category_page);
 router.post("/create-category",                     UploadFile.single("Thumbnail"), create_category_process);
 router.get("/categories",                           view_categories_page);
@@ -377,22 +375,32 @@ async function all_feedbacks_data(req, res) {
  }
 
 
-function reply_feedback_page(req, res) {
-    return res.render('admin/reply_feedback', { message : req.params.message});
+async function reply_feedback_page(req, res) {
+    let feedbackId = req.params.uuid
+    const current_feedback = await Feedback.findOne({ 
+        where: {
+            uuid : feedbackId
+        },
+    })
+    return res.render('admin/reply_feedback', { message : current_feedback.message, uuid: feedbackId});
 };
 
 
-function reply_feedback_process(req, res) {
-    let email = req.params.email
+async function reply_feedback_process(req, res) {
     let reply = req.body.Reply
+    const current_feedback = await Feedback.findOne({ 
+        where: {
+            uuid : req.params.uuid
+        },
+    })
     Feedback.update({
-       read : true
+       read : "Yes"
     }, {
         where: {
-            email: email
+           uuid : req.params.uuid
         }
     })
-    sendMailFeedbackResponse(email,reply)
+    sendMailFeedbackResponse(current_feedback.email,reply)
         .then((result) => console.log('Email sent...', result))
         .catch((error) => console.log(error.message));
     return res.redirect("/admin/feedback");

@@ -49,33 +49,12 @@
                 data-url="/admin/all-feedbacks-data"
                 data-side-pagination="server">
                 <thead class="thead-dark">
-                    <tr>
-                        <th scope="col" data-sortable="true">Name</th>
-                        <th scope="col" data-sortable="true">Email</th>
-                        <th scope="col" data-sortable="true">Phone Number</th>
-                        <th scope="col" data-sortable="true">Feedback</th>
-                        <th scope="col" data-sortable="true">Reply</th>
-                        <th scope="col" data-sortable="true">Read Status</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {{#each feedback}}
-                        <tr>
-                            <td>{{ name }}</td>
-                            <td>{{ email }}</td>
-                            <td>{{ phone }}</td>
-                            <td>{{ message }}</td>
-                            <td><a href="reply_feedback/{{message}}">Reply</a></td>
-                            <td>{{ read }}</td>
-                            <td><a href="/admin/deleteFeedback/{{uuid}}"><i class="material-icons" title="Delete">&#xE872;</i></a></td>
-                        </tr>
-                        {{/each}}
                         <th scope="col" data-sortable="true" data-field="name">Name</th>
                         <th scope="col" data-sortable="true" data-field="email">Email</th>
                         <th scope="col" data-sortable="true" data-field="phone">Phone Number</th>
                         <th scope="col" data-sortable="true" data-field="message">Feedback</th>
-                        <th scope="col" data-sortable="true" data-field="read">Read Status</th>
+                        <th scope="col" data-sortable="true" data-field="read">Read?</th>
+                        <th scope="col" data-formatter="table_row_reply">Reply</th>
                         <th scope="col" data-formatter="table_row_delete">Actions</th>
                     </tr>
                 </thead>
@@ -90,6 +69,11 @@
     function table_row_delete(value, row, index) {
 		return `
         <a href="/admin/deleteFeedback/${row.uuid}" class="delete"><i class="material-icons" title="Delete">&#xE872;</i></a>
+		`;
+	}
+    function table_row_reply(value, row, index) {
+		return `
+        <a href="/admin/reply_feedback/${row.uuid}" class="delete"><i class="fa fa-paper-plane" title="Reply">&#xE872;</i></a>
 		`;
 	}
 </script>
