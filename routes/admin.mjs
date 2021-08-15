@@ -282,7 +282,7 @@ function view_outlets_page(req, res) {
     var admin = role[0];
     var business = role[1];
     var customer = role[2];
-    return res.render('admin/retrieve_allOutlets', {
+    return res.render('admin/retrieve_outlets', {
         admin: admin,
         business: business,
         customer: customer,
@@ -351,7 +351,7 @@ function delete_outlet(req, res) {
                     "postal_code" : req.params.postal_code
                 }
             }).then(() => {
-                res.redirect('/admin/allOutlets');
+                res.redirect('/admin/outlets');
             }).catch( err => console.log(err));
         } else {
 	    res.redirect('/404');
@@ -447,7 +447,7 @@ function view_categories_page(req, res) {
     var admin = role[0];
     var business = role[1];
     var customer = role[2];
-    return res.render('admin/retrieve_allCategories', {
+    return res.render('admin/retrieve_categories', {
         admin: admin,
         business: business,
         customer: customer,
