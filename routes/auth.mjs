@@ -233,6 +233,12 @@ async function register_business_process(req, res) {
 		if (! regexName.test(Name)) {
 			errors = errors.concat({ text: "Invalid name provided! It must be minimum 3 characters and starts with a alphabet." });
 		}
+		else {
+			const user = await User.findOne({where: {name: Name}});
+			if (user != null) {
+				errors = errors.concat({ text: "This business name is taken!"})
+			}
+		}
 
 		if (! regexEmail.test(Email)) {
 			errors = errors.concat({ text: "Invalid email address!" });

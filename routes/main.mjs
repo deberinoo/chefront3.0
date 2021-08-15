@@ -6,7 +6,7 @@ import { Reservations } 	from '../data/models/Reservations.mjs';
 import { DiscountSlot }     from '../data/models/DiscountSlot.mjs';
 
 import ORM             		from 'sequelize';
-const { Sequelize, DataTypes, Model, Op } = ORM;
+const { Op } = ORM;
 
 const router = Router();
 export default router;
@@ -22,6 +22,7 @@ router.get("/dynamic/:path/:file*", async function (req,res){
 router.get("/home",     							   view_home_page);
 router.get("/about",     							   view_about_page);
 router.get("/categories",     						   view_categories_page);
+router.get("/category/:category",     				   view_category_page);
 router.get("/error",     							   view_error_page);
 router.get("/success",                                 view_success_page);
 
@@ -49,6 +50,7 @@ import RouterPayment from './payment/payment.mjs'
 router.use("/payment", RouterPayment)
 
 import RouterAdmin from './admin.mjs'
+import { Categories } from '../data/models/Categories.mjs';
 router.use("/admin", RouterAdmin);
 
 router.get("/", async function (req, res) {
@@ -129,20 +131,59 @@ function view_about_page(req, res) {
 	});
 };
 
-function view_categories_page(req, res) {
+async function view_categories_page(req, res) {
+	const category = await Categories.findAll({
+        where: {
+            "name": {
+                [Op.ne]:'null'
+            }
+        }
+	});
 	if (req.user == undefined) {
-		return res.render('categories')
+		return res.render('categories',
+		{category:category})
 	} else {
 		var role = getRole(req.user.role);
 		var admin = role[0];
 		var business = role[1];
 		var customer = role[2];
 	}
-
 	return res.render('categories', {
 		admin: admin,
 		business: business,
-		customer: customer
+		customer: customer,
+		category: category
+	});
+};
+
+async function view_category_page(req, res) {
+	const restaurants = await Outlets.findAll({
+        where: {
+            "category": {
+                [Op.eq]: req.params.category
+            }
+        }
+	});
+	const category = await Categories.findOne({
+		where: {
+			"name":req.params.category
+		}
+	});
+	if (req.user == undefined) {
+		return res.render('category', {restaurants:restaurants, category:category})
+	} else {
+		var role = getRole(req.user.role);
+		var admin = role[0];
+		var business = role[1];
+		var customer = role[2];
+	}
+	
+	return res.render('category', {
+		admin: admin,
+		business: business,
+		customer: customer,
+		restaurants: restaurants,
+		category:category
 	});
 };
 
@@ -166,7 +207,6 @@ function view_contact_page(req, res) {
 async function create_feedback_process(req,res) {
 	let { Name, Email, Phone, Message, Read } = req.body;
 
-	//CREATE
 	const feedbacks = await Feedback.create({
 		"name" : Name,
 		"email" : Email,
@@ -179,28 +219,11 @@ async function create_feedback_process(req,res) {
 	return res.redirect("/home");
 };
 
-function view_payment_page(req, res) {
-	if (req.user == undefined) {
-		return res.render('payment')
-	} else {
-		var role = getRole(req.user.role);
-		var admin = role[0];
-		var business = role[1];
-		var customer = role[2];
-	}
-
-	return res.render('payment', {
-		admin: admin,
-		business: business,
-		customer: customer
-	});
-};
-
 async function view_restaurants_page(req, res) {
 	const restaurants = await Outlets.findAll({
-        where: {
+		where: {
             "name": {
-                [Op.ne]:"null"
+                [Op.ne]:'null'
             }
         }
 	});
@@ -218,7 +241,7 @@ async function view_restaurants_page(req, res) {
 			admin:admin,
 			business:business,
 			customer:customer,
-			restaurants:restaurants
+			restaurants:restaurants,
 		});
 	}
 };
@@ -257,7 +280,24 @@ async function view_individual_restaurant_page(req, res) {
 function getId() {
     const rand = Math.random().toString(16).substr(2, 6); 
 	return rand.toUpperCase();
-}
+};
+
+function view_payment_page(req, res) {
+	if (req.user == undefined) {
+		return res.render('payment')
+	} else {
+		var role = getRole(req.user.role);
+		var admin = role[0];
+		var business = role[1];
+		var customer = role[2];
+	}
+
+	return res.render('payment', {
+		admin: admin,
+		business: business,
+		customer: customer
+	});
+};
 
 async function create_reservation_process(req, res) {
 	if (req.user == undefined) {
@@ -276,11 +316,10 @@ async function create_reservation_process(req, res) {
         }
 	});
 
+	let { BusinessName, Location, ResDate, Pax, Slot, Name, Email, Contact } = req.body;
+	const timediscount = Slot.split(",")
+
 	if (reservations > 0) {
-		let { BusinessName, Location, ResDate, Pax, Slot, Name, Email, Contact } = req.body;
-
-		const timediscount = Slot.split(",")
-
 		const reservation = await Reservations.create({
 			"reservation_id":  String(getId()),
 			"name":  BusinessName,
@@ -300,13 +339,25 @@ async function create_reservation_process(req, res) {
 			reservation:reservation
 		});
 	} else {
+		const reservation = {
+			"reservation_id":  String(getId()),
+			"name":  BusinessName,
+			"location":  Location,
+			"date": ResDate,
+			"pax": Pax,
+			"time": timediscount[0],
+			"discount": timediscount[1],
+			"user_name": Name,
+			"user_email": Email,
+			"user_contact": Contact,
+		};
 		res.render("payment", {
 			admin:admin,
 			business:business,
 			customer:customer,
+			reservation:reservation
 		});
 	}
-
 };
 
 function view_success_page(req, res) {

@@ -8,6 +8,7 @@ export class Outlets extends Model {
             "dateCreated" : { type: DataTypes.DATE(), allowNull: false, defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')},
             "dataUpdated" : { type: DataTypes.DATE(), allowNull: false, defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')},
             "name" : { type: DataTypes.STRING(64), allowNull: false},
+            "category" :{ type: DataTypes.STRING(64), allowNull: false},
             "location" : { type: DataTypes.STRING(64), allowNull: false},
             "address" : { type: DataTypes.STRING(64), allowNull: false},
             "postal_code" : { type: DataTypes.INTEGER(6), allowNull: false},
@@ -30,6 +31,7 @@ export class Outlets extends Model {
 
     get uuid()        { return String(this.getDataValue("uuid")); }
     get name()        { return String(this.getDataValue("name")); }
+    get category()     { return String(this.getDataValue("category")); }
     get location()    { return String(this.getDataValue("location")); }
     get address()     { return String(this.getDataValue("address")); }
     get postal_code() { return String(this.getDataValue("postal_code")); }
@@ -43,6 +45,7 @@ export class Outlets extends Model {
 
     set uuid(uuid)               { this.setDataValue("uuid", uuid); }
     set name(name)               { this.setDataValue("name", name); }
+    set category(category)       { this.setDataValue("category", category); }
     set location(location)       { this.setDataValue("location", location); }
     set address(address)         { this.setDataValue("address", address); }
     set postal_code(postal_code) { this.setDataValue("postal_code", postal_code); }

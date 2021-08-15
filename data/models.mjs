@@ -7,6 +7,7 @@ import { Outlets }          from '../data/models/Outlets.mjs';
 import { Reservations }     from '../data/models/Reservations.mjs';
 import { DiscountSlot }     from '../data/models/DiscountSlot.mjs';
 import { Feedback }         from '../data/models/Feedback.mjs';
+import { Categories }   from '../data/models/Categories.mjs';
 //import { Favourites } 		from '../data/models/Favourites.mjs';
 //import { Review } 			from '../data/models/Review.mjs';
 
@@ -23,26 +24,9 @@ import { Feedback }         from '../data/models/Feedback.mjs';
         Feedback.initialize(database);
         User.initialize(database);
         Reservations.initialize(database);
+		Categories.initialize(database);
 
 		console.log("Building ORM model relations and indices");
-		//	Create relations between models or tables
-		//	Setup foreign keys, indexes etc
-
-		//	Check foreign key in your database after writing all these stuff
-		//User.hasMany(Outlets, {
-		//	as:		    "outlets",
-		//	foreignKey: "ownerID",
-		//	onUpdate:   "CASCADE",
-		//	onDelete:   "CASCADE",
-		//});
-
-		//Outlets.belongsTo(User, {
-		//	as:			"owner",
-		//	foreignKey: "ownerID",
-		//	onUpdate:   "CASCADE",
-		//	onDelete:   "CASCADE",
-		//});
-		
 		console.log("Adding initialization hooks");
 		//	Run once hooks during initialization
 	}

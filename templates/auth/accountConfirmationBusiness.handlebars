@@ -16,7 +16,7 @@
 									<div class="form-group mb-3">
 										<input id="confirmationCode" type="text" placeholder="Confirmation Code" required=""
 											autofocus="" class="form-control rounded-pill shadow-sm px-4 text-dark"
-											name="confirmationCode" style="text-transform:uppercase">
+											name="confirmationCode" oninput="this.value = this.value.toUpperCase()">
 									</div>
 									<button type="submit"
 										class="btn custom-btn btn-danger btn-block mb-2 rounded-pill shadow-sm">Confirm Account</button>
@@ -29,3 +29,11 @@
 		</div>
 	</div>
 </section>
+
+<script>
+	function upperCaseF(a){
+    setTimeout(function(){
+        a.value = a.value.toUpperCase();
+    }, 1);
+}
+</script>

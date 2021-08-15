@@ -5,12 +5,16 @@ import Hash    from 'hash.js';
 import Moment  from 'moment';
 
 import { nets_api_key, nets_api_skey, nets_api_gateway } from './payment-config.mjs';
+import { Reservations } 	from '../../data/models/Reservations.mjs';
 
 const router = Router();
 export default router;
+
 router.post("/generate", nets_generate);
 router.post("/query",    nets_query);
 router.post("/void",     nets_void);
+
+router.post("/deposit",  create_reservation);
 
 let   nets_stan     = 0;	//	Counter id for nets, keep this in database
 
@@ -117,6 +121,55 @@ async function nets_generate(req, res) {
  * @param {import('express').Request} req 
  * @param {import('express').Response} res 
  */
+
+
+// ----------------
+// Check user role
+function getRole(role) {
+	if (role == 'admin') {
+		var admin = true;
+		var business = false;
+		var customer = false;
+	}
+	else if (role == 'business') {
+		var admin = false;
+		var business = true;
+		var customer = false;
+	}
+	else if (role == 'customer') {
+		var admin = false;
+		var business = false;
+		var customer = true;
+	}
+	return [admin, business, customer];
+}
+
+async function create_reservation(req,res) {
+	var role = getRole(req.user.role);
+	var admin = role[0];
+	var business = role[1];
+	var customer = role[2];
+
+	const reservation = await Reservations.create({
+		"reservation_id": req.body.Id,
+		"name":  req.body.BusinessName,
+		"location":  req.body.Location,
+		"date": req.body.ResDate,
+		"pax": req.body.Pax,
+		"time": req.body.Time[0],
+		"discount": req.body.Discount,
+		"user_name": req.body.Name,
+		"user_email": req.body.Email,
+		"user_contact": req.body.Contact,
+	});
+	return res.render("success", {
+		admin:admin,
+		business:business,
+		customer:customer,
+		reservation:reservation
+	});
+}
+
 async function nets_query(req, res) {
 	try {
 
@@ -157,6 +210,7 @@ async function nets_query(req, res) {
 
 			//	Okay
 			case "00":
+				create_reservation()
 				return res.json({
 					status : 1
 				});

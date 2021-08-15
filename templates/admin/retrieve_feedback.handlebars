@@ -19,6 +19,10 @@
                             </div>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link" id="home-tab" href="/admin/categories" role="tab"
+                                aria-controls="home" aria-selected="false">View categories</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" id="home-tab" href="/admin/allOutlets" role="tab"
                                 aria-controls="home" aria-selected="false">View outlets</a>
                         </li>
@@ -29,17 +33,21 @@
                     </ul>
                 </div>
             </div>
-            <table id="table"
+            <table 
+                id="table"
                 data-toggle="table"
                 data-width = "50px" 
                 data-pagination="true"
                 data-page-size="10"
+                data-buttons="buttons"
                 data-show-columns="true"
                 data-show-refresh="true"
                 data-show-columns-toggle-all="true"
                 data-show-pagination-switch="true"
                 data-show-fullscreen="true"
-                data-search="true">
+                data-search="true"
+                data-url="/admin/all-feedbacks-data"
+                data-side-pagination="server">
                 <thead class="thead-dark">
                     <tr>
                         <th scope="col" data-sortable="true">Name</th>
@@ -63,8 +71,25 @@
                             <td><a href="/admin/deleteFeedback/{{uuid}}"><i class="material-icons" title="Delete">&#xE872;</i></a></td>
                         </tr>
                         {{/each}}
+                        <th scope="col" data-sortable="true" data-field="name">Name</th>
+                        <th scope="col" data-sortable="true" data-field="email">Email</th>
+                        <th scope="col" data-sortable="true" data-field="phone">Phone Number</th>
+                        <th scope="col" data-sortable="true" data-field="message">Feedback</th>
+                        <th scope="col" data-sortable="true" data-field="read">Read Status</th>
+                        <th scope="col" data-formatter="table_row_delete">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
                 </tbody>
             </table>
         </div>
     </div>
 </section>
+
+<script>
+    function table_row_delete(value, row, index) {
+		return `
+        <a href="/admin/deleteFeedback/${row.uuid}" class="delete"><i class="material-icons" title="Delete">&#xE872;</i></a>
+		`;
+	}
+</script>

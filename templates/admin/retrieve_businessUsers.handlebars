@@ -19,6 +19,10 @@
                             </div>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link" id="home-tab" href="/admin/categories" role="tab"
+                                aria-controls="home" aria-selected="false">View categories</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" id="home-tab" href="/admin/allOutlets" role="tab"
                                 aria-controls="home" aria-selected="false">View outlets</a>
                         </li>
@@ -35,34 +39,34 @@
                 data-width = "50px" 
                 data-pagination="true"
                 data-page-size="10"
+                data-buttons="buttons"
                 data-show-columns="true"
                 data-show-refresh="true"
                 data-show-columns-toggle-all="true"
                 data-show-pagination-switch="true"
                 data-show-fullscreen="true"
                 data-search="true"
+                data-url="/admin/all-business-data"
                 data-side-pagination="server">
                 <thead class="thead-dark">
                     <tr>
-                        <th scope="col" data-sortable="true">Name</th>
-                        <th scope="col" data-sortable="true">Address</th>
-                        <th scope="col" data-sortable="true">Contact</th>
-                        <th scope="col" data-sortable="true">Email</th>
-                        <th></th>
+                        <th scope="col" data-sortable="true" data-field="name">Name</th>
+                        <th scope="col" data-sortable="true" data-field="contact">Contact</th>
+                        <th scope="col" data-sortable="true" data-field="email">Email</th>
+                        <th scope="col" data-sortable="true" data-field="role">Role</th>
+                        <th scope="col" data-formatter="table_row_delete">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {{#each business}}
-                        <tr>
-                            <td>{{ business_name }}</td>
-                            <td>{{ address }}</td>
-                            <td>{{ contact }}</td>
-                            <td>{{ email }}</td>
-                            <td><a href="/admin/deleteBusinessUser/{{business_name}}"><i class="material-icons" title="Delete">&#xE872;</i></a></td>
-                        </tr>
-                    {{/each}}
                 </tbody>
             </table>
         </div>
     </div>
 </section>
+<script>
+   function table_row_delete(value, row, index) {
+		return `
+        <a href="/admin/deleteBusinessUser/${row.name}" class="delete"><i class="material-icons" title="Delete">&#xE872;</i></a>
+		`;
+	}
+</script>
