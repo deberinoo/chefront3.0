@@ -7,6 +7,7 @@ import { Outlets }          from '../data/models/Outlets.mjs';
 import { Reservations }     from '../data/models/Reservations.mjs';
 import { DiscountSlot }     from '../data/models/DiscountSlot.mjs';
 import { Feedback }         from '../data/models/Feedback.mjs';
+import { Categories }   from '../data/models/Categories.mjs';
 //import { Favourites } 		from '../data/models/Favourites.mjs';
 //import { Review } 			from '../data/models/Review.mjs';
 
@@ -23,6 +24,7 @@ import { Feedback }         from '../data/models/Feedback.mjs';
         Feedback.initialize(database);
         User.initialize(database);
         Reservations.initialize(database);
+		Categories.initialize(database);
 
 		console.log("Building ORM model relations and indices");
 		//	Create relations between models or tables
