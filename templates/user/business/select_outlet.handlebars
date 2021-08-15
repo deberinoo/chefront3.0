@@ -33,18 +33,18 @@
             </div>
             <div class="row">
                 {{#each outlet}}
-                        <div class="card col-sm-6 mr-4 mb-4" style="width: 25rem;">
-                            <a href="../{{ name }}/{{ location }}/reservation-status">
-                            <img class="card-img-top img-fluid"
-                                src="/{{thumbnail}}"
-                                alt="Card image cap" width="300">
-                            <div class="card-body">
-                                <h4 class="card-title">{{name}}</h4>
-                                <p class="card-text">{{location}}</p>
-                                <p class="card-text"></p>
-                            </div>
-                            </a>
+                    <div class="card col-lg-4 col-sm-6 mr-4 mb-4">
+                        <a href="../{{ name }}/{{ location }}/reservation-status">
+                        <img class="card-img-top img-fluid"
+                            src="/{{thumbnail}}"
+                            alt="Card image cap">
+                        <div class="card-body">
+                            <h4 class="card-title">{{name}}</h4>
+                            <p class="card-text">{{location}}</p>
+                            <p class="card-text"></p>
                         </div>
+                        </a>
+                    </div>
                 {{/each}}
             </div>
         </div>

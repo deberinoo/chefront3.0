@@ -62,3 +62,8 @@ section {
     padding: 5px 5px 5px 5px;
     align-self: center;
 }
+
+label,input{
+    display: inline-block;
+    vertical-align: middle;
+}

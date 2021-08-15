@@ -68,6 +68,9 @@ function getRole(role) {
 }
 // ----------------
 
+// ---------------- 
+// Profile settings
+
 function user_business_page(req, res) {
     var role = getRole(req.user.role);
     var admin = role[0];
@@ -161,6 +164,9 @@ function delete_business_user(req, res) {
     });
 };
 
+// ---------------- 
+// Discount slots
+
 async function create_discount_slot_page(req, res) {
     const outlet = await Outlets.findAll({
         where: {
@@ -183,14 +189,30 @@ async function create_discount_slot_page(req, res) {
 };
 
 async function create_discount_slot_process(req, res) {
-    let { Name, Location, Time, Discount } = req.body;
+    let { Name, Location, Time, Discount, GlobalCreate } = req.body;
 
-    const discountslot = await DiscountSlot.create({
+    if ( GlobalCreate == "True" ) {
+        const restaurants = await Outlets.findAll({
+            where: { "name": Name }
+        });
+        const count_restaurants = await Outlets.count({
+            where: { "name": Name }
+        });
+        for (let i = 0; i < count_restaurants; i++ ) {
+            const discountslot = await DiscountSlot.create({
+                "name":  Name,
+                "location":  restaurants[i].location,
+                "time": Time,
+                "discount": Discount
+            });
+        }
+    } else {
+        const discountslot = await DiscountSlot.create({
         "name":  Name,
         "location":  Location,
         "time": Time,
         "discount": Discount
-    });
+    })};
     res.redirect(`/u/b/${Name}/view-discount-slots`);
 };
 
@@ -277,14 +299,14 @@ async function edit_discount_slot_page(req, res){
     var business = role[1];
     var customer = role[2];
 
-    DiscountSlot.findOne({
+    const discount_slot = await DiscountSlot.findOne({
         where: {
             "name" : req.params.name,
             "uuid": req.params.uuid
         }
     }).then((discount_slot) => {
         res.render(`user/business/update_discountslot`, {
-            discount_slot,
+            discount_slot: discount_slot,
             admin: admin,
             business: business,
             customer: customer,
@@ -332,6 +354,8 @@ function delete_discount_slot(req, res) {
     });
 };
 
+// ---------------- 
+// Outlets, Reservation Status
 async function create_outlet_page(req, res) {
     const category = await Categories.findAll();
     const user = User.findOne({
@@ -435,7 +459,8 @@ async function outlets_data(req, res) {
    }
 };
 
-function edit_outlet_page(req, res){
+async function edit_outlet_page(req, res){
+    const category = await Categories.findAll();
     const user = User.findOne({
         where: {
             "name": req.params.name
@@ -446,17 +471,18 @@ function edit_outlet_page(req, res){
     var business = role[1];
     var customer = role[2];
 
-    Outlets.findOne({
+    const outlet = Outlets.findOne({
         where: {
             "name" : req.params.name,
             "postal_code": req.params.postal_code
         }
     }).then((outlet) => {
         res.render(`user/business/update_outlet`, {
-            outlet,
+            outlet: outlet,
             admin: admin,
             business: business,
-            customer: customer
+            customer: customer,
+            category: category
         });
     }).catch(err => console.log(err));
 };
