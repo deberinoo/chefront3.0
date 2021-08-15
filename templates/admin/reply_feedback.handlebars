@@ -1,0 +1,49 @@
+<title>Chefront - Reply Message</title>
+
+<link rel="stylesheet" href="/public/css/profile.css">
+
+<section>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-lg-12 col-xl-12 mx-auto">
+                <h2 class="h3 mb-4 page-title">Create reply</h2>
+                <div class="my-4">
+                    <form action="/admin/reply_feedback/{{uuid}}" method="post" enctype="multipart/form-data">
+                        {{#if user}}
+                            <div class="form-group row">
+                                <div class="col-sm-10">
+                                    <p>{{message}}</p>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="reply" class="col-sm-2 col-form-label">Reply</label>
+                                <div class="col-sm-10">
+                                    <textarea class="form-control text-dark" id="reply" rows="5" maxlength="300"
+                                        placeholder="Enter reply" name="Reply"></textarea>
+                                    <div id="word-count">
+                                        <span id="current">0</span>
+                                        <span id="maximum">/ 300</span>
+                                    </div>
+                                </div>
+                            </div>
+    
+                        {{/if}}
+                        <button type="submit" class="btn btn-danger btn-block col-sm-10 rounded-pill shadow-sm" style="margin-left: 125px;">Reply</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    $('textarea').keyup(function () {
+
+        var characterCount = $(this).val().length,
+            current = $('#current'),
+            maximum = $('#maximum'),
+            wordCount = $('#word-count');
+
+        current.text(characterCount);
+    });
+</script>

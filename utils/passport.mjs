@@ -16,12 +16,15 @@ export function initialize_passport(server) {
 	});
 	Passport.deserializeUser(async function (uid, done) {
 		try {
-			const user = await User.findByPk(uid);
-			if (user == null) {
+			const current_user = await User.findByPk(uid);
+			if (current_user == null) {
 				throw new Error ("Invalid user id");
 			}
+			else if (current_user.banned == true){
+				throw new Error ("Account has been banned")
+			}
 			else {
-				return done(null, user);
+				return done(null, current_user);
 			}
 		}
 		catch (error) {
@@ -41,17 +44,20 @@ const LocalStrategy = new Strategy ({
 }, async function (email, password, done) {
 
 	try {
-		var user = await User.findOne({
+		const current_user = await User.findOne({
 			where: {
 				Email:    email,
 				Password: Hash.sha256().update(password).digest('hex')
 			}
 		});
-		if (user == null) {
+		if (current_user == null) {
 			throw new Error ("Invalid Credentials");	
 		}
+		else if (current_user.banned == true){
+			throw new Error ("Account has been banned")
+		}
 		else {
-			return done(null, user);
+			return done(null, current_user);
 		}
 	}
 	catch (error) {
