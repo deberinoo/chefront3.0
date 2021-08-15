@@ -19,6 +19,8 @@ export class User extends Model {
             "email" : { type: DataTypes.STRING(128), allowNull: false},
             "contact" : { type: DataTypes.INTEGER(16), allowNull: false},
             "password" : { type: DataTypes.STRING(64), allowNull: false},
+            "skips" : { type: DataTypes.INTEGER(16), allowNull: false, defaultValue: 0},
+            "banned" : {type: DataTypes.BOOLEAN, allowNull:false, defaultValue: false},
             "role" : { type: DataTypes.STRING(10), allowNull: false},
         }, {
             

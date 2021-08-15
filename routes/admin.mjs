@@ -5,6 +5,10 @@ import { User }         from '../data/models/Users.mjs';
 import { Outlets }      from '../data/models/Outlets.mjs';
 import { Feedback }     from '../data/models/Feedback.mjs'
 
+
+import { sendMailBannedAccount,sendMailFeedbackResponse} from '../data/mail.mjs';
+
+
 import ORM              from 'sequelize';
 const { Op } = ORM;
 
@@ -29,6 +33,8 @@ router.get("/deleteOutlet/:postal_code",            delete_outlet);
 
 // Feedback management routes
 router.get("/feedback",                             view_feedback_page);
+router.get("/reply_feedback/:message",              reply_feedback_page);
+router.post("/reply_feedback/:email",               reply_feedback_process);
 router.get("/deleteFeedback/:uuid",                 delete_feedback);
 
 function ensure_auth(req, res, next) {
@@ -165,9 +171,33 @@ async function view_feedback_page(req, res) {
 	return res.render('admin/retrieve_feedback', {feedback : feedback});
 };
 
+
+function reply_feedback_page(req, res) {
+    return res.render('admin/reply_feedback', { message : req.params.message});
+};
+
+
+function reply_feedback_process(req, res) {
+    let email = req.params.email
+    let reply = req.body.Reply
+    Feedback.update({
+       read : true
+    }, {
+        where: {
+            email: email
+        }
+    })
+    sendMailFeedbackResponse(email,reply)
+        .then((result) => console.log('Email sent...', result))
+        .catch((error) => console.log(error.message));
+    return res.redirect("/admin/feedback");
+};
+
+
+
 function delete_feedback(req, res) {
     let feedbackId = req.params.uuid
-    Feedback.findOne({
+    Feedback.findOne({ 
         where: {
             uuid : feedbackId
         },
@@ -184,4 +214,5 @@ function delete_feedback(req, res) {
         }
     });
 };
+
 

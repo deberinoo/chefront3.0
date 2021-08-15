@@ -7,6 +7,10 @@ import { Outlets }                          from '../data/models/Outlets.mjs';
 import { Reservations } 	                from '../data/models/Reservations.mjs';
 
 import { UploadFile, DeleteFilePath }       from '../utils/multer.mjs';
+import {  } from '../data/mail.mjs';
+
+import { sendMailUpdateUser,sendMailDeleteUser,sendMailUpdateOutlet,sendMailDeleteOutlet,sendMailBannedAccount,sendMailFeedbackResponse,sendMailMakeReservation, sendMailDeleteReservation } from '../data/mail.mjs';
+
 
 import ORM                                  from 'sequelize';
 const { Op } = ORM;
@@ -44,6 +48,8 @@ router.get("/b/:name/delete-outlet/:postal_code",       delete_outlet);
 // Reservations
 router.get("/b/:name/select-outlet",                    view_select_outlet_page);
 router.get("/b/:name/:location/reservation-status",     view_reservation_status_page);
+router.get("/b/:name/:location/did_not_attend_reservation/:email/:id", did_not_attend_reservation);
+router.get("/b/:name/:location/attend_reservation/:id",     attend_reservation);
 
 // ----------------
 // Check user role
@@ -360,6 +366,10 @@ async function create_outlet_process(req, res) {
         "thumbnail" : req.file.path
     });
     res.redirect(`/u/b/${Name}/view-outlets`);
+    sendMailCreateOutlet(email,Name,location,address,Postalcode)
+    .then((result) => console.log('Email sent...', result))
+    .catch((error) => console.log(error.message));
+
 };
 
 async function view_outlets_page(req, res) {
@@ -480,6 +490,10 @@ function save_edit_outlet(req, res){
         }
             res.redirect(`/u/b/${Name}/view-outlets`);
     }).catch(err => console.log(err)); 
+    sendMailUpdateOutlet(email,Name,Location,Address,Postalcode,Price,Contact,Description,req.file.path)
+			.then((result) => console.log('Email sent...', result))
+			.catch((error) => console.log(error.message));
+
 };
 
 function delete_outlet(req, res) {
@@ -502,6 +516,10 @@ function delete_outlet(req, res) {
 	    res.redirect('/404');
     }
     });
+    sendMailDeleteOutlet(email,code)
+			.then((result) => console.log('Email sent...', result))
+			.catch((error) => console.log(error.message));
+
 };
 
 async function view_select_outlet_page(req, res) {
@@ -543,6 +561,64 @@ async function view_reservation_status_page(req, res) {
     });
 };
 
+async function did_not_attend_reservation(req, res) {
+    User.update({       
+        skips: skips + 1
+    }, {
+        where: {
+            email : req.params.email
+        }
+    })
+    Reservations.findOne({
+        where: {
+            "reservation_id" : req.params.id
+        },
+    }).then((user) => {
+        if (user != null) {
+            Reservations.destroy({
+                where: {
+                    "reservation_id" : req.params.id
+                }
+            }).then(() => {
+                flashMessage(res,'success', 'Customer did not attend', 'fa fa-trash', true );
+            }).catch( err => console.log(err));
+        } else {
+	    res.redirect('/404');
+    }
+    });
+    if (skips >= 3){
+        User.update({       
+            banned: true
+        }, {
+            where: {
+                email : req.params.email
+            }
+        })
+        sendMailBannedAccount(email)
+            .then((result) => console.log('Email sent...', result))
+ 			.catch((error) => console.log(error.message));
+    }
+
+};
+async function attend_reservation(req,res){
+    Reservations.findOne({
+        where: {
+            "reservation_id" : req.params.id
+        },
+    }).then((user) => {
+        if (user != null) {
+            Reservations.destroy({
+                where: {
+                    "reservation_id" : req.params.id
+                }
+            }).then(() => {
+                flashMessage(res,'success', 'Customer has attended', 'fa fa-trash', true );
+            }).catch( err => console.log(err));
+        } else {
+	    res.redirect('/404');
+    }
+    });
+}
 // ---------------- 	
 // Customer user routing
 
@@ -598,6 +674,7 @@ function edit_user_customer_page(req, res) {
 };
  
 function save_edit_user_customer(req, res) {
+
     let { Name, Contact, Email } = req.body;
 
     User.update({
@@ -611,6 +688,9 @@ function save_edit_user_customer(req, res) {
         }).then(() => {
             res.redirect(`/u/c/${Email}`);
     }).catch(err => console.log(err));  
+    sendMailUpdateUser(Email,Name,Contact)
+ 			.then((result) => console.log('Email sent...', result))
+ 			.catch((error) => console.log(error.message));
 };
 
 function delete_customer_user(req, res) {
@@ -633,6 +713,9 @@ function delete_customer_user(req, res) {
 	    res.redirect('/404');
     }
     });
+    sendMailDeleteUser(req.params.user_email)
+    .then((result) => console.log('Email sent...', result))
+    .catch((error) => console.log(error.message));
 };
 
 async function create_reservation_process(req, res) {
@@ -651,6 +734,10 @@ async function create_reservation_process(req, res) {
         "discount" : discount
     });
     res.redirect("/retrieve_reservation/:user_email");
+    sendMailMakeReservation(email,reservation_id)
+			.then((result) => console.log('Email sent...', result))
+			.catch((error) => console.log(error.message));
+
 };
 
 async function view_upcoming_reservations_page(req, res) {
@@ -797,5 +884,9 @@ function delete_reservation(req, res) {
 	    res.redirect('/404');
     }
     });
+    sendMailDeleteReservation(email,req.params.reservation_id)
+			.then((result) => console.log('Email sent...', result))
+			.catch((error) => console.log(error.message));
+
 };
 

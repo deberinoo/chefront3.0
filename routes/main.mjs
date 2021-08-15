@@ -5,7 +5,6 @@ import { Outlets } 			from '../data/models/Outlets.mjs';
 import { Reservations } 	from '../data/models/Reservations.mjs';
 import { DiscountSlot }     from '../data/models/DiscountSlot.mjs';
 
-
 import ORM             		from 'sequelize';
 const { Sequelize, DataTypes, Model, Op } = ORM;
 

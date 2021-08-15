@@ -48,7 +48,8 @@
                         <th scope="col" data-sortable="true">Last Name</th>
                         <th scope="col" data-sortable="true">Email</th>
                         <th scope="col" data-sortable="true">Phone Number</th>
-                        <th></th>
+                        <th scope="col" data-sortable="true">No. of skips</th>
+                        <th scope="col" data-sortable="true">Banned</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -58,6 +59,8 @@
                             <td>{{ last_name }}</td>
                             <td>{{ email }}</td>
                             <td>{{ contact }}</td>
+                            <td>{{ skips }}</td>
+                            <td>{{ banned }}</td>
                             <td><a href="/admin/deleteCustomerUser/{{email}}"><i class="material-icons" title="Delete">&#xE872;</i></a></td>
                         </tr>
                         {{/each}}

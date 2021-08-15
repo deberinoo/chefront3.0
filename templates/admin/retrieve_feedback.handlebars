@@ -46,6 +46,7 @@
                         <th scope="col" data-sortable="true">Email</th>
                         <th scope="col" data-sortable="true">Phone Number</th>
                         <th scope="col" data-sortable="true">Feedback</th>
+                        <th scope="col" data-sortable="true">Reply</th>
                         <th scope="col" data-sortable="true">Read Status</th>
                         <th></th>
                     </tr>
@@ -57,6 +58,7 @@
                             <td>{{ email }}</td>
                             <td>{{ phone }}</td>
                             <td>{{ message }}</td>
+                            <td><a href="reply_feedback/{{message}}">Reply</a></td>
                             <td>{{ read }}</td>
                             <td><a href="/admin/deleteFeedback/{{uuid}}"><i class="material-icons" title="Delete">&#xE872;</i></a></td>
                         </tr>
