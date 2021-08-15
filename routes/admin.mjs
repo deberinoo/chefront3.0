@@ -700,6 +700,7 @@ function save_edit_admin_user(req, res) {
             name: req.params.name
         }
     });
+
     User.update({
         name: Name,
         email: Email,
@@ -760,7 +761,7 @@ async function create_admin_user_process(req,res){
 			"role": UserRole.Admin
 		})
         flashMessage(res, 'success', 'Successfully created an admin user.', false);
-        res.redirect("/admin/adminUsers");
+        res.redirect("admin/adminUsers");
     }
     catch (error) {
 		//	Else internal server error
