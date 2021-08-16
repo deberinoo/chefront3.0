@@ -10,6 +10,10 @@
                 <h2 class="h3 mb-4 page-title">View Admin Accounts</h2>
                 <div class="my-4">
                     <ul class="nav nav-tabs mb-4" id="myTab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link" id="home-tab" href="/admin/adminDashboard" role="tab"
+                                aria-controls="home" aria-selected="false">Dashboard</a>
+                        </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link active dropdown-toggle" data-toggle="dropdown" href="#" role="button"
                                 aria-haspopup="true" aria-expanded="false">Users</a>
@@ -40,6 +44,7 @@
                 data-width = "50px" 
                 data-pagination="true"
                 data-page-size="10"
+                data-page-list="[10, 25, 50, 100, all]"
                 data-buttons="buttons"
                 data-show-columns="true"
                 data-show-refresh="true"

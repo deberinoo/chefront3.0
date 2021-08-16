@@ -14,7 +14,6 @@ export class Outlets extends Model {
             "postal_code" : { type: DataTypes.INTEGER(6), allowNull: false},
             "price" : { type: DataTypes.INTEGER(3), allowNull: false},
             "contact" : { type: DataTypes.INTEGER(8), allowNull: false},
-            "reservations" : { type: DataTypes.INTEGER(8), allowNull: false},
             "status" : { type: DataTypes.STRING(64), allowNull: false},
             "description" : { type: DataTypes.STRING(300), allowNull: false},
             "thumbnail" : { type: DataTypes.CHAR(255), allowNull: false},
@@ -31,33 +30,31 @@ export class Outlets extends Model {
         instance.dateUpdated = Sequelize.literal('CURRENT_TIMESTAMP');
     }
 
-    get uuid()         { return String(this.getDataValue("uuid")); }
-    get name()         { return String(this.getDataValue("name")); }
-    get category()     { return String(this.getDataValue("category")); }
-    get location()     { return String(this.getDataValue("location")); }
-    get address()      { return String(this.getDataValue("address")); }
-    get postal_code()  { return String(this.getDataValue("postal_code")); }
-    get price()        { return String(this.getDataValue("price")); }
-    get contact()      { return String(this.getDataValue("contact")); }
-    get reservations() { return String(this.getDataValue("reservations")); }
-    get status()       { return String(this.getDataValue("status")); }
-    get description()  { return String(this.getDataValue("description")); }
-    get thumbnail()    { return String(this.getDataValue("thumbnail")); }
-    get verified()     { return Boolean(this.getDataValue("verified")); }
-    get dateCreated()  { return new Date(this.getDataValue("dateCreated")); }
-    get dateUpdated()  { return new Date(this.getDataValue("dateUpdated")); }
+    get uuid()            { return String(this.getDataValue("uuid")); }
+    get name()            { return String(this.getDataValue("name")); }
+    get category()        { return String(this.getDataValue("category")); }
+    get location()        { return String(this.getDataValue("location")); }
+    get address()         { return String(this.getDataValue("address")); }
+    get postal_code()     { return String(this.getDataValue("postal_code")); }
+    get price()           { return String(this.getDataValue("price")); }
+    get contact()         { return String(this.getDataValue("contact")); }
+    get status()          { return String(this.getDataValue("status")); }
+    get description()     { return String(this.getDataValue("description")); }
+    get thumbnail()       { return String(this.getDataValue("thumbnail")); }
+    get verified()        { return Boolean(this.getDataValue("verified")); }
+    get dateCreated()     { return new Date(this.getDataValue("dateCreated")); }
+    get dateUpdated()     { return new Date(this.getDataValue("dateUpdated")); }
 
-    set uuid(uuid)                { this.setDataValue("uuid", uuid); }
-    set name(name)                { this.setDataValue("name", name); }
-    set category(category)        { this.setDataValue("category", category); }
-    set location(location)        { this.setDataValue("location", location); }
-    set address(address)          { this.setDataValue("address", address); }
-    set postal_code(postal_code)  { this.setDataValue("postal_code", postal_code); }
-    set price(price)              { this.setDataValue("price", price); }
-    set contact(contact)          { this.setDataValue("contact", contact); }
-    set reservations(reservations){ this.setDataValue("reservations", reservations); }
-    set status(status)            { this.setDataValue("status", status); }
-    set description(description)  { this.setDataValue("description", description); }
-    set thumbnail(thumbnail)      { this.setDataValue("thumbnail", thumbnail); }
-    set verified(verified)        { this.setDataValue("verified", verified); }
+    set uuid(uuid)                       { this.setDataValue("uuid", uuid); }
+    set name(name)                       { this.setDataValue("name", name); }
+    set category(category)               { this.setDataValue("category", category); }
+    set location(location)               { this.setDataValue("location", location); }
+    set address(address)                 { this.setDataValue("address", address); }
+    set postal_code(postal_code)         { this.setDataValue("postal_code", postal_code); }
+    set price(price)                     { this.setDataValue("price", price); }
+    set contact(contact)                 { this.setDataValue("contact", contact); }
+    set status(status)                   { this.setDataValue("status", status); }
+    set description(description)         { this.setDataValue("description", description); }
+    set thumbnail(thumbnail)             { this.setDataValue("thumbnail", thumbnail); }
+    set verified(verified)               { this.setDataValue("verified", verified); }
 }

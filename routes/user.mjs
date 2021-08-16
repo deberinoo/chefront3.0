@@ -430,7 +430,7 @@ async function create_outlet_page(req, res) {
 async function create_outlet_process(req, res) {
     let errors = [];
     
-    let { Name, Category, Location, Address, Postalcode, Price, Contact, Description } = req.body;
+    let { Name, Category, Location, Address, Postalcode, Price, Contact, Status, Description } = req.body;
     console.log(`${req.file.path}`)
 
     const outlet = await Outlets.create({
@@ -441,6 +441,7 @@ async function create_outlet_process(req, res) {
         "postal_code":  Postalcode,
         "price":  Price,
         "contact":  Contact,
+        "status": Status,
         "description": Description,
         "thumbnail": req.file.path
     });
@@ -544,7 +545,7 @@ async function edit_outlet_page(req, res){
 };
 
 function save_edit_outlet(req, res){
-    let { Name, Category, Location, Address, Postalcode, Price, Contact, Description } = req.body;
+    let { Name, Category, Location, Address, Postalcode, Price, Contact, Status, Description } = req.body;
 
     Outlets.update({
         name:  Name,
@@ -554,6 +555,7 @@ function save_edit_outlet(req, res){
         postal_code:  Postalcode,
         price:  Price,
         contact:  Contact,
+        status: Status,
         description: Description,
         thumbnail: req.path.file
     }, {
@@ -561,11 +563,9 @@ function save_edit_outlet(req, res){
             postal_code : req.params.postal_code
         }
         }).then(() => {
+            
             res.redirect(`/u/b/${Name}/view-outlets`);
     }).catch(err => console.log(err)); 
-    sendMailUpdateOutlet(email,Name,Location,Address,Postalcode,Price,Contact,Description,req.file.path)
-			.then((result) => console.log('Email sent...', result))
-			.catch((error) => console.log(error.message));
 
 };
 

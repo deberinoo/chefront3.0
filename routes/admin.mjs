@@ -44,13 +44,14 @@ router.get("/customerUsers",                        view_customer_users_page);
 router.get("/all-customer-data",                    all_customer_data);
 router.get("/deleteCustomerUser/:email",            delete_customer_user);
 
-router.get("/adminUsers",                            view_admin_users_page);
-router.get("/all-admin-data",                        all_admin_data);
-router.get("/deleteAdminUser/:name",                 delete_admin_user);
-router.get("/editAdminUser/:name",                   edit_admin_page);
-router.put("/saveAdminUser/:name",                   save_edit_admin_user);
-router.get("/createAdminUser",                       create_admin_user_page);
-router.post("/createAdminUser",                      create_admin_user_process);
+router.get("/adminDashboard",                       view_admin_dashboard_page);
+router.get("/adminUsers",                           view_admin_users_page);
+router.get("/all-admin-data",                       all_admin_data);
+router.get("/deleteAdminUser/:name",                delete_admin_user);
+router.get("/editAdminUser/:name",                  edit_admin_page);
+router.put("/saveAdminUser/:name",                  save_edit_admin_user);
+router.get("/createAdminUser",                      create_admin_user_page);
+router.post("/createAdminUser",                     create_admin_user_process);
 
 // Outlet management routes
 router.get("/outlets",                              view_outlets_page);
@@ -59,8 +60,8 @@ router.get("/deleteOutlet/:postal_code",            delete_outlet);
 
 // Feedback management routes
 router.get("/feedback",                             view_feedback_page);
-router.get("/reply_feedback/:uuid",              reply_feedback_page);
-router.post("/reply_feedback/:uuid",               reply_feedback_process);
+router.get("/reply_feedback/:uuid",                 reply_feedback_page);
+router.post("/reply_feedback/:uuid",                reply_feedback_process);
 router.get("/all-feedbacks-data",                   all_feedbacks_data);
 router.get("/deleteFeedback/:uuid",                 delete_feedback);
 
@@ -77,7 +78,7 @@ router.get("/deleteCategory/:name",                 delete_category);
 // Authentication
 function ensure_auth(req, res, next) {
     if (!req.isAuthenticated()) {
-        return res.redirect("/auth/adminlogin");
+        return res.redirect("/auth/login");
     }
     else {
         return next();
@@ -627,6 +628,64 @@ function delete_category(req, res) {
         } else {
 	    res.redirect('/404');
     }
+    });
+};
+
+async function view_admin_dashboard_page(req, res) {
+    var role = getRole(req.user.role);
+    var admin = role[0];
+    var business = role[1];
+    var customer = role[2];
+    
+    const outlet_count = await Outlets.count({
+        where:{
+            "name": {
+                [Op.ne]: 'null'
+        }
+    }});
+
+    const business_count = await User.count({
+        where:{
+            "role":{
+                [Op.eq]: 'business'
+            }
+        }
+    });
+
+    const customer_count = await User.count({
+        where:{
+            "role":{
+                [Op.eq]: 'customer'
+            }
+        }
+    });
+
+    const feedback_count = await Feedback.count({
+        where:{
+            "name": {
+                [Op.ne]: 'null'
+        },
+        "email": {
+            [Op.ne]: 'null'
+        }
+    }});
+
+    const admin_count = await User.count({
+        where:{
+            "role":{
+                [Op.eq]: 'admin'
+            }
+        }
+    });
+	return res.render('admin/admin_dashboard', {
+        admin: admin,
+        business: business,
+        customer: customer,
+        outlet_count:outlet_count,
+        business_count:business_count,
+        customer_count:customer_count,
+        feedback_count:feedback_count,
+        admin_count:admin_count
     });
 };
 

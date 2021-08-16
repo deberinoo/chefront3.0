@@ -24,7 +24,16 @@ Server.set('views', 'templates');    //  Let express know where to find HTML tem
 Server.set('view engine', 'handlebars');  //  Let express know what template engine to use
 Server.engine('handlebars', ExpHandlebars({
 	handlebars: allowInsecurePrototypeAccess(Handlebars),
-	defaultLayout: 'main'
+	defaultLayout: 'main',
+	helpers: {
+		ifEquals(a, b, options) {
+			if (a === b) {
+				return options.fn(this)
+			} else {
+				return options.inverse(this)
+			}
+		},
+	}
 }));
 //  Let express know where to access static files
 //  Host them at locahost/public
