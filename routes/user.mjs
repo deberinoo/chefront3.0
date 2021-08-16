@@ -974,8 +974,7 @@ async function create_reservation_process(req, res) {
 };
 
 async function view_upcoming_reservations_page(req, res) {
-    var date = moment().format('L');
-    var time = moment().format("HH:mm")  
+    var date = Date.now() 
 
 	const reservation = await Reservations.findAll({
         where: {
@@ -985,9 +984,6 @@ async function view_upcoming_reservations_page(req, res) {
             "date": {
                 [Op.gte]: date
             },
-            "time": {
-                [Op.gte]: time
-            }
         }
     });
     const user = User.findOne({
