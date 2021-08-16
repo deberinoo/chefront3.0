@@ -1,5 +1,6 @@
 import { Router }                           from 'express';
 import { flashMessage }                     from '../utils/flashmsg.mjs';
+import moment                               from 'moment';
 
 import { User, UserRole }                   from '../data/models/Users.mjs'
 import { DiscountSlot }                     from '../data/models/DiscountSlot.mjs';
@@ -10,13 +11,19 @@ import Hash             from 'hash.js';
 import { UploadFile, DeleteFilePath }       from '../utils/multer.mjs';
 import {  } from '../data/mail.mjs';
 
-import { sendMailUpdateUser,sendMailDeleteUser,sendMailUpdateOutlet,sendMailDeleteOutlet,sendMailBannedAccount,sendMailFeedbackResponse,sendMailMakeReservation, sendMailDeleteReservation } from '../data/mail.mjs';
+import {sendMailDeleteUser, sendMailBannedAccount, sendMailMakeReservation, sendMailDeleteReservation} from '../data/mail.mjs';
 
 /**
  * Regular expressions for form testing
  **/ 
  const regexEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
  const regexName  = /^[a-z ,.'-]+$/i;
+ const regexAddress  = /[A-Za-z0-9'\.\-\s\,]/;
+ const regexPostalCode = /^\d{6}$/;
+ const regexPrice =/^\d{1,3}$/;
+ const regexContact = /^\d{8}$/;
+ const regexDescription = /^.{1,300}$/;
+
  //	Min 8 character, 1 upper, 1 lower, 1 number, 1 symbol
  //const regexPwd   = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
  
@@ -431,8 +438,38 @@ async function create_outlet_process(req, res) {
     let errors = [];
     
     let { Name, Category, Location, Address, Postalcode, Price, Contact, Status, Description } = req.body;
-    console.log(`${req.file.path}`)
+    console.log(`${req.file.path}`);
+    
+    try{
+        if(! regexAddress.test(Address)) {
+            errors = errors.concat({ text: "Invalid address provided!"})
+        }
+        if (!regexPostalCode.test(Postalcode)) {
+            errors = errors.concat({ text: "Invalid postal code! It must be 6 digits."});
+        }
+        if (!regexContact.test(Contact)) {
+            errors = errors.concat({ text: "Invalid phone number format. It should contain 8 digits only." });
+        }
+        if (!regexPrice.test(Price)) {
+            errors = errors.concat({ text: "Price range should be between 1-3 digits."});
+        }
+        if (!regexDescription.test(Description)) {
+            errors = errors.concat({ text: "Maximum of 300 characters for description." })
+        }
+		if (errors.length > 0) {
+			throw new Error("There are validation errors");
+		}        
+    }
+	catch (error) {
+		console.error("There is errors with the editing form body.");
+		console.error(error);
+		return res.render(`user/business/update_outlet`, { 
+            errors: errors,
+            outlet: outlet,
+            category: category
 
+        });
+    }
     const outlet = await Outlets.create({
         "name":  Name,
         "category" : Category,
@@ -445,6 +482,7 @@ async function create_outlet_process(req, res) {
         "description": Description,
         "thumbnail": req.file.path
     });
+    flashMessage(res, 'success', 'Successfully created an outlet.');
     res.redirect(`/u/b/${Name}/view-outlets`);
     sendMailCreateOutlet(email,Name,location,address,Postalcode)
     .then((result) => console.log('Email sent...', result))
@@ -544,9 +582,46 @@ async function edit_outlet_page(req, res){
     }).catch(err => console.log(err));
 };
 
-function save_edit_outlet(req, res){
-    let { Name, Category, Location, Address, Postalcode, Price, Contact, Status, Description } = req.body;
+async function save_edit_outlet(req, res){
+    let { Name, Category, Location, Address, Postalcode, Price, Contact,Status, Description } = req.body;
+    const category = await Categories.findAll();
+    const outlet = await Outlets.findOne({
+        where: {
+            "name" : req.params.name,
+            "postal_code": req.params.postal_code
+        }
+    });
+    let errors = []
+    try{
+        if(! regexAddress.test(Address)) {
+            errors = errors.concat({ text: "Invalid address provided!"})
+        }
+        if (!regexPostalCode.test(Postalcode)) {
+            errors = errors.concat({ text: "Invalid postal code! It must be 6 digits."});
+        }
+        if (!regexContact.test(Contact)) {
+            errors = errors.concat({ text: "Invalid phone number format. It should contain 8 digits only." });
+        }
+        if (!regexPrice.test(Price)) {
+            errors = errors.concat({ text: "Price range should be between 1-3 digits."});
+        }
+        if (!regexDescription.test(Description)) {
+            errors = errors.concat({ text: "Maximum of 300 characters for description." })
+        }
+		if (errors.length > 0) {
+			throw new Error("There are validation errors");
+		}        
+    }
+	catch (error) {
+		console.error("There is errors with the editing form body.");
+		console.error(error);
+		return res.render(`user/business/update_outlet`, { 
+            errors: errors,
+            outlet: outlet,
+            category: category
 
+        });
+    }
     Outlets.update({
         name:  Name,
         category: Category,
@@ -566,7 +641,6 @@ function save_edit_outlet(req, res){
             
             res.redirect(`/u/b/${Name}/view-outlets`);
     }).catch(err => console.log(err)); 
-
 };
 
 // //if (req.files.length > 0) {
@@ -797,7 +871,7 @@ async function save_edit_user_customer(req, res) {
     let errors = []
 	try {
 		if (! regexName.test(Name)) {
-			errors = errors.concat({ text: "Invalid name provided! It must be minimum 3 characters and starts with a alphabet." });
+			errors = errors.concat({ text: "Invalid name provided! It must be minimum 3 characters and starts with an alphabet." });
 		}
         const current_user = await User.findOne({
             where: {
@@ -903,15 +977,16 @@ async function create_reservation_process(req, res) {
 };
 
 async function view_upcoming_reservations_page(req, res) {
-    var time = Date.now()
+    var date = Date.now() 
+
 	const reservation = await Reservations.findAll({
         where: {
             "user_email": {
                 [Op.eq]: req.params.user_email
             },
             "date": {
-                [Op.gt]: time
-            }
+                [Op.gte]: date
+            },
         }
     });
     const user = User.findOne({
@@ -919,6 +994,9 @@ async function view_upcoming_reservations_page(req, res) {
             "email": req.params.user_email
         }
     })
+    if (req.user == undefined) {
+		return res.render('404')
+	} else {
     var role = getRole(req.user.role);
     var admin = role[0];
     var business = role[1];
@@ -929,7 +1007,7 @@ async function view_upcoming_reservations_page(req, res) {
         business: business,
         customer: customer
     });
-};
+}};
 
 async function view_historical_reservations_page(req, res) {
     var time = Date.now()
@@ -1026,14 +1104,32 @@ function save_edit_reservation(req, res){
     }).catch(err => console.log(err)); 
 };
 
-function delete_reservation(req, res) {
-    Reservations.findOne({
+async function delete_reservation(req, res) {
+    const target_reservation = await Reservations.findOne({
+        where: {
+            "user_email": req.params.user_email,
+            "reservation_id": req.params.reservation_id
+        },
+    });
+
+    var now = new Date();
+    var reservation_cutoff = moment(target_reservation.time).subtract(30, "minutes").toDate();
+
+    if (now >= reservation_cutoff) {
+        flashMessage(res,'danger', 'Cancellation of reservation is prohibited within 30 minutes before reservation.', 'fa fa-times', false );
+        return res.redirect(`/u/c/my-reservations/upcoming/${req.params.user_email}`); 
+    }
+
+    const reservation = await Reservations.findOne({
         where: {
             "user_email": req.params.user_email,
             "reservation_id": req.params.reservation_id
         },
     }).then((reservation) => {
-        if (reservation!= null) {
+        if (reservation != null) {
+            sendMailDeleteReservation( reservation.user_email, reservation.reservation_id, reservation.name, reservation.location, reservation.user_name, reservation.date, reservation.pax, reservation.time, reservation.discount)
+            .then((result) => console.log('Email sent...', result))
+            .catch((error) => console.log(error.message));
             Reservations.destroy({
                 where: {
                     "user_email": req.params.user_email,
@@ -1046,9 +1142,4 @@ function delete_reservation(req, res) {
 	    res.redirect('/404');
     }
     });
-    sendMailDeleteReservation(email,req.params.reservation_id)
-			.then((result) => console.log('Email sent...', result))
-			.catch((error) => console.log(error.message));
-
 };
-

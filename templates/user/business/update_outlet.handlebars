@@ -73,8 +73,6 @@
                                     <input 
                                         id="address"
                                         type="text"
-                                        required="" autofocus=""
-                                        minlength="20" maxlength="80" 
                                         title="Address should be at least 20 characters long"
                                         class="form-control text-dark"                              
                                         name="Address"
@@ -88,9 +86,6 @@
                                     <input 
                                         id="postalCode"
                                         type="text"
-                                        required="" autofocus=""
-                                        pattern="[0-9]{6}" 
-                                        title="Postal code should consist of only 6 numbers"
                                         class="form-control text-dark"
                                         name="Postalcode"
                                         value="{{outlet.postal_code}}"
@@ -103,9 +98,7 @@
                                     <input 
                                         id="price" 
                                         type="text"
-                                        placeholder="$" required="" autofocus=""
-                                        pattern="[0-9]{,3}"
-                                        title="Price should contain numbers only"
+                                        placeholder="$"
                                         class="form-control text-dark"
                                         name="Price"
                                         value="{{outlet.price}}"
@@ -118,9 +111,7 @@
                                     <input
                                         id="contact"
                                         type="text"
-                                        placeholder="+65" required="" autofocus=""
-                                        pattern="[0-9]{8}"
-                                        title="Contact number should contain only eight numbers"
+                                        placeholder="+65"
                                         class="form-control text-dark" 
                                         name="Contact"
                                         value="{{outlet.contact}}"
@@ -141,7 +132,7 @@
                             <div class="form-group row">
                                 <label for="description" class="col-sm-2 col-form-label">Description</label>
                                 <div class="col-sm-10">
-                                    <textarea class="form-control text-dark" id="description" rows="5" maxlength="300"
+                                    <textarea class="form-control text-dark" id="description"
                                         name="Description">{{outlet.description}}</textarea>
                                     <div id="word-count">
                                         <span id="current">0</span>

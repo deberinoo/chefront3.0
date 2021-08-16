@@ -56,6 +56,7 @@ Server.use(ExpSession({
 	name: 'example-app',
 	secret: 'random-secret',
 	resave: false,
+	store: SessionStore,
 	saveUninitialized: false
 }));
 
