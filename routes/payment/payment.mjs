@@ -152,7 +152,6 @@ async function create_reservation(req,res) {
 	var admin = role[0];
 	var business = role[1];
 	var customer = role[2];
-
 	User.update({       
 		deposited: "Yes"
 	}, {
@@ -177,10 +176,10 @@ async function create_reservation(req,res) {
 	.then((result) => console.log('Email sent...', result))
 	.catch((error) => console.log(error.message));
 	return res.render("success", {
-		admin:admin,
-		business:business,
-		customer:customer,
-		reservation:reservation
+		reservation:reservation,
+		admin: admin,
+		business: business,
+		customer: customer
 	});
 }
 

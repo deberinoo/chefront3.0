@@ -1,5 +1,6 @@
 import { Router }                           from 'express';
 import { flashMessage }                     from '../utils/flashmsg.mjs';
+import moment                               from 'moment';
 
 import { User, UserRole }                   from '../data/models/Users.mjs'
 import { DiscountSlot }                     from '../data/models/DiscountSlot.mjs';
@@ -973,14 +974,19 @@ async function create_reservation_process(req, res) {
 };
 
 async function view_upcoming_reservations_page(req, res) {
-    var time = Date.now()
+    var date = moment().format('L');
+    var time = moment().format("HH:mm")  
+
 	const reservation = await Reservations.findAll({
         where: {
             "user_email": {
                 [Op.eq]: req.params.user_email
             },
             "date": {
-                [Op.gt]: time
+                [Op.gte]: date
+            },
+            "time": {
+                [Op.gte]: time
             }
         }
     });
@@ -989,6 +995,9 @@ async function view_upcoming_reservations_page(req, res) {
             "email": req.params.user_email
         }
     })
+    if (req.user == undefined) {
+		return res.render('404')
+	} else {
     var role = getRole(req.user.role);
     var admin = role[0];
     var business = role[1];
@@ -999,7 +1008,7 @@ async function view_upcoming_reservations_page(req, res) {
         business: business,
         customer: customer
     });
-};
+}};
 
 async function view_historical_reservations_page(req, res) {
     var time = Date.now()
@@ -1097,6 +1106,21 @@ function save_edit_reservation(req, res){
 };
 
 async function delete_reservation(req, res) {
+    const target_reservation = await Reservations.findOne({
+        where: {
+            "user_email": req.params.user_email,
+            "reservation_id": req.params.reservation_id
+        },
+    });
+
+    var now = new Date();
+    var reservation_cutoff = moment(target_reservation).subtract(30, "minutes").toDate();
+
+    if (now >= reservation_cutoff) {
+        flashMessage(res,'danger', 'Cancellation of reservation is prohibited within 30 minutes before reservation.', 'fa fa-times', false );
+        return res.redirect(`/u/c/my-reservations/upcoming/${req.params.user_email}`); 
+    }
+
     const reservation = await Reservations.findOne({
         where: {
             "user_email": req.params.user_email,
