@@ -8,6 +8,8 @@ import { Categories }       from '../data/models/Categories.mjs';
 import { Reservations } 	from '../data/models/Reservations.mjs';
 import { DiscountSlot }     from '../data/models/DiscountSlot.mjs';
 
+import { sendMailBannedAccount,sendMailFeedbackResponse} from '../data/mail.mjs';
+
 import { UploadFile, DeleteFilePath }       from '../utils/multer.mjs';
 import Hash             from 'hash.js';
 
@@ -57,6 +59,8 @@ router.get("/deleteOutlet/:postal_code",            delete_outlet);
 
 // Feedback management routes
 router.get("/feedback",                             view_feedback_page);
+router.get("/reply_feedback/:uuid",              reply_feedback_page);
+router.post("/reply_feedback/:uuid",               reply_feedback_process);
 router.get("/all-feedbacks-data",                   all_feedbacks_data);
 router.get("/deleteFeedback/:uuid",                 delete_feedback);
 
@@ -440,6 +444,37 @@ async function all_feedbacks_data(req, res) {
         return res.status(500).end();
     }
  }
+
+ async function reply_feedback_page(req, res) {
+    let feedbackId = req.params.uuid
+    const current_feedback = await Feedback.findOne({ 
+        where: {
+            uuid : feedbackId
+        },
+    })
+    return res.render('admin/reply_feedback', { message : current_feedback.message, uuid: feedbackId});
+};
+
+
+async function reply_feedback_process(req, res) {
+    let reply = req.body.Reply
+    const current_feedback = await Feedback.findOne({ 
+        where: {
+            uuid : req.params.uuid
+        },
+    })
+    Feedback.update({
+       read : "Yes"
+    }, {
+        where: {
+           uuid : req.params.uuid
+        }
+    })
+    sendMailFeedbackResponse(current_feedback.email,reply)
+        .then((result) => console.log('Email sent...', result))
+        .catch((error) => console.log(error.message));
+    return res.redirect("/admin/feedback");
+};
 
 function delete_feedback(req, res) {
     let feedbackId = req.params.uuid

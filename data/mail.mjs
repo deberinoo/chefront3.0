@@ -939,7 +939,7 @@ export async function sendMailBannedAccount(email) {
 											<td bgcolor="#ffffff" align="center" style="padding: 20px 30px 60px 30px;">
 												<table border="0" cellspacing="0" cellpadding="0">
 													<tr>
-														<td align="center" style="border-radius: 3px;" bgcolor="#f55767"><a href="#" target="_blank" style="font-size: 20px; font-family: 'Nunito', sans-serif; color: #ffffff; text-decoration: none; color: #ffffff; text-decoration: none; padding: 15px 25px; border-radius: 2px; border: 1px solid #FFA73B; display: inline-block;">${code}</td>
+														<td align="center" style="border-radius: 3px;" bgcolor="#f55767"><a href="#" target="_blank" style="font-size: 20px; font-family: 'Nunito', sans-serif; color: #ffffff; text-decoration: none; color: #ffffff; text-decoration: none; padding: 15px 25px; border-radius: 2px; border: 1px solid #FFA73B; display: inline-block;">You're banned lol get played EZ claps </td>
 													</tr>
 												</table>
 											</td>

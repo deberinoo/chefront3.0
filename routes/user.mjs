@@ -60,8 +60,8 @@ router.get("/b/:name/delete-outlet/:postal_code",       delete_outlet);
 // Reservations
 router.get("/b/:name/select-outlet",                    view_select_outlet_page);
 router.get("/b/:name/:location/reservation-status",     view_reservation_status_page);
-router.get("/b/did_not_attend_reservation/:email/:id", did_not_attend_reservation);
-router.get("/b/attend_reservation/:id",     attend_reservation);
+router.get("/b/:name/:location/:id",                    did_not_attend_reservation);
+router.get("/b/attend_reservation/:id",                 attend_reservation);
 
 // ----------------
 // Check user role
@@ -630,6 +630,13 @@ async function view_reservation_status_page(req, res) {
     var business = role[1];
     var customer = role[2];
 
+    const outlet = await Outlets.findAll({
+        where: {
+            "name" : req.params.name,
+            "location" : req.params.location
+        }
+    })
+
     const reservation = await Reservations.findAll({
         where: {
             "name" : req.params.name,
@@ -638,6 +645,7 @@ async function view_reservation_status_page(req, res) {
     })
 	return res.render('user/business/retrieve_reservationBusiness', {
         reservation: reservation,
+        outlet: outlet,
         admin: admin,
         business: business,
         customer: customer
@@ -645,25 +653,24 @@ async function view_reservation_status_page(req, res) {
 };
 
 async function did_not_attend_reservation(req, res) {
-    const current_user = await User.findOne({
+    const reservation = await Reservations.findOne({
         where: {
-            email : req.params.email
+            reservation_id : req.params.id
         }
     });
-    console.log(current_user.skips)
-    User.update({       
-        skips: current_user.skips + 1
-    }, {
+    const user = await User.findOne({
         where: {
-            email : req.params.email
+            email : reservation.user_email
         }
     })
-    const after_current_user = await User.findOne({
+    User.update({       
+        skips: user.skips + 1
+    }, {
         where: {
-            email : req.params.email
+            email : reservation.user_email
         }
     });
-    console.log(after_current_user.skips)
+    console.log("new no. of skips" + user.skips)
     Reservations.findOne({
         where: {
             "reservation_id" : req.params.id
@@ -681,19 +688,25 @@ async function did_not_attend_reservation(req, res) {
 	    res.redirect('/404');
     }
     });
-    if (after_current_user.skips >= 3){
+    if (user.skips == 2){
         User.update({       
             banned: "Yes"
         }, {
             where: {
-                email : req.params.email
+                email : reservation.user_email
             }
         })
-        sendMailBannedAccount(email)
+        sendMailBannedAccount(reservation.user_email)
             .then((result) => console.log('Email sent...', result))
  			.catch((error) => console.log(error.message));
     }
-    return res.redirect('/u/b/{{user_name}}/{{location}}/did_not_attend_reservation/{{user_email}}/{{reservation_id}}')
+    const outlet = await Outlets.findOne({
+        where: {
+            name : req.body.name,
+            location : req.body.location
+        }
+    });
+    return res.redirect(`/u/b/${outlet.name}/${outlet.location}/reservation-status`)
 };
 async function attend_reservation(req,res){
     Reservations.findOne({
@@ -713,7 +726,7 @@ async function attend_reservation(req,res){
 	    res.redirect('/404');
     }
     });
-    return res.redirect('/u/b/{{user_name}}/{{location}}/attend_reservation/{{reservation_id}}')
+    return res.redirect(`/u/b/${after_current_user.name}/${after_current_user.location}/reservation-status`)
 }
 // ---------------- 	
 // Customer user routing
