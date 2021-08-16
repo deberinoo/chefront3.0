@@ -31,7 +31,15 @@
                                         alt="Card image cap" width="300">
                                     <div class="card-body">
                                         <h4 class="card-title">{{name}}</h4>
-                                        <p class="card-text">{{location}} • ${{price}}</p>
+                                        <p class="card-text">{{location}} • ${{price}}{{#ifEquals this.status "FULL"}}
+                                        <button class="btn btn-danger" style="pointer-events: none;" id="status_btn">{{this.status}}</button>
+                                        {{/ifEquals}}
+                                        {{#ifEquals this.status "AVAILABLE"}}
+                                        <button class="btn btn-success"  style="pointer-events: none;"id="status_btn">{{this.status}}</button>
+                                        {{/ifEquals}}
+                                        {{#ifEquals this.status "MODERATE"}}
+                                        <button class="btn btn-warning" style="pointer-events: none;" id="status_btn">{{this.status}}</button>
+                                        {{/ifEquals}}</p>
                                     </div>
                                 </a>
                             </div>
