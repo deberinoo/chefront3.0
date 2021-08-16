@@ -18,6 +18,7 @@ export class User extends Model {
             "contact" : { type: DataTypes.INTEGER(16), allowNull: true},
             "password" : { type: DataTypes.STRING(64), allowNull: false},
             "skips" : { type: DataTypes.INTEGER(16), allowNull: false, defaultValue: 0},
+            "deposited" : {type: DataTypes.STRING(128), allowNull: false, defaultValue: "No"},
             "banned" : {type: DataTypes.STRING(128), allowNull: false, defaultValue: "No"},
             "role" : { type: DataTypes.STRING(10), allowNull: false},
         }, {

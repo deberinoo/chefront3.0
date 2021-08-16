@@ -4,6 +4,9 @@ import FileSys from 'fs';
 import Hash    from 'hash.js';
 import Moment  from 'moment';
 
+import { sendMailMakeReservation } from '../../data/mail.mjs';
+import { User }                   from '../../data/models/Users.mjs'
+
 import { nets_api_key, nets_api_skey, nets_api_gateway } from './payment-config.mjs';
 import { Reservations } 	from '../../data/models/Reservations.mjs';
 
@@ -150,6 +153,14 @@ async function create_reservation(req,res) {
 	var business = role[1];
 	var customer = role[2];
 
+	User.update({       
+		deposited: "Yes"
+	}, {
+		where: {
+			email : req.user.email
+		}
+	}) 
+
 	const reservation = await Reservations.create({
 		"reservation_id": req.body.Id,
 		"name":  req.body.BusinessName,
@@ -162,6 +173,9 @@ async function create_reservation(req,res) {
 		"user_email": req.body.Email,
 		"user_contact": req.body.Contact,
 	});
+	sendMailMakeReservation(req.body.Email, req.body.Id, req.body.BusinessName, req.body.Location, req.body.Name, req.body.ResDate, req.body.Pax, req.body.Time[0], req.body.Discount)
+	.then((result) => console.log('Email sent...', result))
+	.catch((error) => console.log(error.message));
 	return res.render("success", {
 		admin:admin,
 		business:business,

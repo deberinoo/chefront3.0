@@ -10,7 +10,7 @@ import Hash             from 'hash.js';
 import { UploadFile, DeleteFilePath }       from '../utils/multer.mjs';
 import {  } from '../data/mail.mjs';
 
-import { sendMailUpdateUser,sendMailDeleteUser,sendMailUpdateOutlet,sendMailDeleteOutlet,sendMailBannedAccount,sendMailFeedbackResponse,sendMailMakeReservation, sendMailDeleteReservation } from '../data/mail.mjs';
+import {sendMailDeleteUser, sendMailBannedAccount, sendMailMakeReservation, sendMailDeleteReservation} from '../data/mail.mjs';
 
 /**
  * Regular expressions for form testing
@@ -1026,14 +1026,17 @@ function save_edit_reservation(req, res){
     }).catch(err => console.log(err)); 
 };
 
-function delete_reservation(req, res) {
-    Reservations.findOne({
+async function delete_reservation(req, res) {
+    const reservation = await Reservations.findOne({
         where: {
             "user_email": req.params.user_email,
             "reservation_id": req.params.reservation_id
         },
     }).then((reservation) => {
-        if (reservation!= null) {
+        if (reservation != null) {
+            sendMailDeleteReservation( reservation.user_email, reservation.reservation_id, reservation.name, reservation.location, reservation.user_name, reservation.date, reservation.pax, reservation.time, reservation.discount)
+            .then((result) => console.log('Email sent...', result))
+            .catch((error) => console.log(error.message));
             Reservations.destroy({
                 where: {
                     "user_email": req.params.user_email,
@@ -1046,9 +1049,4 @@ function delete_reservation(req, res) {
 	    res.redirect('/404');
     }
     });
-    sendMailDeleteReservation(email,req.params.reservation_id)
-			.then((result) => console.log('Email sent...', result))
-			.catch((error) => console.log(error.message));
-
 };
-

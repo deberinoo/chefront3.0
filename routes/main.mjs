@@ -51,6 +51,7 @@ router.use("/payment", RouterPayment)
 
 import RouterAdmin from './admin.mjs'
 import { Categories } from '../data/models/Categories.mjs';
+import { sendMailMakeReservation } from '../data/mail.mjs';
 router.use("/admin", RouterAdmin);
 
 router.get("/", async function (req, res) {
@@ -307,17 +308,10 @@ async function create_reservation_process(req, res) {
 		var customer = role[2];
 	}
 
-	// check if user has reserved before
-	const reservations = await Reservations.count({
-		where: {
-            "name": req.params.name,
-        }
-	});
-
 	let { BusinessName, Location, ResDate, Pax, Slot, Name, Email, Contact } = req.body;
 	const timediscount = Slot.split(",")
 
-	if (reservations > 0) {
+	if (req.user.deposited == "Yes") {
 		const reservation = await Reservations.create({
 			"reservation_id":  String(getId()),
 			"name":  BusinessName,
@@ -330,13 +324,16 @@ async function create_reservation_process(req, res) {
 			"user_email": Email,
 			"user_contact": Contact,
 		});
+		sendMailMakeReservation(Email, reservation.reservation_id, BusinessName, Location, Name, ResDate, Pax, timediscount[0], timediscount[1])
+		.then((result) => console.log('Email sent...', result))
+		.catch((error) => console.log(error.message));
 		res.render("success", {
 			admin:admin,
 			business:business,
 			customer:customer,
 			reservation:reservation
 		});
-	} else {
+	} else if (req.user.deposited == "No") {
 		const reservation = {
 			"reservation_id":  String(getId()),
 			"name":  BusinessName,
