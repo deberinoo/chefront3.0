@@ -11,9 +11,10 @@
                 <div class="my-4">
                     <ul class="nav nav-tabs mb-4" id="myTab" role="tablist">
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button"
+                            <a class="nav-link active dropdown-toggle" data-toggle="dropdown" href="#" role="button"
                                 aria-haspopup="true" aria-expanded="false">Users</a>
                             <div class="dropdown-menu">
+                                <a class="dropdown-item" href="/admin/adminUsers">View Admins</a>
                                 <a class="dropdown-item" href="/admin/businessUsers">View Businesses</a>
                                 <a class="dropdown-item" href="/admin/customerUsers">View Customers</a>
                             </div>
@@ -52,7 +53,6 @@
                     <tr>
                         <th scope="col" data-sortable="true" data-field="name">Name</th>
                         <th scope="col" data-sortable="true" data-field="email">Email</th>
-                        <th scope="col" data-sortable="true" data-field="role">Role</th>
                         <th scope="col" data-formatter="table_row_delete">Actions</th>
                     </tr>
                 </thead>

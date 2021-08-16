@@ -60,8 +60,8 @@ router.get("/b/:name/delete-outlet/:postal_code",       delete_outlet);
 // Reservations
 router.get("/b/:name/select-outlet",                    view_select_outlet_page);
 router.get("/b/:name/:location/reservation-status",     view_reservation_status_page);
-router.get("/b/:name/:location/:id",                    did_not_attend_reservation);
-router.get("/b/attend_reservation/:id",                 attend_reservation);
+router.get("/b/:name/:location/:id/missed",             did_not_attend_reservation);
+router.get("/b/:name/:location/:id/attended",           attend_reservation);
 
 // ----------------
 // Check user role
@@ -630,7 +630,7 @@ async function view_reservation_status_page(req, res) {
     var business = role[1];
     var customer = role[2];
 
-    const outlet = await Outlets.findAll({
+    const outlet = await Outlets.findOne({
         where: {
             "name" : req.params.name,
             "location" : req.params.location
@@ -700,14 +700,16 @@ async function did_not_attend_reservation(req, res) {
             .then((result) => console.log('Email sent...', result))
  			.catch((error) => console.log(error.message));
     }
+    console.log("name"+req.params.name)
     const outlet = await Outlets.findOne({
         where: {
-            name : req.body.name,
-            location : req.body.location
+            name : req.params.name,
+            location : req.params.location
         }
     });
     return res.redirect(`/u/b/${outlet.name}/${outlet.location}/reservation-status`)
 };
+
 async function attend_reservation(req,res){
     Reservations.findOne({
         where: {
@@ -726,7 +728,13 @@ async function attend_reservation(req,res){
 	    res.redirect('/404');
     }
     });
-    return res.redirect(`/u/b/${after_current_user.name}/${after_current_user.location}/reservation-status`)
+    const outlet = await Outlets.findOne({
+        where: {
+            name : req.params.name,
+            location : req.params.location
+        }
+    });
+    return res.redirect(`/u/b/${outlet.name}/${outlet.location}/reservation-status`)
 }
 // ---------------- 	
 // Customer user routing

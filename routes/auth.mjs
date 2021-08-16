@@ -82,7 +82,11 @@ async function login_process(req, res, next) {
 			}
 		});
 		if (user == null) {
-			errors = errors.concat({ text: "Invalid user credentials!" });
+			errors = errors.concat({ text: "Invalid user credentials!"});
+			return res.render('auth/login', { errors: errors });
+		}
+		if (user.banned == "Yes") {
+			errors = errors.concat({ text: "This user has been banned!"});
 			return res.render('auth/login', { errors: errors });
 		}
 		if (errors.length > 0) {

@@ -305,7 +305,7 @@ function view_outlets_page(req, res) {
     var admin = role[0];
     var business = role[1];
     var customer = role[2];
-    return res.render('admin/retrieve_allOutlets', {
+    return res.render('admin/retrieve_outlets', {
         admin: admin,
         business: business,
         customer: customer,
@@ -501,7 +501,7 @@ function view_categories_page(req, res) {
     var admin = role[0];
     var business = role[1];
     var customer = role[2];
-    return res.render('admin/retrieve_allCategories', {
+    return res.render('admin/retrieve_categories', {
         admin: admin,
         business: business,
         customer: customer,

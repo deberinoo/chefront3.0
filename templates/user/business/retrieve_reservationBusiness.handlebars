@@ -59,10 +59,8 @@
                             <td>{{ discount }}%</td>
                             <td>{{ pax }}</td>
                             <td>
-                                <input type="hidden" value="{{outlet.name}}" name="name">
-                                <input type="hidden" value="{{outlet.location}}" name="location">
-                                <a href="/u/b/did_not_attend_reservation/{{user_email}}/{{reservation_id}}">No</a><br>
-                                <a href="/u/b/attend_reservation/{{reservation_id}}">Yes</a>
+                                <a href="/u/b/{{name}}/{{location}}/{{reservation_id}}/missed">No</a><br>
+                                <a href="/u/b/{{name}}/{{location}}/{{reservation_id}}/attended">Yes</a>
                             </td>
                             {{!-- <td><input type="checkbox" checked data-on="No" data-off="Yes" data-toggle="toggle" data-onstyle="outline-danger" data-offstyle="outline-success"></td> --}}
                         </tr>
