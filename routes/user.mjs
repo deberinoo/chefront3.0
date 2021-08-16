@@ -6,8 +6,23 @@ import { DiscountSlot }                     from '../data/models/DiscountSlot.mj
 import { Outlets }                          from '../data/models/Outlets.mjs';
 import { Reservations } 	                from '../data/models/Reservations.mjs';
 import { Categories }                       from '../data/models/Categories.mjs';
-
+import Hash             from 'hash.js';
 import { UploadFile, DeleteFilePath }       from '../utils/multer.mjs';
+import {  } from '../data/mail.mjs';
+
+import { sendMailUpdateUser,sendMailDeleteUser,sendMailUpdateOutlet,sendMailDeleteOutlet,sendMailBannedAccount,sendMailFeedbackResponse,sendMailMakeReservation, sendMailDeleteReservation } from '../data/mail.mjs';
+
+/**
+ * Regular expressions for form testing
+ **/ 
+ const regexEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+ const regexName  = /^[a-z ,.'-]+$/i;
+ //	Min 8 character, 1 upper, 1 lower, 1 number, 1 symbol
+ //const regexPwd   = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+ 
+ // Min 8 character, 1 letter, 1 number 
+ const regexPwd = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/
+
 
 import ORM                                  from 'sequelize';
 const { Op } = ORM;
@@ -45,6 +60,8 @@ router.get("/b/:name/delete-outlet/:postal_code",       delete_outlet);
 // Reservations
 router.get("/b/:name/select-outlet",                    view_select_outlet_page);
 router.get("/b/:name/:location/reservation-status",     view_reservation_status_page);
+router.get("/b/:name/:location/:id/missed",             did_not_attend_reservation);
+router.get("/b/:name/:location/:id/attended",           attend_reservation);
 
 // ----------------
 // Check user role
@@ -103,19 +120,54 @@ function edit_user_business_page(req, res) {
     }).catch(err => console.log(err));
 };
 
-function save_edit_user_business(req, res) {
-    let { Name, Email, Contact } = req.body;
+async function save_edit_user_business(req, res) {
+    let { Name, Contact,OldPassword,InputPassword,ConfirmPassword } = req.body;
+
+	try {
+        const current_user = await User.findOne({
+            where: {
+                "name" : req.params.name
+            },
+        })
+		if (! regexName.test(Name)) {
+			errors = errors.concat({ text: "Invalid name provided! It must be minimum 3 characters and starts with a alphabet." });
+		}
+        else{
+            const user = await User.findOne({where: {name: Name}});
+			if (user != null) {
+				errors = errors.concat({ text: "This business name is taken!"})
+			}
+        }
+		if (! regexPwd.test(InputPassword)) {
+			errors = errors.concat({ text: "Password requires minimum eight characters, at least one uppercase letter, one lowercase letter and one number!" });
+		}
+		else if (InputPassword !== ConfirmPassword) {
+			errors = errors.concat({ text: "Password do not match!" });
+		}
+        else if (OldPassword == current_user.password){
+            error = errors.concat({ text: "Old Password do not match"})
+        }
+		if (errors.length > 0) {
+			throw new Error("There are validation errors");
+		}
+	}
+	catch (error) {
+		console.error("There is errors with the registration form body.");
+		console.error(error);
+		return res.render('customer/update_userCustomer', { errors: errors , user: current_user});
+	}
+
     const user = User.findOne({
         where: {
             role: UserRole.Business,
             name: req.params.name
         }
     });
-
+    const Password =  Hash.sha256().update(InputPassword).digest('hex')
     User.update({
         name: Name,
-        email: Email,
-        contact: Contact
+        contact: Contact,
+        password: Password
     }, { where: {role: UserRole.Business, name: req.params.name}}
     ), 
     Outlets.update({
@@ -393,6 +445,10 @@ async function create_outlet_process(req, res) {
         "thumbnail": req.file.path
     });
     res.redirect(`/u/b/${Name}/view-outlets`);
+    sendMailCreateOutlet(email,Name,location,address,Postalcode)
+    .then((result) => console.log('Email sent...', result))
+    .catch((error) => console.log(error.message));
+
 };
 
 async function view_outlets_page(req, res) {
@@ -507,6 +563,10 @@ function save_edit_outlet(req, res){
         }).then(() => {
             res.redirect(`/u/b/${Name}/view-outlets`);
     }).catch(err => console.log(err)); 
+    sendMailUpdateOutlet(email,Name,Location,Address,Postalcode,Price,Contact,Description,req.file.path)
+			.then((result) => console.log('Email sent...', result))
+			.catch((error) => console.log(error.message));
+
 };
 
 // //if (req.files.length > 0) {
@@ -539,6 +599,10 @@ function delete_outlet(req, res) {
 	    res.redirect('/404');
     }
     });
+    sendMailDeleteOutlet(email,code)
+			.then((result) => console.log('Email sent...', result))
+			.catch((error) => console.log(error.message));
+
 };
 
 async function view_select_outlet_page(req, res) {
@@ -566,6 +630,13 @@ async function view_reservation_status_page(req, res) {
     var business = role[1];
     var customer = role[2];
 
+    const outlet = await Outlets.findOne({
+        where: {
+            "name" : req.params.name,
+            "location" : req.params.location
+        }
+    })
+
     const reservation = await Reservations.findAll({
         where: {
             "name" : req.params.name,
@@ -574,12 +645,97 @@ async function view_reservation_status_page(req, res) {
     })
 	return res.render('user/business/retrieve_reservationBusiness', {
         reservation: reservation,
+        outlet: outlet,
         admin: admin,
         business: business,
         customer: customer
     });
 };
 
+async function did_not_attend_reservation(req, res) {
+    const reservation = await Reservations.findOne({
+        where: {
+            reservation_id : req.params.id
+        }
+    });
+    const user = await User.findOne({
+        where: {
+            email : reservation.user_email
+        }
+    })
+    User.update({       
+        skips: user.skips + 1
+    }, {
+        where: {
+            email : reservation.user_email
+        }
+    });
+    console.log("new no. of skips" + user.skips)
+    Reservations.findOne({
+        where: {
+            "reservation_id" : req.params.id
+        },
+    }).then((user) => {
+        if (user != null) {
+            Reservations.destroy({
+                where: {
+                    "reservation_id" : req.params.id
+                }
+            }).then(() => {
+                flashMessage(res,'success', 'Customer did not attend', 'fa fa-trash', true );
+            }).catch( err => console.log(err));
+        } else {
+	    res.redirect('/404');
+    }
+    });
+    if (user.skips == 2){
+        User.update({       
+            banned: "Yes"
+        }, {
+            where: {
+                email : reservation.user_email
+            }
+        })
+        sendMailBannedAccount(reservation.user_email)
+            .then((result) => console.log('Email sent...', result))
+ 			.catch((error) => console.log(error.message));
+    }
+    console.log("name"+req.params.name)
+    const outlet = await Outlets.findOne({
+        where: {
+            name : req.params.name,
+            location : req.params.location
+        }
+    });
+    return res.redirect(`/u/b/${outlet.name}/${outlet.location}/reservation-status`)
+};
+
+async function attend_reservation(req,res){
+    Reservations.findOne({
+        where: {
+            "reservation_id" : req.params.id
+        },
+    }).then((user) => {
+        if (user != null) {
+            Reservations.destroy({
+                where: {
+                    "reservation_id" : req.params.id
+                }
+            }).then(() => {
+                flashMessage(res,'success', 'Customer has attended', 'fa fa-trash', true );
+            }).catch( err => console.log(err));
+        } else {
+	    res.redirect('/404');
+    }
+    });
+    const outlet = await Outlets.findOne({
+        where: {
+            name : req.params.name,
+            location : req.params.location
+        }
+    });
+    return res.redirect(`/u/b/${outlet.name}/${outlet.location}/reservation-status`)
+}
 // ---------------- 	
 // Customer user routing
 
@@ -634,23 +790,66 @@ function edit_user_customer_page(req, res) {
     }).catch(err => console.log(err));
 };
  
-function save_edit_user_customer(req, res) {
-    let { Name, Contact, Email } = req.body;
+async function save_edit_user_customer(req, res) {
 
+    let { Name, Contact,OldPassword,InputPassword,ConfirmPassword } = req.body;
+
+    let errors = []
+	try {
+		if (! regexName.test(Name)) {
+			errors = errors.concat({ text: "Invalid name provided! It must be minimum 3 characters and starts with a alphabet." });
+		}
+        const current_user = await User.findOne({
+            where: {
+                "email" : req.params.user_email
+            },
+        })
+		if (! regexPwd.test(InputPassword)) {
+			errors = errors.concat({ text: "Password requires minimum eight characters, at least one uppercase letter, one lowercase letter and one number!" });
+		}
+		else if (InputPassword !== ConfirmPassword) {
+			errors = errors.concat({ text: "Password do not match!" });
+		}
+        else if (InputPassword == current_user.password) {
+			errors = errors.concat({ text: "New Password cannot be the same as the old Password!" });
+		}
+        else if (OldPassword == current_user.password){
+            error = errors.concat({ text: "Old Password do not match"})
+        }
+		if (errors.length > 0) {
+			throw new Error("There are validation errors");
+		}
+	}
+	catch (error) {
+        const current_user = await User.findOne({
+            where: {
+                "email" : req.params.user_email
+            },
+        })
+		console.error("There is errors with the registration form body.");
+		console.error(error);
+		return res.render('user/customer/update_userCustomer', {
+             errors: errors,
+             user: current_user
+        });
+	}
+    const Password =  Hash.sha256().update(InputPassword).digest('hex')
     User.update({
         name: Name,
-        email: Email,
-        contact: Contact
+        contact: Contact,
+        password: Password
     }, { where: {email: req.params.user_email}}
     ),
     Reservations.update({
         user_name: Name,
-        user_email: Email,
         contact: Contact
     }, { where: {user_email: req.params.user_email}}
     ).then(() => {
-            res.redirect(`/u/c/${Email}`);
+            res.redirect(`/u/c/${req.params.user_email}`);
     }).catch(err => console.log(err));  
+    sendMailUpdateUser(req.params.user_email,Name,Contact)
+ 			.then((result) => console.log('Email sent...', result))
+ 			.catch((error) => console.log(error.message));
 };
 
 function delete_customer_user(req, res) {
@@ -676,6 +875,9 @@ function delete_customer_user(req, res) {
 	    res.redirect('/404');
     }
     });
+    sendMailDeleteUser(req.params.user_email)
+    .then((result) => console.log('Email sent...', result))
+    .catch((error) => console.log(error.message));
 };
 
 async function create_reservation_process(req, res) {
@@ -694,6 +896,10 @@ async function create_reservation_process(req, res) {
         "discount" : discount
     });
     res.redirect("/retrieve_reservation/:user_email");
+    sendMailMakeReservation(email,reservation_id)
+			.then((result) => console.log('Email sent...', result))
+			.catch((error) => console.log(error.message));
+
 };
 
 async function view_upcoming_reservations_page(req, res) {
@@ -840,4 +1046,9 @@ function delete_reservation(req, res) {
 	    res.redirect('/404');
     }
     });
+    sendMailDeleteReservation(email,req.params.reservation_id)
+			.then((result) => console.log('Email sent...', result))
+			.catch((error) => console.log(error.message));
+
 };
+

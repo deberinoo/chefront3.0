@@ -1,4 +1,4 @@
-<title>Chefront - Retrieve Business Users</title>
+<title>Chefront - View Admin Accounts</title>
 
 <link rel="stylesheet" href="/public/css/profile.css">
 <script src="https://unpkg.com/bootstrap-table@1.18.3/dist/bootstrap-table.min.js"></script>
@@ -7,7 +7,7 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-12 col-lg-12 col-xl-12 mx-auto">
-                <h2 class="h3 mb-4 page-title">Retrieve Business Users</h2>
+                <h2 class="h3 mb-4 page-title">View Admin Accounts</h2>
                 <div class="my-4">
                     <ul class="nav nav-tabs mb-4" id="myTab" role="tablist">
                         <li class="nav-item dropdown">
@@ -34,7 +34,7 @@
                     </ul>
                 </div>
             </div>
-            <table
+            <table 
                 id="table"
                 data-toggle="table"
                 data-width = "50px" 
@@ -47,12 +47,11 @@
                 data-show-pagination-switch="true"
                 data-show-fullscreen="true"
                 data-search="true"
-                data-url="/admin/all-business-data"
+                data-url="/admin/all-admin-data"
                 data-side-pagination="server">
                 <thead class="thead-dark">
                     <tr>
                         <th scope="col" data-sortable="true" data-field="name">Name</th>
-                        <th scope="col" data-sortable="true" data-field="contact">Contact</th>
                         <th scope="col" data-sortable="true" data-field="email">Email</th>
                         <th scope="col" data-formatter="table_row_delete">Actions</th>
                     </tr>
@@ -63,10 +62,26 @@
         </div>
     </div>
 </section>
+
 <script>
-   function table_row_delete(value, row, index) {
+    function table_row_delete(value, row, index) {
 		return `
-        <a href="/admin/deleteBusinessUser/${row.name}" class="delete"><i class="material-icons" title="Delete">&#xE872;</i></a>
+        <a href = "/admin/editAdminUser/${row.name}" class = "edit"><i class="material-icons" title="Edit">&#xE254;</i></a>
+        <a href="/admin/deleteAdminUser/${row.name}" class="delete"><i class="material-icons" title="Delete">&#xE872;</i></a>
 		`;
 	}
+
+    function buttons () {
+    return {
+      btnAdd: {
+        icon: 'fa-plus',
+        event: function () {
+          window.location.href = "http://localhost:3000/admin/createAdminUser";  
+        },
+        attributes: {
+          title: 'Create an admin user'
+        }
+      }
+    }
+  }
 </script>

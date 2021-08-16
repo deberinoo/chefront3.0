@@ -10,7 +10,7 @@ export class Feedback extends Model {
             "phone" : { type: DataTypes.INTEGER(8), allowNull: false},
             "email" : { type: DataTypes.STRING(128), allowNull: false},
             "message" : { type: DataTypes.STRING(2000), allowNull: false},
-            "read" : {type: DataTypes.BOOLEAN, allowNull:false, defaultValue: false}                
+            "read" : {type: DataTypes.STRING(128), allowNull: false, defaultValue: "No"}                
         }, {
             "sequelize" : database,
             "modelName" : "Feedback",
