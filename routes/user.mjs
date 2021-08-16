@@ -1110,7 +1110,7 @@ async function delete_reservation(req, res) {
     });
 
     var now = new Date();
-    var reservation_cutoff = moment(target_reservation).subtract(30, "minutes").toDate();
+    var reservation_cutoff = moment(target_reservation.time).subtract(30, "minutes").toDate();
 
     if (now >= reservation_cutoff) {
         flashMessage(res,'danger', 'Cancellation of reservation is prohibited within 30 minutes before reservation.', 'fa fa-times', false );
