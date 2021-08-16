@@ -15,7 +15,7 @@ export class User extends Model {
             "dataUpdated" : { type: DataTypes.DATE(), allowNull: false, defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')},
             "name" : { type: DataTypes.STRING(64), allowNull: false},
             "email" : { type: DataTypes.STRING(128), allowNull: false},
-            "contact" : { type: DataTypes.INTEGER(16), allowNull: false},
+            "contact" : { type: DataTypes.INTEGER(16), allowNull: true},
             "password" : { type: DataTypes.STRING(64), allowNull: false},
             "skips" : { type: DataTypes.INTEGER(16), allowNull: false, defaultValue: 0},
             "banned" : {type: DataTypes.STRING(128), allowNull: false, defaultValue: "No"},

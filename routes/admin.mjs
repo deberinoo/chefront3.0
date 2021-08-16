@@ -795,7 +795,7 @@ async function create_admin_user_process(req,res){
 			"password": Password,
 			"role": UserRole.Admin
 		})
-        flashMessage(res, 'success', 'Successfully created an admin user.', false);
+        flashMessage(res, 'success', 'Successfully created an admin user.');
         res.redirect("/admin/adminUsers");
     }
     catch (error) {
