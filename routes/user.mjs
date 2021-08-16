@@ -17,6 +17,12 @@ import { sendMailUpdateUser,sendMailDeleteUser,sendMailUpdateOutlet,sendMailDele
  **/ 
  const regexEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
  const regexName  = /^[a-z ,.'-]+$/i;
+ const regexAddress  = /[A-Za-z0-9'\.\-\s\,]/;
+ const regexPostalCode = /^\d{6}$/;
+ const regexPrice =/^\d{1,3}$/;
+ const regexContact = /^\d{8}$/;
+ const regexDescription = /^.{1,300}$/;
+
  //	Min 8 character, 1 upper, 1 lower, 1 number, 1 symbol
  //const regexPwd   = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
  
@@ -431,8 +437,38 @@ async function create_outlet_process(req, res) {
     let errors = [];
     
     let { Name, Category, Location, Address, Postalcode, Price, Contact, Description } = req.body;
-    console.log(`${req.file.path}`)
+    console.log(`${req.file.path}`);
+    
+    try{
+        if(! regexAddress.test(Address)) {
+            errors = errors.concat({ text: "Invalid address provided!"})
+        }
+        if (!regexPostalCode.test(Postalcode)) {
+            errors = errors.concat({ text: "Invalid postal code! It must be 6 digits."});
+        }
+        if (!regexContact.test(Contact)) {
+            errors = errors.concat({ text: "Invalid phone number format. It should contain 8 digits only." });
+        }
+        if (!regexPrice.test(Price)) {
+            errors = errors.concat({ text: "Price range should be between 1-3 digits."});
+        }
+        if (!regexDescription.test(Description)) {
+            errors = errors.concat({ text: "Maximum of 300 characters for description." })
+        }
+		if (errors.length > 0) {
+			throw new Error("There are validation errors");
+		}        
+    }
+	catch (error) {
+		console.error("There is errors with the editing form body.");
+		console.error(error);
+		return res.render(`user/business/update_outlet`, { 
+            errors: errors,
+            outlet: outlet,
+            category: category
 
+        });
+    }
     const outlet = await Outlets.create({
         "name":  Name,
         "category" : Category,
@@ -444,6 +480,7 @@ async function create_outlet_process(req, res) {
         "description": Description,
         "thumbnail": req.file.path
     });
+    flashMessage(res, 'success', 'Successfully created an outlet.');
     res.redirect(`/u/b/${Name}/view-outlets`);
     sendMailCreateOutlet(email,Name,location,address,Postalcode)
     .then((result) => console.log('Email sent...', result))
@@ -543,9 +580,46 @@ async function edit_outlet_page(req, res){
     }).catch(err => console.log(err));
 };
 
-function save_edit_outlet(req, res){
+async function save_edit_outlet(req, res){
     let { Name, Category, Location, Address, Postalcode, Price, Contact, Description } = req.body;
+    const category = await Categories.findAll();
+    const outlet = await Outlets.findOne({
+        where: {
+            "name" : req.params.name,
+            "postal_code": req.params.postal_code
+        }
+    });
+    let errors = []
+    try{
+        if(! regexAddress.test(Address)) {
+            errors = errors.concat({ text: "Invalid address provided!"})
+        }
+        if (!regexPostalCode.test(Postalcode)) {
+            errors = errors.concat({ text: "Invalid postal code! It must be 6 digits."});
+        }
+        if (!regexContact.test(Contact)) {
+            errors = errors.concat({ text: "Invalid phone number format. It should contain 8 digits only." });
+        }
+        if (!regexPrice.test(Price)) {
+            errors = errors.concat({ text: "Price range should be between 1-3 digits."});
+        }
+        if (!regexDescription.test(Description)) {
+            errors = errors.concat({ text: "Maximum of 300 characters for description." })
+        }
+		if (errors.length > 0) {
+			throw new Error("There are validation errors");
+		}        
+    }
+	catch (error) {
+		console.error("There is errors with the editing form body.");
+		console.error(error);
+		return res.render(`user/business/update_outlet`, { 
+            errors: errors,
+            outlet: outlet,
+            category: category
 
+        });
+    }
     Outlets.update({
         name:  Name,
         category: Category,
@@ -563,10 +637,6 @@ function save_edit_outlet(req, res){
         }).then(() => {
             res.redirect(`/u/b/${Name}/view-outlets`);
     }).catch(err => console.log(err)); 
-    sendMailUpdateOutlet(email,Name,Location,Address,Postalcode,Price,Contact,Description,req.file.path)
-			.then((result) => console.log('Email sent...', result))
-			.catch((error) => console.log(error.message));
-
 };
 
 // //if (req.files.length > 0) {
@@ -797,7 +867,7 @@ async function save_edit_user_customer(req, res) {
     let errors = []
 	try {
 		if (! regexName.test(Name)) {
-			errors = errors.concat({ text: "Invalid name provided! It must be minimum 3 characters and starts with a alphabet." });
+			errors = errors.concat({ text: "Invalid name provided! It must be minimum 3 characters and starts with an alphabet." });
 		}
         const current_user = await User.findOne({
             where: {
