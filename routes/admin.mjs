@@ -59,7 +59,7 @@ router.get("/deleteOutlet/:postal_code",            delete_outlet);
 
 // Feedback management routes
 router.get("/feedback",                             view_feedback_page);
-router.get("/reply_feedback/:uuid",              reply_feedback_page);
+router.get("/reply_feedback/:uuid",                 reply_feedback_page);
 router.post("/reply_feedback/:uuid",               reply_feedback_process);
 router.get("/all-feedbacks-data",                   all_feedbacks_data);
 router.get("/deleteFeedback/:uuid",                 delete_feedback);
