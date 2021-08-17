@@ -68,7 +68,7 @@ import Hash             	from 'hash.js';
 // 			email   : "root@chefront.com",
 // 			contact : "97504802",
 // 			role    : "admin",
-// 			verified: true,
+// 			verified: "Yes",
 // 			password: Hash.sha256().update("CEOtings123").digest("hex")
 // 		};
 // 		//	Find for existing account with the same id, create or update

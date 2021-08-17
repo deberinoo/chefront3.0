@@ -60,8 +60,7 @@
                         <th scope="col" data-sortable="true" data-field="email">Email</th>
                         <th scope="col" data-sortable="true" data-field="role">Role</th>
                         <th scope="col" data-sortable="true" data-field="verified">Verified?</th>
-                        <th scope="col" data-formatter="table_document">Document</th>
-                        <th scope="col" data-formatter="table_row_accept">Accept Document</th>        
+                        <th scope="col" data-formatter="table_document">Document</th>  
                         <th scope="col" data-formatter="table_row_delete">Actions</th>
                     </tr>
                 </thead>
@@ -77,14 +76,9 @@
         <a href="/admin/deleteBusinessUser/${row.name}" class="delete"><i class="material-icons" title="Delete">&#xE872;</i></a>
 		`;
 	}
-       function table_row_accept(value, row, index) {
-		return `
-        <a href="/admin/accept_document/${row.email}" class="delete">accept</a>
-		`;
-	}
     function table_document(value, row, index) {
 		return `
-        <a href="/chefront3.0/${row.document}" download><i class="bi bi-file-text">hello</i></a>
+        <a href="/admin/view_doc/${row.email}" ><i class="bi bi-file-text">view</i></a>
 		`;
 	}
 </script>

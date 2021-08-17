@@ -7,6 +7,7 @@ import { Feedback }         from '../data/models/Feedback.mjs';
 import { Categories }       from '../data/models/Categories.mjs';
 import { Reservations } 	from '../data/models/Reservations.mjs';
 import { DiscountSlot }     from '../data/models/DiscountSlot.mjs';
+import { Favourites }       from '../data/models/Favourites.mjs';
 
 import { sendMailVerifiedBusiness,sendMailBannedAccount,sendMailFeedbackResponse} from '../data/mail.mjs';
 
@@ -38,8 +39,9 @@ router.use(ensure_admin)
 // User management routes
 router.get("/businessUsers",                        view_business_users_page);
 router.get("/all-business-data",                    all_business_data);
-router.get("/accept_document/:email",               accept_document);
+router.post("/accept_document/:email",               accept_document);
 router.get("/deleteBusinessUser/:name",             delete_business_user);
+router.get("/view_doc/:email",                      view_document)
 
 router.get("/customerUsers",                        view_customer_users_page);
 router.get("/all-customer-data",                    all_customer_data);
@@ -118,6 +120,16 @@ function getRole(role) {
 	return [admin, business, customer];
 }
 // ----------------
+
+async function view_document(req,res){
+    const user = await User.findOne({
+        where: {
+            "email" : req.params.email
+        },
+    })
+    console.log( user.document)
+    return res.render('admin/view_doc', {email : req.params.email, document: user.document, verified : user.verified})
+}
 
 function view_customer_users_page(req, res) {
     var role = getRole(req.user.role);
