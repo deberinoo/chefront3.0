@@ -79,12 +79,12 @@
 	}
        function table_row_accept(value, row, index) {
 		return `
-        <a href="/admin/accept_document/${row.email}" class="delete">accept</a>
+        <a href="/admin/accept_document/${row.email}" class="delete"><i class="far fa-check-circle fa-lg"></i></a>
 		`;
 	}
     function table_document(value, row, index) {
 		return `
-        <a href="/chefront3.0/${row.document}" download><i class="bi bi-file-text">hello</i></a>
+        <a href="/chefront3.0/${row.document}" download><i class="far fa-file-pdf fa-lg"></i></a>
 		`;
 	}
 </script>

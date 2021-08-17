@@ -485,19 +485,19 @@ async function create_outlet_process(req, res) {
             errors = errors.concat({ text: `${Location} outlet already exists!`})
         }
         if(! regexAddress.test(Address)) {
-            errors = errors.concat({ text: "Invalid address provided!"})
+            errors = errors.concat({ text: "Address should be in valid format."})
         }
         if (!regexPostalCode.test(Postalcode)) {
-            errors = errors.concat({ text: "Invalid postal code! It must be 6 digits."});
+            errors = errors.concat({ text: "Postal code should consist of only 6 digits."});
         }
         if (!regexContact.test(Contact)) {
-            errors = errors.concat({ text: "Invalid phone number format. It should contain 8 digits only." });
+            errors = errors.concat({ text: "Contact number should consist of only 8 numbers." });
         }
         if (!regexPrice.test(Price)) {
             errors = errors.concat({ text: "Price range should be between 1-3 digits."});
         }
         if (!regexDescription.test(Description)) {
-            errors = errors.concat({ text: "Maximum of 300 characters for description." })
+            errors = errors.concat({ text: "Description should contain between 1 and 300 characters." })
         }
 		if (errors.length > 0) {
 			throw new Error("There are validation errors");
@@ -506,7 +506,7 @@ async function create_outlet_process(req, res) {
 	catch (error) {
 		console.error("There is errors with the editing form body.");
 		console.error(error);
-		return res.render(`user/business/update_outlet`, { 
+		return res.render(`user/business/create_outlet`, { 
             errors: errors,
             category: category
         });
@@ -636,19 +636,19 @@ async function save_edit_outlet(req, res){
     let errors = []
     try{
         if(! regexAddress.test(Address)) {
-            errors = errors.concat({ text: "Invalid address provided!"})
+            errors = errors.concat({ text: "Address should be in valid format."})
         }
         if (!regexPostalCode.test(Postalcode)) {
-            errors = errors.concat({ text: "Invalid postal code! It must be 6 digits."});
+            errors = errors.concat({ text: "Postal code should consist of only 6 digits."});
         }
         if (!regexContact.test(Contact)) {
-            errors = errors.concat({ text: "Invalid phone number format. It should contain 8 digits only." });
+            errors = errors.concat({ text: "Contact number should consist of only 8 numbers." });
         }
         if (!regexPrice.test(Price)) {
             errors = errors.concat({ text: "Price range should be between 1-3 digits."});
         }
         if (!regexDescription.test(Description)) {
-            errors = errors.concat({ text: "Maximum of 300 characters for description." })
+            errors = errors.concat({ text: "Description should contain between 1 and 300 characters."})
         }
 		if (errors.length > 0) {
 			throw new Error("There are validation errors");

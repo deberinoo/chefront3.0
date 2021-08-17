@@ -137,11 +137,6 @@ function view_about_page(req, res) {
 };
 
 async function view_categories_page(req, res) {
-	var role = getRole(req.user.role);
-    var admin = role[0];
-    var business = role[1];
-    var customer = role[2];
-	
 	const category = await Categories.findAll({
         where: {
             "name": {
@@ -152,6 +147,10 @@ async function view_categories_page(req, res) {
 	if (req.user == undefined) {
 		return res.render('categories', {category:category})
 	} else {
+		var role = getRole(req.user.role);
+		var admin = role[0];
+		var business = role[1];
+		var customer = role[2];
 		return res.render('categories', {
 			admin: admin,
 			business: business,
@@ -162,11 +161,6 @@ async function view_categories_page(req, res) {
 };
 
 async function view_category_page(req, res) {
-	var role = getRole(req.user.role);
-	var admin = role[0];
-	var business = role[1];
-	var customer = role[2];
-	
 	const restaurants = await Outlets.findAll({
         where: {
             "category": {
@@ -182,6 +176,10 @@ async function view_category_page(req, res) {
 	if (req.user == undefined) {
 		return res.render('category', {restaurants:restaurants, category:category})
 	} else {
+		var role = getRole(req.user.role);
+		var admin = role[0];
+		var business = role[1];
+		var customer = role[2];
 		return res.render('category', {
 			admin: admin,
 			business: business,
@@ -223,11 +221,6 @@ async function create_feedback_process(req,res) {
 };
 
 async function view_restaurants_page(req, res) {
-	var role = getRole(req.user.role);
-	var admin = role[0];
-	var business = role[1];
-	var customer = role[2];
-
 	const restaurants = await Outlets.findAll({
 		where: {
             "name": {
@@ -242,6 +235,10 @@ async function view_restaurants_page(req, res) {
 			restaurants:restaurants
 		})
 	} else {
+		var role = getRole(req.user.role);
+		var admin = role[0];
+		var business = role[1];
+		var customer = role[2];
 		return res.render('restaurants', {
 			admin:admin,
 			business:business,
@@ -252,12 +249,7 @@ async function view_restaurants_page(req, res) {
 };
 
 async function view_individual_restaurant_page(req, res) {
-	var role = getRole(req.user.role);
-	var admin = role[0];
-	var business = role[1];
-	var customer = role[2];
-
-    const restaurant = await Outlets.findOne({
+	const restaurant = await Outlets.findOne({
 		where: {
             "name": req.params.name,
 			"location": req.params.location
@@ -272,6 +264,10 @@ async function view_individual_restaurant_page(req, res) {
 	if (req.user == undefined) {
 		return res.render('restaurant', {restaurant:restaurant, discountslot:discountslot})
 	} else {
+		var role = getRole(req.user.role);
+		var admin = role[0];
+		var business = role[1];
+		var customer = role[2];
 		return res.render('restaurant', {
 			admin:admin,
 			business:business,
