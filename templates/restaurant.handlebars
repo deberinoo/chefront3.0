@@ -2,7 +2,7 @@
 
 <link rel="stylesheet" href="/public/css/restaurant.css">
 
-<section>
+<section style="padding-top: 135px;">
     <div id="booking" class="section">
 		<div class="section-center">
 			<div class="container">
@@ -39,15 +39,18 @@
                                         {{/ifEquals}} 
                                     </h5>
                                    <a href="/category/{{restaurant.category}}"><h5>{{restaurant.category}}</h5></a>
-                                    <iframe width="400" height="250" style="border:0" loading="lazy" allowfullscreen
-                                    src ="https://www.google.com/maps/embed/v1/place?q={{restaurant.name}}%20{{restaurant.location}}&key=AIzaSyAG7xcB2a0UsQI6UlWHhFweYZmvurJgwsw" ></iframe>
-                            
                                 </div>
                             </div>
                             <div class="card pt-2 p-3 mb-2">
                                 <div>
                                     <h5>Description</h5>
                                     <p>{{restaurant.description}}</p>
+                                    <h5>Location</h5>
+                                    <div>
+                                        <iframe style="border:0" loading="lazy" allowfullscreen
+                                        src ="https://www.google.com/maps/embed/v1/place?q={{restaurant.name}}%20{{restaurant.location}}&key=AIzaSyAG7xcB2a0UsQI6UlWHhFweYZmvurJgwsw">
+                                        </iframe>
+                                    </div>
                                 </div>
                             </div>
 						</div>

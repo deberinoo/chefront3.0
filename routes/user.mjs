@@ -757,7 +757,8 @@ async function view_reservation_status_page(req, res) {
         where: {
             "name" : req.params.name,
             "location" : req.params.location
-        }
+        },
+        order: [['date', 'DESC']]
     })
 	return res.render('user/business/retrieve_reservationBusiness', {
         reservation: reservation,
@@ -1036,11 +1037,8 @@ async function view_upcoming_reservations_page(req, res) {
                 [Op.eq]: req.params.user_email
             },
             "date": {
-                [Op.gte]: date
+                [Op.gt]: date
             },
-            "time": {
-                [Op.gt]: time
-            }
         }
     });
     const user = User.findOne({
@@ -1068,19 +1066,19 @@ async function view_historical_reservations_page(req, res) {
 
     var date = moment().format('YYYY-MM-DD');
 	var time = moment().format("HH:mm")
-	const reservation = await Reservations.findAll({
+    const reservation = await Reservations.findAll({
         where: {
             "user_email": {
                 [Op.eq]: req.params.user_email
             },
             "date": {
-                [Op.lte]: date
+                [Op.eq]: date
             },
             "time": {
-                [Op.lt]: time
+                [Op.lte]: time
             }
         }
-    });
+    })
     const user = User.findOne({
         where: {
             "email": req.params.user_email
