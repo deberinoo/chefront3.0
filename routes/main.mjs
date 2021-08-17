@@ -133,6 +133,11 @@ function view_about_page(req, res) {
 };
 
 async function view_categories_page(req, res) {
+	var role = getRole(req.user.role);
+    var admin = role[0];
+    var business = role[1];
+    var customer = role[2];
+	
 	const category = await Categories.findAll({
         where: {
             "name": {
@@ -141,23 +146,23 @@ async function view_categories_page(req, res) {
         }
 	});
 	if (req.user == undefined) {
-		return res.render('categories',
-		{category:category})
+		return res.render('categories', {category:category})
 	} else {
-		var role = getRole(req.user.role);
-		var admin = role[0];
-		var business = role[1];
-		var customer = role[2];
+		return res.render('categories', {
+			admin: admin,
+			business: business,
+			customer: customer,
+			category: category
+		});
 	}
-	return res.render('categories', {
-		admin: admin,
-		business: business,
-		customer: customer,
-		category: category
-	});
 };
 
 async function view_category_page(req, res) {
+	var role = getRole(req.user.role);
+	var admin = role[0];
+	var business = role[1];
+	var customer = role[2];
+	
 	const restaurants = await Outlets.findAll({
         where: {
             "category": {
@@ -173,19 +178,14 @@ async function view_category_page(req, res) {
 	if (req.user == undefined) {
 		return res.render('category', {restaurants:restaurants, category:category})
 	} else {
-		var role = getRole(req.user.role);
-		var admin = role[0];
-		var business = role[1];
-		var customer = role[2];
+		return res.render('category', {
+			admin: admin,
+			business: business,
+			customer: customer,
+			restaurants: restaurants,
+			category:category
+		});
 	}
-	
-	return res.render('category', {
-		admin: admin,
-		business: business,
-		customer: customer,
-		restaurants: restaurants,
-		category:category
-	});
 };
 
 function view_contact_page(req, res) {
@@ -219,6 +219,11 @@ async function create_feedback_process(req,res) {
 };
 
 async function view_restaurants_page(req, res) {
+	var role = getRole(req.user.role);
+	var admin = role[0];
+	var business = role[1];
+	var customer = role[2];
+
 	const restaurants = await Outlets.findAll({
 		where: {
             "name": {
@@ -233,10 +238,6 @@ async function view_restaurants_page(req, res) {
 			restaurants:restaurants
 		})
 	} else {
-		var role = getRole(req.user.role);
-		var admin = role[0];
-		var business = role[1];
-		var customer = role[2];
 		return res.render('restaurants', {
 			admin:admin,
 			business:business,
@@ -247,6 +248,11 @@ async function view_restaurants_page(req, res) {
 };
 
 async function view_individual_restaurant_page(req, res) {
+	var role = getRole(req.user.role);
+	var admin = role[0];
+	var business = role[1];
+	var customer = role[2];
+
     const restaurant = await Outlets.findOne({
 		where: {
             "name": req.params.name,
@@ -263,10 +269,6 @@ async function view_individual_restaurant_page(req, res) {
 	if (req.user == undefined) {
 		return res.render('restaurant', {restaurant:restaurant, discountslot:discountslot})
 	} else {
-		var role = getRole(req.user.role);
-		var admin = role[0];
-		var business = role[1];
-		var customer = role[2];
 		return res.render('restaurant', {
 			admin:admin,
 			business:business,
@@ -319,12 +321,6 @@ async function create_reservation_process(req, res) {
 
 	let { BusinessName, Location, ResDate, Pax, Slot, Name, Email, Contact } = req.body;
 	const timediscount = Slot.split(",");
-	var now = new Date();
-
-	// if (now > ResDate) {
-    //     flashMessage(res,'danger', 'Reserved date cannot be', 'fa fa-times', false );
-	// 	return res.redirect(`/restaurant/${BusinessName}/${location}`); 
-	// }
 
 	if (req.user.deposited == "Yes") {
 		const reservation = await Reservations.create({

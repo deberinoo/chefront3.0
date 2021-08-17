@@ -1,35 +1,33 @@
 import { Router }                           from 'express';
 import { flashMessage }                     from '../utils/flashmsg.mjs';
-import moment                               from 'moment';
-
 import { User, UserRole }                   from '../data/models/Users.mjs'
 import { DiscountSlot }                     from '../data/models/DiscountSlot.mjs';
 import { Outlets }                          from '../data/models/Outlets.mjs';
 import { Reservations } 	                from '../data/models/Reservations.mjs';
 import { Categories }                       from '../data/models/Categories.mjs';
-import Hash             from 'hash.js';
-import { UploadFile, DeleteFilePath }       from '../utils/multer.mjs';
-import {  } from '../data/mail.mjs';
 
-import {sendMailDeleteUser, sendMailBannedAccount, sendMailMakeReservation, sendMailDeleteReservation} from '../data/mail.mjs';
+import { UploadFile, DeleteFilePath }       from '../utils/multer.mjs';
+import Hash                                 from 'hash.js';
+import moment                               from 'moment';
+
+import { sendMailDeleteUser, sendMailBannedAccount, sendMailMakeReservation, sendMailDeleteReservation } from '../data/mail.mjs';
 
 /**
  * Regular expressions for form testing
  **/ 
- const regexEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
- const regexName  = /^[a-z ,.'-]+$/i;
- const regexAddress  = /[A-Za-z0-9'\.\-\s\,]/;
- const regexPostalCode = /^\d{6}$/;
- const regexPrice =/^\d{1,3}$/;
- const regexContact = /^\d{8}$/;
- const regexDescription = /^.{1,300}$/;
+const regexEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+const regexName  = /^[a-z ,.'-]+$/i;
+const regexAddress  = /[A-Za-z0-9'\.\-\s\,]/;
+const regexPostalCode = /^\d{6}$/;
+const regexPrice =/^\d{1,3}$/;
+const regexContact = /^\d{8}$/;
+const regexDescription = /^.{1,300}$/;
 
- //	Min 8 character, 1 upper, 1 lower, 1 number, 1 symbol
- //const regexPwd   = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
- 
- // Min 8 character, 1 letter, 1 number 
- const regexPwd = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/
+//	Min 8 character, 1 upper, 1 lower, 1 number, 1 symbol
+//const regexPwd   = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
 
+// Min 8 character, 1 letter, 1 number 
+const regexPwd = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/
 
 import ORM                                  from 'sequelize';
 const { Op } = ORM;
@@ -109,15 +107,16 @@ function user_business_page(req, res) {
 };
 
 function edit_user_business_page(req, res) {
+    var role = getRole(req.user.role);
+    var admin = role[0];
+    var business = role[1];
+    var customer = role[2];
+
     const user = User.findOne({
         where: {
             "name": req.params.name
         }
     }).then((user) => {
-        var role = getRole(req.user.role);
-        var admin = role[0];
-        var business = role[1];
-        var customer = role[2];
         res.render('user/business/update_userBusiness', {
             user,
             admin: admin,
@@ -128,7 +127,7 @@ function edit_user_business_page(req, res) {
 };
 
 async function save_edit_user_business(req, res) {
-    let { Name, Contact,OldPassword,InputPassword,ConfirmPassword } = req.body;
+    let { Name, Contact, OldPassword, InputPassword, ConfirmPassword } = req.body;
 
 	try {
         const current_user = await User.findOne({
@@ -227,6 +226,11 @@ function delete_business_user(req, res) {
 // Discount slots
 
 async function create_discount_slot_page(req, res) {
+    var role = getRole(req.user.role);
+    var admin = role[0];
+    var business = role[1];
+    var customer = role[2];
+
     const outlet = await Outlets.findAll({
         where: {
             "name": {[Op.eq]: req.params.name}
@@ -235,10 +239,6 @@ async function create_discount_slot_page(req, res) {
     const user = User.findOne({
         where: {"name": req.params.name}
     });
-    var role = getRole(req.user.role);
-    var admin = role[0];
-    var business = role[1];
-    var customer = role[2];
     return res.render('user/business/create_discountslot', {
         admin: admin,
         business: business,
@@ -248,6 +248,11 @@ async function create_discount_slot_page(req, res) {
 };
 
 async function create_discount_slot_process(req, res) {
+    var role = getRole(req.user.role);
+    var admin = role[0];
+    var business = role[1];
+    var customer = role[2];
+
     let errors = [];
     let { Name, Location, Time, Discount, GlobalCreate } = req.body;
 
@@ -265,10 +270,6 @@ async function create_discount_slot_process(req, res) {
     });
 
     if (discount_slot != null) {
-        var role = getRole(req.user.role);
-        var admin = role[0];
-        var business = role[1];
-        var customer = role[2];
         errors = errors.concat({ text: `${Time} discount slot for ${Location} outlet already exists!`})
         return res.render('user/business/create_discountslot', {
             errors: errors,
@@ -305,17 +306,17 @@ async function create_discount_slot_process(req, res) {
 };
 
 async function view_discount_slots_page(req, res) {
-        var role = getRole(req.user.role);
-        var admin = role[0];
-        var business = role[1];
-        var customer = role[2];
-        
-        return res.render('user/business/retrieve_discountslots', {
-            admin: admin,
-            business: business,
-            customer: customer
-        });
-    };
+    var role = getRole(req.user.role);
+    var admin = role[0];
+    var business = role[1];
+    var customer = role[2];
+    
+    return res.render('user/business/retrieve_discountslots', {
+        admin: admin,
+        business: business,
+        customer: customer
+    });
+};
 
     /**
 * Provides bootstrap table with data
@@ -369,7 +370,12 @@ async function discounts_data(req, res) {
     }
  }
 
-async function edit_discount_slot_page(req, res){
+async function edit_discount_slot_page(req, res) {
+    var role = getRole(req.user.role);
+    var admin = role[0];
+    var business = role[1];
+    var customer = role[2];
+
     const outlet = await Outlets.findAll({
         where: {
             "name": {
@@ -382,11 +388,6 @@ async function edit_discount_slot_page(req, res){
             "name": req.params.name
         }
     })
-    var role = getRole(req.user.role);
-    var admin = role[0];
-    var business = role[1];
-    var customer = role[2];
-
     const discount_slot = await DiscountSlot.findOne({
         where: {
             "name" : req.params.name,
@@ -403,7 +404,7 @@ async function edit_discount_slot_page(req, res){
     }).catch(err => console.log(err));
 };
 
-function save_edit_discount_slot(req, res){
+function save_edit_discount_slot(req, res) {
     let { Name, Location, Time, Discount } = req.body;
 
     DiscountSlot.update({
@@ -445,17 +446,17 @@ function delete_discount_slot(req, res) {
 // ---------------- 
 // Outlets, Reservation Status
 async function create_outlet_page(req, res) {
+    var role = getRole(req.user.role);
+    var admin = role[0];
+    var business = role[1];
+    var customer = role[2];
+
     const category = await Categories.findAll();
     const user = User.findOne({
         where: {
             "name": req.params.name
         }
     });
-   
-    var role = getRole(req.user.role);
-    var admin = role[0];
-    var business = role[1];
-    var customer = role[2];
 	return res.render('user/business/create_outlet', {
         admin: admin,
         business: business,
@@ -593,17 +594,18 @@ async function outlets_data(req, res) {
    }
 };
 
-async function edit_outlet_page(req, res){
+async function edit_outlet_page(req, res) {
+    var role = getRole(req.user.role);
+    var admin = role[0];
+    var business = role[1];
+    var customer = role[2];
+
     const category = await Categories.findAll();
     const user = User.findOne({
         where: {
             "name": req.params.name
         }
     });
-    var role = getRole(req.user.role);
-    var admin = role[0];
-    var business = role[1];
-    var customer = role[2];
 
     const outlet = Outlets.findOne({
         where: {
@@ -868,15 +870,17 @@ router.put("/c/my-reservations/:user_email/save-reservation/:reservation_id",   
 router.get("/c/my-reservations/:user_email/cancel-reservation/:reservation_id",    delete_reservation);
 
 function user_customer_page(req, res) {
+    var role = getRole(req.user.role);
+    var admin = role[0];
+    var business = role[1];
+    var customer = role[2];
+
     const user = User.findOne({
         where: {
             "email": req.params.user_email
         }
     })
-    var role = getRole(req.user.role);
-    var admin = role[0];
-    var business = role[1];
-    var customer = role[2];
+
 	return res.render('user/customer/userCustomer', {
         admin: admin,
         business: business,
@@ -885,15 +889,16 @@ function user_customer_page(req, res) {
 };
 
 function edit_user_customer_page(req, res) {
+    var role = getRole(req.user.role);
+    var admin = role[0];
+    var business = role[1];
+    var customer = role[2];
+
     const user = User.findOne({
         where: {
             "email": req.params.user_email
         }
     }).then((user) => {
-        var role = getRole(req.user.role);
-        var admin = role[0];
-        var business = role[1];
-        var customer = role[2];
         res.render('user/customer/update_userCustomer', {
             user,
             admin: admin,
@@ -1016,6 +1021,10 @@ async function create_reservation_process(req, res) {
 };
 
 async function view_upcoming_reservations_page(req, res) {
+    var role = getRole(req.user.role);
+    var admin = role[0];
+    var business = role[1];
+    var customer = role[2];
     var date = Date.now() 
 
 	const reservation = await Reservations.findAll({
@@ -1036,19 +1045,21 @@ async function view_upcoming_reservations_page(req, res) {
     if (req.user == undefined) {
 		return res.render('404')
 	} else {
+        return res.render('user/customer/retrieve_upcomingreservationCustomer', {
+            reservation: reservation,
+            admin: admin,
+            business: business,
+            customer: customer
+        });
+    }
+};
+
+async function view_historical_reservations_page(req, res) {
     var role = getRole(req.user.role);
     var admin = role[0];
     var business = role[1];
     var customer = role[2];
-    return res.render('user/customer/retrieve_upcomingreservationCustomer', {
-        reservation: reservation,
-        admin: admin,
-        business: business,
-        customer: customer
-    });
-}};
 
-async function view_historical_reservations_page(req, res) {
     var time = Date.now()
 	const reservation = await Reservations.findAll({
         where: {
@@ -1065,10 +1076,6 @@ async function view_historical_reservations_page(req, res) {
             "email": req.params.user_email
         }
     })
-    var role = getRole(req.user.role);
-    var admin = role[0];
-    var business = role[1];
-    var customer = role[2];
     return res.render('user/customer/retrieve_historicalreservationCustomer', {
         reservation: reservation,
         admin: admin,
