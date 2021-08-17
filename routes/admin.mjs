@@ -699,6 +699,14 @@ async function view_admin_dashboard_page(req, res) {
         }
     }});
 
+    const banned_customers = await User.count({
+        where:{
+            "banned":{
+                [Op.eq]:'yes'
+            }
+        }
+    })
+
     const admin_count = await User.count({
         where:{
             "role":{
@@ -714,7 +722,8 @@ async function view_admin_dashboard_page(req, res) {
         business_count:business_count,
         customer_count:customer_count,
         feedback_count:feedback_count,
-        admin_count:admin_count
+        admin_count:admin_count,
+        banned_customers:banned_customers
     });
 };
 
