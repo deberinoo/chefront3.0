@@ -27,7 +27,6 @@
                         </li>
                     </ul>
                     <form action="../../{{outlet.name}}/saveOutlet/{{outlet.postal_code}}?_method=PUT" method="post" enctype="multipart/form-data">
-                        <button type="back" class="btn btn-danger rounded-pill shadow-sm">< Back</button>
                         {{#if user}}
                             <div class="form-group row">
                                 <label for="staticBusinessName" class="col-sm-2 col-form-label">Outlet Name</label>
@@ -123,9 +122,9 @@
                                 <div class="col-sm-10">
                                     <select class="form-control text-dark form-select" id="status" name="Status">
                                         <option selected value="{{outlet.status}}">{{outlet.status}}</option>
-                                        <option value="AVAILABLE">AVAILABLE</option>
-                                        <option value="MODERATE">MODERATE</option>
-                                        <option value="FULL">FULL</option>
+                                        <option value="Available">Available</option>
+                                        <option value="Moderate">Moderate</option>
+                                        <option value="Full">Full</option>
                                     </select>
                                 </div>
                             </div>

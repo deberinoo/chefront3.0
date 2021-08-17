@@ -33,13 +33,13 @@
                                         alt="Card image cap" width="300">
                                     <div class="card-body">
                                         <h4 class="card-title">{{this.name}}</h4>
-                                        <p class="card-text">{{this.location}} • ${{this.price}} •  {{#ifEquals this.status "FULL"}}
+                                        <p class="card-text">{{this.location}} • ${{this.price}} •  {{#ifEquals this.status "Full"}}
                                         <button class="btn btn-danger" style="pointer-events: none;" id="status_btn">{{this.status}}</button>
                                         {{/ifEquals}}
-                                        {{#ifEquals this.status "AVAILABLE"}}
+                                        {{#ifEquals this.status "Available"}}
                                         <button class="btn btn-success"  style="pointer-events: none;"id="status_btn">{{this.status}}</button>
                                         {{/ifEquals}}
-                                        {{#ifEquals this.status "MODERATE"}}
+                                        {{#ifEquals this.status "Moderate"}}
                                         <button class="btn btn-warning" style="pointer-events: none;" id="status_btn">{{this.status}}</button>
                                         {{/ifEquals}}</p>
                                         

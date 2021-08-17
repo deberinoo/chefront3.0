@@ -18,13 +18,13 @@
                                 <div>
                                     <h3>{{restaurant.name}}</h3>
                                     <h4>{{restaurant.location}} • ${{restaurant.price}} • 
-                                        {{#ifEquals restaurant.status "FULL"}}
+                                        {{#ifEquals restaurant.status "Full"}}
                                             <button class="btn btn-danger" style="pointer-events: none;" id="status_btn">{{restaurant.status}}</button>
                                         {{/ifEquals}}
-                                        {{#ifEquals restaurant.status "AVAILABLE"}}
+                                        {{#ifEquals restaurant.status "Available"}}
                                             <button class="btn btn-success" style="pointer-events: none;" id="status_btn">{{restaurant.status}}</button>
                                         {{/ifEquals}}
-                                        {{#ifEquals restaurant.status "MODERATE"}}
+                                        {{#ifEquals restaurant.status "Moderate"}}
                                             <button class="btn btn-warning" style="pointer-events: none;" id="status_btn">{{restaurant.status}}</button>
                                         {{/ifEquals}} </h4>
                                    <a href="/category/{{restaurant.category}}"><h5>{{restaurant.category}}</h5></a>
@@ -41,12 +41,12 @@
 					</div>
 					<div class="col-md-5 col-md-pull-7">
 						<div class="booking-form" style="padding-top:15px;">
-                            {{#ifEquals restaurant.status "FULL"}}
-                                <h3>This outlet is at it's maximum capacity.</h3>
+                            {{#ifEquals restaurant.status "Full"}}
+                                <h4>This outlet is at its maximum capacity.</h4>
                                 <br>
                                 <h4>Please try again soon.</h4>
                             {{/ifEquals}}
-                            {{#ifEquals restaurant.status "MODERATE"}}
+                            {{#ifEquals restaurant.status "Moderate"}}
                                 <form action="/restaurant/{{restaurant.name}}/{{restaurant.location}}" method="post">
                                 <span class="form-label" style="font-size: larger">Reservation Details</span>
                                 <br><br>
@@ -133,7 +133,7 @@
 								</div>
 							</form>
                             {{/ifEquals}}
-                            {{#ifEquals restaurant.status "AVAILABLE"}}
+                            {{#ifEquals restaurant.status "Available"}}
                                 <form action="/restaurant/{{restaurant.name}}/{{restaurant.location}}" method="post">
                                 <span class="form-label" style="font-size: larger">Reservation Details</span>
                                 <br><br>

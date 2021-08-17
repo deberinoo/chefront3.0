@@ -248,7 +248,22 @@ async function create_discount_slot_page(req, res) {
 };
 
 async function create_discount_slot_process(req, res) {
+    let errors = [];
     let { Name, Location, Time, Discount, GlobalCreate } = req.body;
+
+    const discount_slot = await DiscountSlot.findOne({
+        where: {
+            name: Name,
+            time: Time
+        }
+    });
+
+    if (discount_slot != null) {
+        errors = errors.concat({ text: `${Time} discount slot for ${Location} outlet already exists!`})
+        res.render('user/business/create_discountslot', {
+            errors: errors
+        })
+    };
 
     if ( GlobalCreate == "True" ) {
         const restaurants = await Outlets.findAll({
@@ -270,7 +285,7 @@ async function create_discount_slot_process(req, res) {
         "name":  Name,
         "location":  Location,
         "time": Time,
-        "discount": Discount
+        "discount": Discount,
     })};
     res.redirect(`/u/b/${Name}/view-discount-slots`);
 };
@@ -421,7 +436,8 @@ async function create_outlet_page(req, res) {
         where: {
             "name": req.params.name
         }
-    })
+    });
+   
     var role = getRole(req.user.role);
     var admin = role[0];
     var business = role[1];
@@ -440,7 +456,18 @@ async function create_outlet_process(req, res) {
     let { Name, Category, Location, Address, Postalcode, Price, Contact, Status, Description } = req.body;
     console.log(`${req.file.path}`);
     
+    const category = await Categories.findAll();
+    const restaurant = await Outlets.findOne({
+        where: {
+            "name": Name,
+            "location": Location
+        }
+    });
+
     try{
+        if(restaurant != null) {
+            errors = errors.concat({ text: `${Location} outlet already exists!`})
+        }
         if(! regexAddress.test(Address)) {
             errors = errors.concat({ text: "Invalid address provided!"})
         }
@@ -465,9 +492,7 @@ async function create_outlet_process(req, res) {
 		console.error(error);
 		return res.render(`user/business/update_outlet`, { 
             errors: errors,
-            outlet: outlet,
             category: category
-
         });
     }
     const outlet = await Outlets.create({
