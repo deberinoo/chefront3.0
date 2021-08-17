@@ -4,9 +4,9 @@ import { Feedback } 		from '../data/models/Feedback.mjs';
 import { Outlets } 			from '../data/models/Outlets.mjs';
 import { Reservations } 	from '../data/models/Reservations.mjs';
 import { DiscountSlot }     from '../data/models/DiscountSlot.mjs';
-import { Favourites }     from '../data/models/Favourites.mjs';
+import { Favourites }       from '../data/models/Favourites.mjs';
 
-import { UploadFile, DeleteFilePath }       from '../utils/multer.mjs';
+import moment               from 'moment';
 
 import ORM             		from 'sequelize';
 const { Op } = ORM;
@@ -249,6 +249,8 @@ async function view_restaurants_page(req, res) {
 };
 
 async function view_individual_restaurant_page(req, res) {
+	var current_time = moment().format("HH:mm")
+
 	const restaurant = await Outlets.findOne({
 		where: {
             "name": req.params.name,
@@ -258,7 +260,7 @@ async function view_individual_restaurant_page(req, res) {
 	const discountslot = await DiscountSlot.findAll({
 		where: {
             "name": req.params.name,
-			"location": req.params.location
+			"location": req.params.location,
         }
 	});
 	if (req.user == undefined) {
@@ -278,42 +280,11 @@ async function view_individual_restaurant_page(req, res) {
 	}
 };
 
-function favourite_restaurant(req,res){
-	let name = req.params.name
-	let location = req.params.location
-	let email = req.params.email
-	Favourites.create({
-		"email": email,
-		"name": name,
-		"location" : location,
-	})
-	flashMessage(res, 'success', 'Bookmarked restaurant', 'fas fa-sign-in-alt', false);
-	return res.redirect(`/restaurant/${name}/${location}`)
-}
-
-function getId() {
-    const rand = Math.random().toString(16).substr(2, 5); 
-	return rand.toUpperCase();
-};
-
-function view_payment_page(req, res) {
-	if (req.user == undefined) {
-		return res.render('payment')
-	} else {
-		var role = getRole(req.user.role);
-		var admin = role[0];
-		var business = role[1];
-		var customer = role[2];
-	}
-
-	return res.render('payment', {
-		admin: admin,
-		business: business,
-		customer: customer
-	});
-};
-
 async function create_reservation_process(req, res) {
+	let errors = [];
+	var now = moment().format('YYYY-MM-DD');
+	var current_time = moment().format("HH:mm")
+
 	if (req.user == undefined) {
 		return res.render('auth/login');
 	} 
@@ -331,7 +302,43 @@ async function create_reservation_process(req, res) {
 		}
 	}
 
+	const restaurant = await Outlets.findOne({
+		where: {
+            "name": req.params.name,
+			"location": req.params.location
+        }
+	});
+	const discountslot = await DiscountSlot.findAll({
+		where: {
+            "name": req.params.name,
+			"location": req.params.location,
+        }
+	});
+
 	let { BusinessName, Location, ResDate, Pax, Slot, Name, Email, Contact } = req.body;
+	try {
+		if (Slot == null) {
+			errors = errors.concat({ text: "Please select a discount slot!" });
+		}
+		if (current_time >= Slot.split(",")[0] && now == ResDate) {
+			errors = errors.concat({ text: "Please select a valid time slot!" });
+		}
+		if (errors.length > 0) {
+			throw new Error("There are validation errors");
+		}
+	}
+	catch (error) {
+		console.error("There is errors with the login form body.");
+		console.error(error);
+		return res.render('restaurant', {
+			admin:admin,
+			business:business,
+			customer:customer,
+			restaurant:restaurant,
+			discountslot:discountslot,
+			errors:errors
+		});
+	}
 	const timediscount = Slot.split(",");
 
 	if (req.user.deposited == "Yes") {
@@ -392,6 +399,41 @@ function view_success_page(req, res) {
 			customer: customer
 		});
 	}
+};
+
+function favourite_restaurant(req,res){
+	let name = req.params.name
+	let location = req.params.location
+	let email = req.params.email
+	Favourites.create({
+		"email": email,
+		"name": name,
+		"location" : location,
+	})
+	flashMessage(res, 'success', 'Bookmarked restaurant', 'fas fa-sign-in-alt', false);
+	return res.redirect(`/restaurant/${name}/${location}`)
+}
+
+function getId() {
+    const rand = Math.random().toString(16).substr(2, 5); 
+	return rand.toUpperCase();
+};
+
+function view_payment_page(req, res) {
+	if (req.user == undefined) {
+		return res.render('payment')
+	} else {
+		var role = getRole(req.user.role);
+		var admin = role[0];
+		var business = role[1];
+		var customer = role[2];
+	}
+
+	return res.render('payment', {
+		admin: admin,
+		business: business,
+		customer: customer
+	});
 };
 
 // ---------------- 

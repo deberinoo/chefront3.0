@@ -67,6 +67,7 @@ import Hash             	from 'hash.js';
 // 			name    : "root",
 // 			email   : "root@chefront.com",
 // 			contact : "97504802",
+//          verified : "Yes",
 // 			role    : "admin",
 // 			password: Hash.sha256().update("CEOtings123").digest("hex")
 // 		};

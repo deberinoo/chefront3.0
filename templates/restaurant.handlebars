@@ -192,7 +192,7 @@
 									<div class="col-sm-6">
 										<div class="form-group">
 											<span class="form-label">Date</span>
-											<input class="form-control" type="date" name="ResDate" required>
+                                            <input class="form-control" id="datefield" type="date" name="ResDate" required>
 										</div>
 									</div>
 									<div class="col-sm-6">
@@ -250,7 +250,6 @@
         if(mm<10){
             mm='0'+mm
         } 
-
     today = yyyy+'-'+mm+'-'+dd;
     document.getElementById("datefield").setAttribute("min", today);
 </script>

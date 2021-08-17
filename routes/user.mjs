@@ -862,7 +862,6 @@ router.get("/c/delete/:user_email",                 delete_customer_user);
 
 // Customer reservation
 
-router.post("c/create-reservation",                                                create_reservation_process);
 router.get("/c/my-reservations/upcoming/:user_email",                              view_upcoming_reservations_page);
 router.get("/c/my-reservations/historical/:user_email",                            view_historical_reservations_page);
 router.get("/c/my-favourites/:user_email",                                         view_favourite_restaurants_page)
@@ -1001,35 +1000,36 @@ function delete_customer_user(req, res) {
     .catch((error) => console.log(error.message));
 };
 
-async function create_reservation_process(req, res) {
-    let { reservation_id, name, location, user_name, user_email, user_contact, date, pax, time, discount } = req.body;
+// async function create_reservation_process(req, res) {
+//     let { reservation_id, name, location, user_name, user_email, user_contact, date, pax, time, discount } = req.body;
 
-    const reservation = await Reservations.create({
-        "reservation_id" : reservation_id,
-        "name" : name,
-        "location" : location,
-        "user_name" : user_name,
-        "user_email" : user_email,
-        "user_contact" : user_contact,
-        "date" : date,
-        "pax" : pax,
-        "time" : time,
-        "discount" : discount
-    });
-    res.redirect("/retrieve_reservation/:user_email");
-    sendMailMakeReservation(email,reservation_id)
-			.then((result) => console.log('Email sent...', result))
-			.catch((error) => console.log(error.message));
+//     const reservation = await Reservations.create({
+//         "reservation_id" : reservation_id,
+//         "name" : name,
+//         "location" : location,
+//         "user_name" : user_name,
+//         "user_email" : user_email,
+//         "user_contact" : user_contact,
+//         "date" : date,
+//         "pax" : pax,
+//         "time" : time,
+//         "discount" : discount
+//     });
+//     res.redirect("/retrieve_reservation/:user_email");
+//     sendMailMakeReservation(email,reservation_id)
+// 			.then((result) => console.log('Email sent...', result))
+// 			.catch((error) => console.log(error.message));
 
-};
+// };
 
 async function view_upcoming_reservations_page(req, res) {
     var role = getRole(req.user.role);
     var admin = role[0];
     var business = role[1];
     var customer = role[2];
-    var date = Date.now() 
 
+    var date = moment().format('YYYY-MM-DD');
+	var time = moment().format("HH:mm")
 	const reservation = await Reservations.findAll({
         where: {
             "user_email": {
@@ -1038,6 +1038,9 @@ async function view_upcoming_reservations_page(req, res) {
             "date": {
                 [Op.gte]: date
             },
+            "time": {
+                [Op.gt]: time
+            }
         }
     });
     const user = User.findOne({
@@ -1063,13 +1066,17 @@ async function view_historical_reservations_page(req, res) {
     var business = role[1];
     var customer = role[2];
 
-    var time = Date.now()
+    var date = moment().format('YYYY-MM-DD');
+	var time = moment().format("HH:mm")
 	const reservation = await Reservations.findAll({
         where: {
             "user_email": {
                 [Op.eq]: req.params.user_email
             },
             "date": {
+                [Op.lte]: date
+            },
+            "time": {
                 [Op.lt]: time
             }
         }
@@ -1162,8 +1169,7 @@ async function delete_reservation(req, res) {
     });
 
     var now = new Date();
-    var reservation_cutoff = moment(target_reservation.time).subtract(30, "minutes").toDate();
-
+    var reservation_cutoff = moment(target_reservation).subtract(30, "minutes").toDate();
     if (now >= reservation_cutoff) {
         flashMessage(res,'danger', 'Cancellation of reservation is prohibited within 30 minutes before reservation.', 'fa fa-times', false );
         return res.redirect(`/u/c/my-reservations/upcoming/${req.params.user_email}`); 
@@ -1191,7 +1197,7 @@ async function delete_reservation(req, res) {
 	    res.redirect('/404');
     }
     });
-    sendMailDeleteReservation(email,req.params.reservation_id)
+    sendMailDeleteReservation(req.params.user_email,req.params.reservation_id)
 			.then((result) => console.log('Email sent...', result))
 			.catch((error) => console.log(error.message));
 
