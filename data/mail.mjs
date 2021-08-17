@@ -43,7 +43,7 @@ export async function sendMail(email,code) {
 				  <div class="content" style="box-sizing: border-box; display: block; Margin: 0 auto; max-width: 580px; padding: 10px;">
 		
 					<!-- START CENTERED WHITE CONTAINER -->
-					<table class="main" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; background: #ffffff; border-radius: 3px;">
+					<table class="main" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; background: #ffffff; color: black; border-radius: 3px;">
 		
 					  <!-- START MAIN CONTENT AREA -->
 					  <tr>
@@ -136,7 +136,7 @@ export async function sendMailDeleteUser(email) {
 					<div class="content" style="box-sizing: border-box; display: block; Margin: 0 auto; max-width: 580px; padding: 10px;">
 		
 					<!-- START CENTERED WHITE CONTAINER -->
-					<table class="main" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; background: #ffffff; border-radius: 3px;">
+					<table class="main" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; background: #ffffff; color: black; border-radius: 3px;">
 		
 						<!-- START MAIN CONTENT AREA -->
 						<tr>
@@ -229,7 +229,7 @@ export async function sendMailMakeReservation(email,code,name,location,user_name
 				  <div class="content" style="box-sizing: border-box; display: block; Margin: 0 auto; max-width: 580px; padding: 10px;">
 		
 					<!-- START CENTERED WHITE CONTAINER -->
-					<table class="main" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; background: #ffffff; border-radius: 3px;">
+					<table class="main" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; background: #ffffff; color: black; border-radius: 3px;">
 		
 					  <!-- START MAIN CONTENT AREA -->
 					  <tr>
@@ -325,7 +325,7 @@ export async function sendMailDeleteReservation(email,code,name,location,user_na
 				  <div class="content" style="box-sizing: border-box; display: block; Margin: 0 auto; max-width: 580px; padding: 10px;">
 		
 					<!-- START CENTERED WHITE CONTAINER -->
-					<table class="main" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; background: #ffffff; border-radius: 3px;">
+					<table class="main" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; background: #ffffff; color: black; border-radius: 3px;">
 		
 					  <!-- START MAIN CONTENT AREA -->
 					  <tr>
@@ -422,7 +422,7 @@ export async function sendMailBannedAccount(email) {
 				  <div class="content" style="box-sizing: border-box; display: block; Margin: 0 auto; max-width: 580px; padding: 10px;">
 		
 					<!-- START CENTERED WHITE CONTAINER -->
-					<table class="main" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; background: #ffffff; border-radius: 3px;">
+					<table class="main" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; background: #ffffff; color: black; border-radius: 3px;">
 		
 					  <!-- START MAIN CONTENT AREA -->
 					  <tr>
@@ -515,7 +515,7 @@ export async function sendMailFeedbackResponse(email,response) {
 				  <div class="content" style="box-sizing: border-box; display: block; Margin: 0 auto; max-width: 580px; padding: 10px;">
 		
 					<!-- START CENTERED WHITE CONTAINER -->
-					<table class="main" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; background: #ffffff; border-radius: 3px;">
+					<table class="main" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; background: #ffffff; color: black; border-radius: 3px;">
 		
 					  <!-- START MAIN CONTENT AREA -->
 					  <tr>

@@ -277,7 +277,7 @@ async function view_individual_restaurant_page(req, res) {
 };
 
 function getId() {
-    const rand = Math.random().toString(16).substr(2, 6); 
+    const rand = Math.random().toString(16).substr(2, 5); 
 	return rand.toUpperCase();
 };
 
@@ -300,16 +300,30 @@ function view_payment_page(req, res) {
 
 async function create_reservation_process(req, res) {
 	if (req.user == undefined) {
-		return res.render('auth/login')
-	} else {
+		return res.render('auth/login');
+	} 
+	else {
 		var role = getRole(req.user.role);
 		var admin = role[0];
 		var business = role[1];
 		var customer = role[2];
+		if (req.user.role == "admin" || req.user.role == "business") {
+			return res.render('403'), {
+				admin: admin,
+				business: business,
+				customer: customer	
+			};
+		}
 	}
 
 	let { BusinessName, Location, ResDate, Pax, Slot, Name, Email, Contact } = req.body;
-	const timediscount = Slot.split(",")
+	const timediscount = Slot.split(",");
+	var now = new Date();
+
+	// if (now > ResDate) {
+    //     flashMessage(res,'danger', 'Reserved date cannot be', 'fa fa-times', false );
+	// 	return res.redirect(`/restaurant/${BusinessName}/${location}`); 
+	// }
 
 	if (req.user.deposited == "Yes") {
 		const reservation = await Reservations.create({
