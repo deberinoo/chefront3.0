@@ -67,7 +67,19 @@ function getRole(role) {
 
 // General - Login, Register, Logout
 function login_page(req, res) {
-	return res.render('auth/login');
+	if (req.user == undefined) {
+		return res.render('auth/login')
+	} else {
+		var role = getRole(req.user.role);
+		var admin = role[0];
+		var business = role[1];
+		var customer = role[2];
+	}
+	return res.render('auth/login', {
+		admin: admin,
+		business: business,
+		customer: customer
+	});
 }
 
 async function login_process(req, res, next) {
@@ -83,11 +95,12 @@ async function login_process(req, res, next) {
 		});
 		if (user == null) {
 			errors = errors.concat({ text: "Invalid user credentials!"});
-			return res.render('auth/login', { errors: errors });
 		}
 		if (user.banned == "Yes") {
 			errors = errors.concat({ text: "This user has been banned!"});
-			return res.render('auth/login', { errors: errors });
+		}
+		if (user.verified == "No") {
+			errors = errors.concat({ text: "This user has not been verified!"});
 		}
 		if (errors.length > 0) {
 			throw new Error("There are validation errors");
@@ -129,7 +142,19 @@ async function login_process(req, res, next) {
 }
 
 function register_page(req, res) {
-	return res.render('auth/register');
+	if (req.user == undefined) {
+		return res.render('auth/register')
+	} else {
+		var role = getRole(req.user.role);
+		var admin = role[0];
+		var business = role[1];
+		var customer = role[2];
+	}
+	return res.render('auth/register', {
+		admin: admin,
+		business: business,
+		customer: customer
+	});
 }
 
 function logout_process(req, res) {
@@ -137,10 +162,21 @@ function logout_process(req, res) {
 	return res.redirect("/home");
 }
 
-
 // Forgot Password
 function forget_password_page(req, res) {
-	return res.render('auth/forgetPassword');
+	if (req.user == undefined) {
+		return res.render('auth/forgetPassword')
+	} else {
+		var role = getRole(req.user.role);
+		var admin = role[0];
+		var business = role[1];
+		var customer = role[2];
+	}
+	return res.render('auth/forgetPassword', {
+		admin: admin,
+		business: business,
+		customer: customer
+	});
 }
 
 async function forget_password_process(req, res, next) {
@@ -187,7 +223,20 @@ async function forget_password_process(req, res, next) {
 
 // Reset Password
 function reset_password_page(req, res) {
-	return res.render('auth/resetPassword', { email : req.params.email});
+	if (req.user == undefined) {
+		return res.render('auth/resetPassword')
+	} else {
+		var role = getRole(req.user.role);
+		var admin = role[0];
+		var business = role[1];
+		var customer = role[2];
+	}
+	return res.render('auth/resetPassword', { 
+		email : req.params.email,
+		admin: admin,
+		business: business,
+		customer: customer
+	});
 }
 
 function reset_password_process(req, res, next) {
@@ -233,7 +282,19 @@ function reset_password_process(req, res, next) {
 
 // Register
 function register_business_page(req, res) {
-	return res.render('auth/registerBusiness');
+	if (req.user == undefined) {
+		return res.render('auth/registerBusiness')
+	} else {
+		var role = getRole(req.user.role);
+		var admin = role[0];
+		var business = role[1];
+		var customer = role[2];
+	}
+	return res.render('auth/registerBusiness', {
+		admin: admin,
+		business: business,
+		customer: customer
+	});
 }
 
 async function register_business_process(req, res) {
@@ -308,7 +369,19 @@ async function register_business_process(req, res) {
 };
 
 function register_customer_page(req, res) {
-	return res.render('auth/registerCustomer');
+	if (req.user == undefined) {
+		return res.render('auth/registerCustomer')
+	} else {
+		var role = getRole(req.user.role);
+		var admin = role[0];
+		var business = role[1];
+		var customer = role[2];
+	}
+	return res.render('auth/registerCustomer', {
+		admin: admin,
+		business: business,
+		customer: customer
+	});
 }
 
 async function register_customer_process(req, res) {
@@ -379,7 +452,19 @@ async function register_customer_process(req, res) {
 
 // Account Confirmation
 function account_confirmation_business_page(req, res) {
-	return res.render('auth/accountConfirmationBusiness');
+	if (req.user == undefined) {
+		return res.render('auth/registerCustomer')
+	} else {
+		var role = getRole(req.user.role);
+		var admin = role[0];
+		var business = role[1];
+		var customer = role[2];
+	}
+	return res.render('auth/accountConfirmationBusiness', {
+		admin: admin,
+		business: business,
+		customer: customer
+	});
 }
 
 async function account_confirmation_business_process(req, res) {
@@ -417,7 +502,19 @@ async function account_confirmation_business_process(req, res) {
 };
 
 function account_confirmation_customer_page(req, res) {
-	return res.render('auth/accountConfirmationCustomer');
+	if (req.user == undefined) {
+		return res.render('auth/registerCustomer')
+	} else {
+		var role = getRole(req.user.role);
+		var admin = role[0];
+		var business = role[1];
+		var customer = role[2];
+	}
+	return res.render('auth/accountConfirmationCustomer', {
+		admin: admin,
+		business: business,
+		customer: customer
+	});
 }
 
 function account_confirmation_customer_process(req, res) {
@@ -472,61 +569,3 @@ function makeid(length) {
    }
    return result.toUpperCase();
 }
-
-// router.post("/adminlogin",    	admin_login_process);
-
-
-// async function admin_login_process(req, res, next) {
-//     let { Email, Password } = req.body;
-	
-// 	let errors = [];
-// 	try {
-// 		const user = await User.findOne({
-// 			where:{
-// 			"email": "chefrontceo@gmail.com",
-// 			}
-// 		}); 
-
-// 		if (user == null) {
-// 			errors = errors.concat({ text: "Invalid user credentials!" });
-// 			return res.render('admin/adminLogin');
-// 		}
-// 	}
-// 	catch (error) {
-// 		console.error("There is errors with the login form body.");
-// 		console.error(error);
-// 		return res.render('admin/adminLogin', { errors: errors });
-// 	}
-// 	return Passport.authenticate('local', {
-// 		successRedirect: "/admin/feedback",
-// 		failureRedirect: "/auth/adminlogin",
-// 		failureFlash:    true
-// 	})(req, res, next);
-// }
-
-// async function generate_root_account(Database,options) {
-// 	Database.removeHook("afterBulkSync", generate_root_acount.name);
-// 	try{
-// 		console.log("Generating root adminstrator account");
-// 		const root_parameters = {
-// 			name : "root_admin",
-// 			email: "chefrontceo@gmail.com",
-// 			role: "admin",
-// 			verified: true,
-// 			password: Hash.sha256().update("password").digest("hex")
-// 		};
-// 		var account = await User.findOne({where:{"email": root_parameters.email}})
-
-// 		account = await((account) ? account.update(root_parameters): User.create(root_parameters))
-
-// 		console.log(" == Generated root account == ");
-// 		console.log(account.toJSON());
-// 		console.log("===================")
-// 		return Promise.resolve();
-// 	}
-// 	catch (error){
-// 		console.error ("Failed to generate root adminstrator user account");
-// 		console.log(error);
-// 		return Promise.reject(error);
-// 	}
-// }
