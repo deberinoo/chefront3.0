@@ -151,20 +151,19 @@ async function view_categories_page(req, res) {
         }
 	});
 	if (req.user == undefined) {
-		return res.render('categories',
-		{category:category})
+		return res.render('categories', {category:category})
 	} else {
 		var role = getRole(req.user.role);
 		var admin = role[0];
 		var business = role[1];
 		var customer = role[2];
+		return res.render('categories', {
+			admin: admin,
+			business: business,
+			customer: customer,
+			category: category
+		});
 	}
-	return res.render('categories', {
-		admin: admin,
-		business: business,
-		customer: customer,
-		category: category
-	});
 };
 
 async function view_category_page(req, res) {
@@ -187,15 +186,14 @@ async function view_category_page(req, res) {
 		var admin = role[0];
 		var business = role[1];
 		var customer = role[2];
+		return res.render('category', {
+			admin: admin,
+			business: business,
+			customer: customer,
+			restaurants: restaurants,
+			category:category
+		});
 	}
-	
-	return res.render('category', {
-		admin: admin,
-		business: business,
-		customer: customer,
-		restaurants: restaurants,
-		category:category
-	});
 };
 
 function view_contact_page(req, res) {
@@ -259,7 +257,7 @@ async function view_restaurants_page(req, res) {
 };
 
 async function view_individual_restaurant_page(req, res) {
-    const restaurant = await Outlets.findOne({
+	const restaurant = await Outlets.findOne({
 		where: {
             "name": req.params.name,
 			"location": req.params.location
@@ -343,12 +341,6 @@ async function create_reservation_process(req, res) {
 
 	let { BusinessName, Location, ResDate, Pax, Slot, Name, Email, Contact } = req.body;
 	const timediscount = Slot.split(",");
-	var now = new Date();
-
-	// if (now > ResDate) {
-    //     flashMessage(res,'danger', 'Reserved date cannot be', 'fa fa-times', false );
-	// 	return res.redirect(`/restaurant/${BusinessName}/${location}`); 
-	// }
 
 	if (req.user.deposited == "Yes") {
 		const reservation = await Reservations.create({

@@ -20,10 +20,10 @@ export function initialize_passport(server) {
 			if (current_user == null) {
 				throw new Error ("Invalid user id");
 			}
-			else if (current_user.banned == "Yes"){
+			else if (current_user.banned == "Yes") {
 				throw new Error ("Account has been banned")
 			}
-			else if (current_user.verified == "No"){
+			else if (current_user.verified == "No") {
 				throw new Error ("Account has not been verified")
 			}
 			else {

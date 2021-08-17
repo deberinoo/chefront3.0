@@ -98,10 +98,11 @@
 
     function table_thumbnail(value, row, index) {
 		return `
+        <a href="/${row.thumbnail}" download>
 		<img src="/${row.thumbnail}" 
         style="width: 75px; height: 50px; padding-bottom: 5px;"
-        alt="Thumbnail" class="w3-hover-opacity"><br>
-        <a href="/${row.thumbnail}" download><i class="bi bi-file-text">hello</i></a>
+        alt="Thumbnail" class="w3-hover-opacity">
+        </a>
 		`;
 	}
 
