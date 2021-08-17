@@ -57,7 +57,7 @@ const LocalStrategy = new Strategy ({
 			throw new Error ("Invalid Credentials");	
 		}
 		else if (current_user.banned == "Yes"){
-			throw new Error ("Account has been banned")
+			throw new Error ("Account has been banned");
 		}
 		else if (current_user.verified == "No"){
 			throw new Error ("Account has not been verified")

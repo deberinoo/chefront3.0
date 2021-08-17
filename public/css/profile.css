@@ -67,3 +67,6 @@ label,input{
     display: inline-block;
     vertical-align: middle;
 }
+.card-dashcard{
+    border-style: solid 5px black;
+}

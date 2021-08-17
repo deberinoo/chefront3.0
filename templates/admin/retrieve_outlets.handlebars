@@ -10,25 +10,30 @@
                 <h2 class="h3 mb-4 page-title">View All Outlets</h2>
                 <div class="my-4">
                     <ul class="nav nav-tabs mb-4" id="myTab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link" id="home-tab" href="/admin/adminDashboard" role="tab"
+                                aria-controls="home" aria-selected="false">Dashboard</a>
+                        </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button"
                                 aria-haspopup="true" aria-expanded="false">Users</a>
                             <div class="dropdown-menu">
+                                <a class="dropdown-item" href="/admin/adminUsers">View Admins</a>
                                 <a class="dropdown-item" href="/admin/businessUsers">View Businesses</a>
                                 <a class="dropdown-item" href="/admin/customerUsers">View Customers</a>
                             </div>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" id="home-tab" href="/admin/categories" role="tab"
-                                aria-controls="home" aria-selected="false">View categories</a>
+                                aria-controls="home" aria-selected="false">Categories</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link active" id="home-tab" href="/admin/outlets" role="tab"
-                                aria-controls="home" aria-selected="false">View outlets</a>
+                                aria-controls="home" aria-selected="false">Outlets</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" id="home-tab" href="/admin/feedback" role="tab"
-                                aria-controls="home" aria-selected="false">View feedback</a>
+                                aria-controls="home" aria-selected="false">Feedback</a>
                         </li>
                     </ul>
                 </div>
@@ -55,6 +60,7 @@
                             <th scope="col" data-sortable="true" data-field="postal_code">Postal Code</th>
                             <th scope="col" data-sortable="true" data-field="price">Price</th>
                             <th scope="col" data-sortable="true" data-field="contact">Contact</th>
+                            <th scope="col" data-sortable="true" data-field="status">Status</th>
                             <th scope="col" data-sortable="true" data-field="description">Description</th>
                             <th scope="col" data-formatter="table_thumbnail">Thumbnail</th>
                             <th scope="col" data-formatter="table_row_delete">Actions</th>

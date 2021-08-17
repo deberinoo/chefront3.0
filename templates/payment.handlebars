@@ -110,7 +110,7 @@
 	 **/
 	async function ping_transaction_status(attempt, transaction) {
 
-		if (attempt > 30)
+		if (attempt > 60)
 			return void_transaction(transaction);
 
 		try {

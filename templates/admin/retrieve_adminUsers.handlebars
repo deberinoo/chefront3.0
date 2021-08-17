@@ -1,4 +1,4 @@
-<title>Chefront - View Feedback</title>
+<title>Chefront - View Admin Accounts</title>
 
 <link rel="stylesheet" href="/public/css/profile.css">
 <script src="https://unpkg.com/bootstrap-table@1.18.3/dist/bootstrap-table.min.js"></script>
@@ -7,7 +7,7 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-12 col-lg-12 col-xl-12 mx-auto">
-                <h2 class="h3 mb-4 page-title">View Feedback</h2>
+                <h2 class="h3 mb-4 page-title">View Admin Accounts</h2>
                 <div class="my-4">
                     <ul class="nav nav-tabs mb-4" id="myTab" role="tablist">
                         <li class="nav-item">
@@ -15,7 +15,7 @@
                                 aria-controls="home" aria-selected="false">Dashboard</a>
                         </li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button"
+                            <a class="nav-link active dropdown-toggle" data-toggle="dropdown" href="#" role="button"
                                 aria-haspopup="true" aria-expanded="false">Users</a>
                             <div class="dropdown-menu">
                                 <a class="dropdown-item" href="/admin/adminUsers">View Admins</a>
@@ -32,7 +32,7 @@
                                 aria-controls="home" aria-selected="false">Outlets</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active" id="home-tab" href="/admin/feedback" role="tab"
+                            <a class="nav-link" id="home-tab" href="/admin/feedback" role="tab"
                                 aria-controls="home" aria-selected="false">Feedback</a>
                         </li>
                     </ul>
@@ -44,6 +44,7 @@
                 data-width = "50px" 
                 data-pagination="true"
                 data-page-size="10"
+                data-page-list="[10, 25, 50, 100, all]"
                 data-buttons="buttons"
                 data-show-columns="true"
                 data-show-refresh="true"
@@ -51,16 +52,12 @@
                 data-show-pagination-switch="true"
                 data-show-fullscreen="true"
                 data-search="true"
-                data-url="/admin/all-feedbacks-data"
+                data-url="/admin/all-admin-data"
                 data-side-pagination="server">
                 <thead class="thead-dark">
+                    <tr>
                         <th scope="col" data-sortable="true" data-field="name">Name</th>
                         <th scope="col" data-sortable="true" data-field="email">Email</th>
-                        <th scope="col" data-sortable="true" data-field="phone">Phone Number</th>
-                        <th scope="col" data-sortable="true" data-field="message">Feedback</th>
-                        <th scope="col" data-sortable="true" data-field="read">Read?</th>
-                        <th scope="col" data-formatter="table_row_reply">Reply</th>
-                        <th scope="col" data-formatter="table_row_delete">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -69,16 +66,3 @@
         </div>
     </div>
 </section>
-
-<script>
-    function table_row_delete(value, row, index) {
-		return `
-        <a href="/admin/deleteFeedback/${row.uuid}" class="delete"><i class="material-icons" title="Delete">&#xE872;</i></a>
-		`;
-	}
-    function table_row_reply(value, row, index) {
-		return `
-        <a href="/admin/reply_feedback/${row.uuid}" class="delete"><i class="fa fa-paper-plane" title="Reply">&#xE872;</i></a>
-		`;
-	}
-</script>

@@ -27,14 +27,22 @@
                     <div class="d-flex flex-wrap justify-content-center">
                         {{#each restaurants}}
                             <div class="card mr-3 mb-5">
-                                <a href="/restaurant/{{name}}/{{location}}">
+                                <a href="/restaurant/{{name}}/{{location}}" style="text-decoration: none;">
                                     <img class="card-img-top img-fluid"
                                         src="/{{thumbnail}}"
                                         alt="Card image cap" width="300">
                                     <div class="card-body">
-                                        <h4 class="card-title">{{name}}</h4>
-                                        <p class="card-text">{{location}} • ${{price}}</p>
-                                        <p class="card-text"></p>
+                                        <h4 class="card-title">{{this.name}}</h4>
+                                        <p class="card-text">{{this.location}} • ${{this.price}} •  {{#ifEquals this.status "Full"}}
+                                        <button class="btn btn-danger" style="pointer-events: none;" id="status_btn">{{this.status}}</button>
+                                        {{/ifEquals}}
+                                        {{#ifEquals this.status "Available"}}
+                                        <button class="btn btn-success"  style="pointer-events: none;"id="status_btn">{{this.status}}</button>
+                                        {{/ifEquals}}
+                                        {{#ifEquals this.status "Moderate"}}
+                                        <button class="btn btn-warning" style="pointer-events: none;" id="status_btn">{{this.status}}</button>
+                                        {{/ifEquals}}</p>
+                                        
                                     </div>
                                 </a>
                             </div>
@@ -57,5 +65,23 @@
         var filter = $(this).val(); // get the value of the input, which we filter on
         $('.carddeck').find('.card a .card-body h4:not(:contains("' + filter + '"))').parent().parent().parent()
             .addClass('d-none');
-    })
+    });
+</script>
+
+<script type="text/javascript">
+
+    function change_status(status){
+        alert("hello")
+        var root = document.getElementById("status_btn")
+        console.log(status)
+        if (status == "FULL"){
+            console.log("FULL")
+            return root.className = 'btn btn-danger'; 
+        }
+        else if (status == "AVAILABLE"){
+            return root.className = "btn btn-success";
+        }
+        else if (status == "MODERATE"){
+            return root.className = "btn btn-warning";
+        }};
 </script>

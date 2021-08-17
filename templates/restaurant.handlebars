@@ -17,8 +17,17 @@
 							<div class="card pt-2 p-3 mb-2">
                                 <div>
                                     <h3>{{restaurant.name}}</h3>
-                                    <h4>{{restaurant.location}} • ${{restaurant.price}}</h4>
-                                    <h5>{{restaurant.category}}</h5>
+                                    <h4>{{restaurant.location}} • ${{restaurant.price}} • 
+                                        {{#ifEquals restaurant.status "Full"}}
+                                            <button class="btn btn-danger" style="pointer-events: none;" id="status_btn">{{restaurant.status}}</button>
+                                        {{/ifEquals}}
+                                        {{#ifEquals restaurant.status "Available"}}
+                                            <button class="btn btn-success" style="pointer-events: none;" id="status_btn">{{restaurant.status}}</button>
+                                        {{/ifEquals}}
+                                        {{#ifEquals restaurant.status "Moderate"}}
+                                            <button class="btn btn-warning" style="pointer-events: none;" id="status_btn">{{restaurant.status}}</button>
+                                        {{/ifEquals}} </h4>
+                                   <a href="/category/{{restaurant.category}}"><h5>{{restaurant.category}}</h5></a>
 
                                 </div>
                             </div>
@@ -32,7 +41,100 @@
 					</div>
 					<div class="col-md-5 col-md-pull-7">
 						<div class="booking-form" style="padding-top:15px;">
-							<form action="/restaurant/{{restaurant.name}}/{{restaurant.location}}" method="post">
+                            {{#ifEquals restaurant.status "Full"}}
+                                <h4>This outlet is at its maximum capacity.</h4>
+                                <br>
+                                <h4>Please try again soon.</h4>
+                            {{/ifEquals}}
+                            {{#ifEquals restaurant.status "Moderate"}}
+                                <form action="/restaurant/{{restaurant.name}}/{{restaurant.location}}" method="post">
+                                <span class="form-label" style="font-size: larger">Reservation Details</span>
+                                <br><br>
+                                <input type="hidden" value="{{restaurant.name}}" name="BusinessName">
+                                <input type="hidden" value="{{restaurant.location}}" name="Location">
+                                {{#if user}}
+                                    <div class="form-group">
+                                        <span class="form-label">Your Name</span>
+                                        <input class="form-control" type="text" value="{{user.name}}" name="Name">
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <span class="form-label">Your Email</span>
+                                                <input class="form-control" type="text" value="{{user.email}}" name="Email">
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <span class="form-label">Your Contact</span>
+                                                <input class="form-control" type="text" value="{{user.contact}}" name="Contact">
+                                            </div>
+                                        </div>
+                                    </div>
+                                {{else}}
+                                    <div class="form-group">
+                                        <span class="form-label">Your Name</span>
+                                        <input class="form-control" type="text" placeholder="" name="user_name"> 
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <span class="form-label">Your Email</span>
+                                                <input class="form-control" type="text" placeholder="" name="user_email">
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <span class="form-label">Your Contact</span>
+                                                <input class="form-control" type="text" placeholder="" name="user_contact">
+                                            </div>
+                                        </div>
+                                    </div>
+                                {{/if}}
+								<div class="row">
+									<div class="col-sm-6">
+										<div class="form-group">
+											<span class="form-label">Date</span>
+											<input class="form-control" id="datefield" type="date" name="ResDate" required>
+										</div>
+									</div>
+									<div class="col-sm-6">
+										<div class="form-group">
+											<span class="form-label">Pax</span>
+											<select class="form-control" name="Pax">
+												<option value="1">1</option>
+												<option value="2">2</option>
+												<option value="3">3</option>
+												<option value="4">4</option>
+												<option value="5">5</option>
+											</select>
+											<span class="select-arrow"></span>
+										</div>
+									</div>
+                                    <div class="col-sm-12">
+                                        <div class="form-group">
+											<span class="form-label">Discount</span>
+                                            <div class="form-control" style="height: 90px">
+                                                {{#each discountslot}}
+                                                    <label class="reservation" style="margin-right: 5px">
+                                                        <input type="radio" name="Slot" value="{{time}},{{discount}}">
+                                                        <div class="background"></div>
+                                                        <p class="time">{{time}}</p>
+                                                        <p class="discount">{{discount}}%</p>
+                                                    </label>
+                                                {{/each}}
+                                            </div>
+                                            </select>
+                                        </div>
+                                    </div>
+								</div>
+								<div class="form-btn">
+									<button class="submit-btn">Book now</button>
+								</div>
+							</form>
+                            {{/ifEquals}}
+                            {{#ifEquals restaurant.status "Available"}}
+                                <form action="/restaurant/{{restaurant.name}}/{{restaurant.location}}" method="post">
                                 <span class="form-label" style="font-size: larger">Reservation Details</span>
                                 <br><br>
                                 <input type="hidden" value="{{restaurant.name}}" name="BusinessName">
@@ -129,6 +231,8 @@
                                 {{/if}}
 
 							</form>
+                            {{/ifEquals}}
+							
 						</div>
 					</div>
 				</div>
@@ -136,3 +240,19 @@
 		</div>
 	</div>
 </section>
+
+<script>
+	var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth()+1; //January is 0!
+    var yyyy = today.getFullYear();
+    if(dd<10){
+            dd='0'+dd
+        } 
+        if(mm<10){
+            mm='0'+mm
+        } 
+
+    today = yyyy+'-'+mm+'-'+dd;
+    document.getElementById("datefield").setAttribute("min", today);
+</script>

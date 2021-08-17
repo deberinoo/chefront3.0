@@ -1,4 +1,4 @@
-<title>Chefront - View Categories</title>
+<title>Chefront - View Admin Accounts</title>
 
 <link rel="stylesheet" href="/public/css/profile.css">
 <script src="https://unpkg.com/bootstrap-table@1.18.3/dist/bootstrap-table.min.js"></script>
@@ -7,7 +7,7 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-12 col-lg-12 col-xl-12 mx-auto">
-                <h2 class="h3 mb-4 page-title">View All Categories</h2>
+                <h2 class="h3 mb-4 page-title">View Admin Accounts</h2>
                 <div class="my-4">
                     <ul class="nav nav-tabs mb-4" id="myTab" role="tablist">
                         <li class="nav-item">
@@ -15,7 +15,7 @@
                                 aria-controls="home" aria-selected="false">Dashboard</a>
                         </li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button"
+                            <a class="nav-link active dropdown-toggle" data-toggle="dropdown" href="#" role="button"
                                 aria-haspopup="true" aria-expanded="false">Users</a>
                             <div class="dropdown-menu">
                                 <a class="dropdown-item" href="/admin/adminUsers">View Admins</a>
@@ -24,7 +24,7 @@
                             </div>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active" id="home-tab" href="/admin/categories" role="tab"
+                            <a class="nav-link" id="home-tab" href="/admin/categories" role="tab"
                                 aria-controls="home" aria-selected="false">Categories</a>
                         </li>
                         <li class="nav-item">
@@ -38,29 +38,29 @@
                     </ul>
                 </div>
             </div>
-                <table
-                    id="table"
-                    data-toggle="table"
-                    data-width = "50px" 
-                    data-pagination="true"
-                    data-page-size="10"
-                    data-buttons="buttons"
-                    data-show-columns="true"
-                    data-show-refresh="true"
-                    data-show-columns-toggle-all="true"
-                    data-show-pagination-switch="true"
-                    data-show-fullscreen="true"
-                    data-search="true"
-                    data-url="/admin/all-categories-data"
-                    data-side-pagination="server">
-                    <thead class="thead-dark">
-                        <tr>
-                            <th scope="col" data-sortable="true" data-field="name">Name</th>
-                            <th scope="col" data-sortable="true" data-field="description">Description</th>
-                            <th scope="col" data-formatter="table_thumbnail">Thumbnail</th>
-                            <th scope="col" data-formatter="table_row_delete">Actions</th>
-                        </tr>
-                    </thead>
+            <table 
+                id="table"
+                data-toggle="table"
+                data-width = "50px" 
+                data-pagination="true"
+                data-page-size="10"
+                data-page-list="[10, 25, 50, 100, all]"
+                data-buttons="buttons"
+                data-show-columns="true"
+                data-show-refresh="true"
+                data-show-columns-toggle-all="true"
+                data-show-pagination-switch="true"
+                data-show-fullscreen="true"
+                data-search="true"
+                data-url="/admin/all-admin-data"
+                data-side-pagination="server">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col" data-sortable="true" data-field="name">Name</th>
+                        <th scope="col" data-sortable="true" data-field="email">Email</th>
+                        <th scope="col" data-formatter="table_row_delete">Actions</th>
+                    </tr>
+                </thead>
                 <tbody>
                 </tbody>
             </table>
@@ -69,18 +69,10 @@
 </section>
 
 <script>
-    function table_thumbnail(value, row, index) {
-		return `
-		<img src="/${row.thumbnail}" 
-        style="width: 75px; height: 50px; padding-bottom: 5px;"
-        alt="Thumbnail" class="w3-hover-opacity">
-		`;
-	}
-
     function table_row_delete(value, row, index) {
 		return `
-		<a href="../admin/edit-category/${row.name}"><i class="material-icons" title="Edit">&#xE254;</i></a>
-        <a href="/admin/deleteCategory/${row.name}" class="delete"><i class="material-icons" title="Delete">&#xE872;</i></a>
+        <a href = "/admin/editAdminUser/${row.name}" class = "edit"><i class="material-icons" title="Edit">&#xE254;</i></a>
+        <a href="/admin/deleteAdminUser/${row.name}" class="delete"><i class="material-icons" title="Delete">&#xE872;</i></a>
 		`;
 	}
 
@@ -89,10 +81,10 @@
       btnAdd: {
         icon: 'fa-plus',
         event: function () {
-          window.location.href = "http://localhost:3000/admin/create-category";  
+          window.location.href = "http://localhost:3000/admin/createAdminUser";  
         },
         attributes: {
-          title: 'Add a new category'
+          title: 'Create an admin user'
         }
       }
     }
