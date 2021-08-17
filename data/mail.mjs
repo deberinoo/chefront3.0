@@ -292,6 +292,161 @@ export async function sendMailDeleteUser(email) {
 	}
 }
 
+export async function sendMailPayment(name, email) {
+	try {
+		const accessToken = await oAuth2Client.getAccessToken();
+
+		const transport = nodemailer.createTransport({
+			service: 'gmail',
+			auth: {
+				type: 'OAuth2',
+				user: 'chefrontceo@gmail.com',
+				clientId: CLIENT_ID,
+				clientSecret: CLIENT_SECRET,
+				refreshToken: REFRESH_TOKEN,
+				accessToken: accessToken,
+			},
+		});
+
+		const mailOptions = {
+			from: 'chefrontceo@gmail.com',
+			to: email,
+			subject: 'We have received your deposit!',
+			text: 'Hello from the CEO',
+			html: `
+			<body class="" style="background-color: #f6f6f6; font-family: sans-serif; -webkit-font-smoothing: antialiased; font-size: 14px; line-height: 1.4; margin: 0; padding: 0; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%;">
+			<table border="0" cellpadding="0" cellspacing="0" class="body" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; background-color: #f6f6f6;">
+			  <tr>
+				<td style="font-family: sans-serif; font-size: 14px; vertical-align: top;">&nbsp;</td>
+				<td class="container" style="font-family: sans-serif; font-size: 14px; vertical-align: top; display: block; Margin: 0 auto; max-width: 580px; padding: 10px; width: 580px;">
+				  <div class="content" style="box-sizing: border-box; display: block; Margin: 0 auto; max-width: 580px; padding: 10px;">
+		
+					<!-- START CENTERED WHITE CONTAINER -->
+					<table class="main" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; background: #ffffff; color: black; border-radius: 3px;">
+		
+					  <!-- START MAIN CONTENT AREA -->
+					  <tr>
+						<td class="wrapper" style="font-family: sans-serif; font-size: 14px; vertical-align: top; box-sizing: border-box; padding: 20px;">
+						  <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;">
+							<tr>
+							  <td style="font-family: sans-serif; font-size: 14px; vertical-align: top;">
+								<p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">Hey there, ${name}!</p>
+								<p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">We have received your deposit of $15! Thank you for choosing to book with Chefront.</p>
+							  </td>
+							</tr>
+							<p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">Cheers, <br>Chefront Team</p>
+						  </table>
+						</td>
+					  </tr>
+		
+					<!-- END MAIN CONTENT AREA -->
+					</table>
+		
+					<!-- START FOOTER -->
+					<div class="footer" style="clear: both; Margin-top: 10px; text-align: center; width: 100%;">
+					  <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;">
+						<tr>
+						  <td class="content-block" style="font-family: sans-serif; vertical-align: top; padding-bottom: 10px; padding-top: 10px; font-size: 12px; color: #999999; text-align: center;">
+							<span class="apple-link" style="color: #999999; font-size: 12px; text-align: center;">Copyright © 2021 Chefront Singapore All Rights Reserved.</span>
+						  </td>
+						</tr>
+					  </table>
+					</div>
+					<!-- END FOOTER -->
+		
+				  <!-- END CENTERED WHITE CONTAINER -->
+				  </div>
+				</td>
+				<td style="font-family: sans-serif; font-size: 14px; vertical-align: top;">&nbsp;</td>
+			  </tr>
+			</table>
+		  </body>`,
+		};
+
+		const result = await transport.sendMail(mailOptions);
+		return result;
+	} catch (error) {
+		return error;
+	}
+}
+export async function sendMailPayment(name, email) {
+	try {
+		const accessToken = await oAuth2Client.getAccessToken();
+
+		const transport = nodemailer.createTransport({
+			service: 'gmail',
+			auth: {
+				type: 'OAuth2',
+				user: 'chefrontceo@gmail.com',
+				clientId: CLIENT_ID,
+				clientSecret: CLIENT_SECRET,
+				refreshToken: REFRESH_TOKEN,
+				accessToken: accessToken,
+			},
+		});
+
+		const mailOptions = {
+			from: 'chefrontceo@gmail.com',
+			to: email,
+			subject: 'We have received your deposit!',
+			text: 'Hello from the CEO',
+			html: `
+			<body class="" style="background-color: #f6f6f6; font-family: sans-serif; -webkit-font-smoothing: antialiased; font-size: 14px; line-height: 1.4; margin: 0; padding: 0; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%;">
+			<table border="0" cellpadding="0" cellspacing="0" class="body" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; background-color: #f6f6f6;">
+			  <tr>
+				<td style="font-family: sans-serif; font-size: 14px; vertical-align: top;">&nbsp;</td>
+				<td class="container" style="font-family: sans-serif; font-size: 14px; vertical-align: top; display: block; Margin: 0 auto; max-width: 580px; padding: 10px; width: 580px;">
+				  <div class="content" style="box-sizing: border-box; display: block; Margin: 0 auto; max-width: 580px; padding: 10px;">
+		
+					<!-- START CENTERED WHITE CONTAINER -->
+					<table class="main" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; background: #ffffff; color: black; border-radius: 3px;">
+		
+					  <!-- START MAIN CONTENT AREA -->
+					  <tr>
+						<td class="wrapper" style="font-family: sans-serif; font-size: 14px; vertical-align: top; box-sizing: border-box; padding: 20px;">
+						  <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;">
+							<tr>
+							  <td style="font-family: sans-serif; font-size: 14px; vertical-align: top;">
+								<p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">Hey there, ${name}!</p>
+								<p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">We have received your deposit of $15! Thank you for choosing to book with Chefront.</p>
+							  </td>
+							</tr>
+							<p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">Cheers, <br>Chefront Team</p>
+						  </table>
+						</td>
+					  </tr>
+		
+					<!-- END MAIN CONTENT AREA -->
+					</table>
+		
+					<!-- START FOOTER -->
+					<div class="footer" style="clear: both; Margin-top: 10px; text-align: center; width: 100%;">
+					  <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;">
+						<tr>
+						  <td class="content-block" style="font-family: sans-serif; vertical-align: top; padding-bottom: 10px; padding-top: 10px; font-size: 12px; color: #999999; text-align: center;">
+							<span class="apple-link" style="color: #999999; font-size: 12px; text-align: center;">Copyright © 2021 Chefront Singapore All Rights Reserved.</span>
+						  </td>
+						</tr>
+					  </table>
+					</div>
+					<!-- END FOOTER -->
+		
+				  <!-- END CENTERED WHITE CONTAINER -->
+				  </div>
+				</td>
+				<td style="font-family: sans-serif; font-size: 14px; vertical-align: top;">&nbsp;</td>
+			  </tr>
+			</table>
+		  </body>`,
+		};
+
+		const result = await transport.sendMail(mailOptions);
+		return result;
+	} catch (error) {
+		return error;
+	}
+}
+
 export async function sendMailMakeReservation(email,code,name,location,user_name,date,pax,time,discount) {
 	try {
 		const accessToken = await oAuth2Client.getAccessToken();

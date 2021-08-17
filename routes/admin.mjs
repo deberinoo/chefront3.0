@@ -878,6 +878,7 @@ async function create_admin_user_process(req,res){
 			"name": Name,
 			"email": Email,
 			"password": Password,
+            "verified": "Yes",
 			"role": UserRole.Admin
 		})
         flashMessage(res, 'success', 'Successfully created an admin user.');
