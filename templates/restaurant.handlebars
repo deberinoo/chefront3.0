@@ -39,6 +39,9 @@
                                         {{/ifEquals}} 
                                     </h5>
                                    <a href="/category/{{restaurant.category}}"><h5>{{restaurant.category}}</h5></a>
+                                    <iframe width="400" height="250" style="border:0" loading="lazy" allowfullscreen
+                                    src ="https://www.google.com/maps/embed/v1/place?q={{restaurant.name}}%20{{restaurant.location}}&key=AIzaSyAG7xcB2a0UsQI6UlWHhFweYZmvurJgwsw" ></iframe>
+                            
                                 </div>
                             </div>
                             <div class="card pt-2 p-3 mb-2">
@@ -240,7 +243,8 @@
 </section>
 
 <script>
-	var today = new Date();
+	window.onload = function(){
+    var today = new Date();
     var dd = today.getDate();
     var mm = today.getMonth()+1; //January is 0!
     var yyyy = today.getFullYear();
@@ -252,4 +256,5 @@
         } 
     today = yyyy+'-'+mm+'-'+dd;
     document.getElementById("datefield").setAttribute("min", today);
+    };
 </script>

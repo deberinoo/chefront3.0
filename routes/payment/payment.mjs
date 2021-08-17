@@ -178,6 +178,10 @@ async function create_reservation(req,res) {
 	sendMailPayment(req.body.Name, req.body.Email)
 	.then((result) => console.log('Email sent...', result))
 	.catch((error) => console.log(error.message));
+
+	sendMailPayment(req.body.Name, req.body.Email)
+	.then((result) => console.log('Email sent...', result))
+	.catch((error) => console.log(error.message));
 	return res.render("success", {
 		reservation:reservation,
 		admin: admin,
