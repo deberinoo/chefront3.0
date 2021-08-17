@@ -69,6 +69,7 @@ import Hash             	from 'hash.js';
 // 			contact : "97504802",
 //          verified : "Yes",
 // 			role    : "admin",
+// 			verified: "Yes",
 // 			password: Hash.sha256().update("CEOtings123").digest("hex")
 // 		};
 // 		//	Find for existing account with the same id, create or update

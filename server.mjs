@@ -33,6 +33,13 @@ Server.engine('handlebars', ExpHandlebars({
 				return options.inverse(this)
 			}
 		},
+		ifNotEquals(a,b,options){
+			if (a != b){
+				return options.fn(this)
+			} else{
+				return options.inverse(this)
+			}
+		}
 	}
 }));
 //  Let express know where to access static files

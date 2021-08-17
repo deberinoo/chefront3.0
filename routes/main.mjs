@@ -271,6 +271,12 @@ async function view_individual_restaurant_page(req, res) {
 			"location": req.params.location,
         }
 	});
+	const favourites = await Favourites.findAll({
+		where: {
+            "name": req.params.name,
+			"location": req.params.location,
+        }
+	});
 	if (req.user == undefined) {
 		return res.render('restaurant', {restaurant:restaurant, discountslot:discountslot})
 	} else {
@@ -283,7 +289,10 @@ async function view_individual_restaurant_page(req, res) {
 			business:business,
 			customer:customer,
 			restaurant:restaurant,
-			discountslot:discountslot
+			discountslot:discountslot,
+			favourites : favourites,
+			name:  req.params.name,
+			location: req.params.location
 		});
 	}
 };

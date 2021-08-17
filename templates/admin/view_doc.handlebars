@@ -1,0 +1,29 @@
+<title>Chefront - View Document</title>
+
+<link rel="stylesheet" href="/public/css/profile.css">
+
+<section>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-lg-12 col-xl-12 mx-auto">
+                <h2 class="h3 mb-4 page-title">View Document</h2>
+                <div class="my-4">
+                    <form action="/admin/accept_document/{{email}}" method="post" >
+                        {{#if user}}
+                            <div class="form-group row">
+                                <div class="col-sm-10">
+                                    <img src="/{{document}}" 
+                                    style="width: 80%px; height: 80%; padding-bottom: 5px;"
+                                    alt="Document" class="w3-hover-opacity">
+                                </div>
+                            </div>
+                        {{/if}}
+                        {{#ifEquals verified "No" }}
+                        <button type="submit" class="btn btn-danger btn-block col-sm-10 rounded-pill shadow-sm" style="margin-left: 125px;">Accept</button>
+                        {{/ifEquals}}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
