@@ -58,7 +58,6 @@
                     <tr>
                         <th scope="col" data-sortable="true" data-field="name">Name</th>
                         <th scope="col" data-sortable="true" data-field="email">Email</th>
-                        <th scope="col" data-formatter="table_row_delete">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -67,26 +66,3 @@
         </div>
     </div>
 </section>
-
-<script>
-    function table_row_delete(value, row, index) {
-		return `
-        <a href = "/admin/editAdminUser/${row.name}" class = "edit"><i class="material-icons" title="Edit">&#xE254;</i></a>
-        <a href="/admin/deleteAdminUser/${row.name}" class="delete"><i class="material-icons" title="Delete">&#xE872;</i></a>
-		`;
-	}
-
-    function buttons () {
-    return {
-      btnAdd: {
-        icon: 'fa-plus',
-        event: function () {
-          window.location.href = "http://localhost:3000/admin/createAdminUser";  
-        },
-        attributes: {
-          title: 'Create an admin user'
-        }
-      }
-    }
-  }
-</script>

@@ -4,6 +4,9 @@ import { Feedback } 		from '../data/models/Feedback.mjs';
 import { Outlets } 			from '../data/models/Outlets.mjs';
 import { Reservations } 	from '../data/models/Reservations.mjs';
 import { DiscountSlot }     from '../data/models/DiscountSlot.mjs';
+import { Favourites }     from '../data/models/Favourites.mjs';
+
+import { UploadFile, DeleteFilePath }       from '../utils/multer.mjs';
 
 import ORM             		from 'sequelize';
 const { Op } = ORM;
@@ -34,6 +37,7 @@ router.post("/home",     							   create_feedback_process);
 router.get("/restaurants",                             view_restaurants_page); 
 router.get("/restaurant/:name/:location",     		   view_individual_restaurant_page);
 router.post("/restaurant/:name/:location",    		   create_reservation_process);
+router.get("/favourite_restaurant/:name/:location/:email",	   favourite_restaurant )
 
 // Payment routes
 router.get("/payment",                                 view_payment_page);
@@ -265,7 +269,6 @@ async function view_individual_restaurant_page(req, res) {
 			"location": req.params.location
         }
 	});
-
 	if (req.user == undefined) {
 		return res.render('restaurant', {restaurant:restaurant, discountslot:discountslot})
 	} else {
@@ -278,6 +281,19 @@ async function view_individual_restaurant_page(req, res) {
 		});
 	}
 };
+
+function favourite_restaurant(req,res){
+	let name = req.params.name
+	let location = req.params.location
+	let email = req.params.email
+	Favourites.create({
+		"email": email,
+		"name": name,
+		"location" : location,
+	})
+	flashMessage(res, 'success', 'Bookmarked restaurant', 'fas fa-sign-in-alt', false);
+	return res.redirect(`/restaurant/${name}/${location}`)
+}
 
 function getId() {
     const rand = Math.random().toString(16).substr(2, 5); 

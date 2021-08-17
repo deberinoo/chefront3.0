@@ -23,6 +23,9 @@ export function initialize_passport(server) {
 			else if (current_user.banned == "Yes"){
 				throw new Error ("Account has been banned")
 			}
+			else if (current_user.verified == "No"){
+				throw new Error ("Account has not been verified")
+			}
 			else {
 				return done(null, current_user);
 			}
@@ -55,6 +58,9 @@ const LocalStrategy = new Strategy ({
 		}
 		else if (current_user.banned == "Yes"){
 			throw new Error ("Account has been banned");
+		}
+		else if (current_user.verified == "No"){
+			throw new Error ("Account has not been verified")
 		}
 		else {
 			return done(null, current_user);
