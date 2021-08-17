@@ -258,10 +258,24 @@ async function create_discount_slot_process(req, res) {
         }
     });
 
+    const outlet = await Outlets.findAll({
+        where: {
+            "name": {[Op.eq]: req.params.name}
+        }
+    });
+
     if (discount_slot != null) {
+        var role = getRole(req.user.role);
+        var admin = role[0];
+        var business = role[1];
+        var customer = role[2];
         errors = errors.concat({ text: `${Time} discount slot for ${Location} outlet already exists!`})
-        res.render('user/business/create_discountslot', {
-            errors: errors
+        return res.render('user/business/create_discountslot', {
+            errors: errors,
+            admin: admin,
+            business: business,
+            customer: customer,
+            outlet: outlet
         })
     };
 
