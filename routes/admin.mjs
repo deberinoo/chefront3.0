@@ -9,12 +9,11 @@ import { Reservations } 	from '../data/models/Reservations.mjs';
 import { DiscountSlot }     from '../data/models/DiscountSlot.mjs';
 
 
-import { sendMailBannedAccount,sendMailFeedbackResponse} from '../data/mail.mjs';
+import { sendMailVerifiedBusiness,sendMailBannedAccount,sendMailFeedbackResponse} from '../data/mail.mjs';
 
 
 import ORM              from 'sequelize';
 import { UploadFile, DeleteFilePath }       from '../utils/multer.mjs';
-
 const { Op } = ORM;
 
 const router = Router();
@@ -28,6 +27,7 @@ router.use(ensure_admin)
 // User management routes
 router.get("/businessUsers",                        view_business_users_page);
 router.get("/all-business-data",                    all_business_data);
+router.get("/accept_document/:email",               accept_document);
 router.get("/deleteBusinessUser/:name",             delete_business_user);
 
 router.get("/customerUsers",                        view_customer_users_page);
@@ -246,6 +246,22 @@ async function all_business_data(req, res) {
         return res.status(500).end();
     }
  }
+
+function accept_document(req,res){
+    let email = req.params.email
+    User.update({
+        verified: "Yes"
+    }, {
+        where: {
+            email : email
+        }
+        })
+    sendMailVerifiedBusiness(email)
+    .then((result) => console.log('Email sent...', result))
+			.catch((error) => console.log(error.message));
+		
+    return res.redirect('/admin/businessUsers')
+}
 
 function delete_business_user(req, res) {
     User.findOne({

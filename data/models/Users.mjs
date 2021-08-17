@@ -17,8 +17,11 @@ export class User extends Model {
             "email" : { type: DataTypes.STRING(128), allowNull: false},
             "contact" : { type: DataTypes.INTEGER(16), allowNull: false},
             "password" : { type: DataTypes.STRING(64), allowNull: false},
-            "skips" : { type: DataTypes.INTEGER(16), allowNull: false, defaultValue: 0},
-            "banned" : {type: DataTypes.STRING(128), allowNull: false, defaultValue: "No"},
+            "skips" : { type: DataTypes.INTEGER(16), allowNull: true, defaultValue: 0},
+            "deposited" : { type: DataTypes.STRING(128), allowNull: true, defaultValue: "No" },
+            "banned" : {type: DataTypes.STRING(128), allowNull: true, defaultValue: "No"},
+            "verified" : {type: DataTypes.STRING(128), allowNull: true, defaultValue: "No"},
+            "document": {type: DataTypes.CHAR(255), allowNull: true},
             "role" : { type: DataTypes.STRING(10), allowNull: false},
         }, {
             "sequelize" : database,

@@ -1,4 +1,4 @@
-<title>Chefront - My Reservations</title>
+<title>Chefront - My favourite restaurants</title>
 
 <link rel="stylesheet" href="/public/css/profile.css">
 <link rel="stylesheet" href="/public/flaticon/flaticon.css">
@@ -7,7 +7,7 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-12 col-lg-12 col-xl-12 mx-auto">
-                <h2 class="h3 mb-4 page-title">My Upcoming Reservations</h2>
+                <h2 class="h3 mb-4 page-title">My favourite restaurants</h2>
                 <div class="my-4">
                     <ul class="nav nav-tabs mb-4" id="myTab" role="tablist">
                         <li class="nav-item">
@@ -29,38 +29,34 @@
                         </li>
                     </ul>
                     <div class="row">
-                        {{#each reservation}}
+                       {{#each favourites}}
                             <div class="card col-sm-6 mr-4 mb-4" style="width: 30rem;">
                                 <div class="card-body" style="font-size: larger;">
                                     <div style="text-align:left;">
-                                        <h5 class="card-title" style="font-size:23px;">{{ name }} • {{location}}</h5>
-                                        <p class="card-text">{{ reservation_id }}</p>
-                                        <p class="card-text"><i class="flaticon-calendar"></i> {{ date }}</p>
-                                        <p class="card-text"><i class="flaticon-user"></i> {{ pax }}
-                                        <p class="card-text"><i class="flaticon-clock"></i> {{ time }} / {{ discount }}% off
-                                        <br><br>
+                                        <h5 class="card-title">{{ location }}</h5>
+                                         <br><br>
                                         <!-- Button trigger modal -->
                                         <button type="button" class="btn btn-danger float-right" data-toggle="modal" data-target="#cancelModal">
-                                            Cancel
+                                            Delete
                                         </button>
-                                        <a href="../../my-reservations/{{user_email}}/edit-reservation/{{ reservation_id }}" class="float-right btn btn-outline-danger mr-3">Edit</a>
+                                        <a href="/restaurant/{{name}}/{{location}}" class="float-right btn btn-outline-danger mr-3">View</a>
 
                                         <!-- Modal -->
                                         <div class="modal fade" id="cancelModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                             <div class="modal-dialog" role="document">
                                                 <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title" id="exampleModalLabel">Cancellation of Reservation</h5>
+                                                    <h5 class="modal-title" id="exampleModalLabel">Remove restaurant from restaurants</h5>
                                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                     <span aria-hidden="true">&times;</span>
                                                     </button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    Are you sure you want to cancel this reservation?
+                                                    Are you sure you want to remove this restaurant?
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                                    <a href="../../my-reservations/{{user_email}}/cancel-reservation/{{ reservation_id }}">
+                                                    <a href="/u/c/delete-favourite/{{uuid}}/{{email}}">
                                                         <button type="button" class="btn btn-danger">Confirm</button>
                                                     </a>
                                                 </div>

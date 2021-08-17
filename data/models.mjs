@@ -8,7 +8,7 @@ import { Reservations }     from '../data/models/Reservations.mjs';
 import { DiscountSlot }     from '../data/models/DiscountSlot.mjs';
 import { Feedback }         from '../data/models/Feedback.mjs';
 import { Categories }   	from '../data/models/Categories.mjs';
-//import { Favourites } 	from '../data/models/Favourites.mjs';
+import { Favourites } 	from '../data/models/Favourites.mjs';
 //import { Review } 		from '../data/models/Review.mjs';
 import Hash             	from 'hash.js';
 
@@ -27,7 +27,7 @@ import Hash             	from 'hash.js';
         User.initialize(database);
         Reservations.initialize(database);
 		Categories.initialize(database);
-
+		Favourites.initialize(database);
 		console.log("Building ORM model relations and indices");
 		//	Create relations between models or tables
 		//	Setup foreign keys, indexes etc

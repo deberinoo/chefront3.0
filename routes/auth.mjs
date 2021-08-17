@@ -5,7 +5,7 @@ import { sendMail, sendMailPasswordChange } from '../data/mail.mjs';
 
 import Passport         from 'passport';
 import Hash             from 'hash.js';
-
+import { UploadFile, DeleteFilePath }       from '../utils/multer.mjs';
 const router = Router();
 export default router;
 
@@ -33,15 +33,15 @@ router.put("/resetPassword/:email", 		reset_password_process)
 
 // Business routes
 router.get("/registerBusiness",     												register_business_page);
-router.post("/registerBusiness",    												register_business_process);
+router.post("/registerBusiness",    												UploadFile.single("Document"),register_business_process);
 router.get("/accountConfirmationBusiness", 											account_confirmation_business_page)
-router.post("/accountConfirmationBusiness/:code/:name/:contact/:email/:password", 	account_confirmation_business_process)
+router.post("/accountConfirmationBusiness/:code/:email", 	account_confirmation_business_process)
 
 // Customer routes
 router.get("/registerCustomer",     												register_customer_page);
 router.post("/registerCustomer",    												register_customer_process);
 router.get("/accountConfirmationCustomer", 											account_confirmation_customer_page)
-router.post("/accountConfirmationCustomer/:code/:name/:contact/:email/:password",  	account_confirmation_customer_process)
+router.post("/accountConfirmationCustomer/:code/:email",  	account_confirmation_customer_process)
 
 // ----------------
 // Check user role
@@ -236,7 +236,8 @@ async function register_business_process(req, res) {
     let errors = [];
     
     let { Name, Contact, Email, InputPassword, ConfirmPassword } = req.body;
-
+	console.log(`${req.file.path}`)
+	
 	try {
 		if (! regexName.test(Name)) {
 			errors = errors.concat({ text: "Invalid name provided! It must be minimum 3 characters and starts with a alphabet." });
@@ -280,12 +281,19 @@ async function register_business_process(req, res) {
 		const Password =  Hash.sha256().update(InputPassword).digest('hex')
 		const email = Email
 		const code = makeid(5)
-
+		User.create({
+			"name": Name,
+			"email": Email,
+			"contact": Contact,
+			"password": Password,
+			"role": UserRole.Business,
+			"document": req.file.path
+		})
 		sendMail(email,code)
 			.then((result) => console.log('Email sent...', result))
 			.catch((error) => console.log(error.message));
 		flashMessage(res, 'success', 'Please check your email for your verification code', 'fas fa-sign-in-alt', false);
-        return res.render('auth/accountConfirmationBusiness', { code:code, name:Name, contact:Contact, email:Email, password:Password });
+        return res.render('auth/accountConfirmationBusiness', { code:code, email:Email });
 	}
 	catch (error) {
 		//	Else internal server error
@@ -343,12 +351,19 @@ async function register_customer_process(req, res) {
 		const email = Email
 		const code = makeid(5)
 
+		User.create({
+			"name":  Name,
+			"contact":  Contact,
+			"email":    Email,
+			"password":  Password,
+			"role": UserRole.Customer
+		})
 
 		sendMail(email,code)
 			.then((result) => console.log('Email sent...', result))
 			.catch((error) => console.log(error.message));
 		flashMessage(res, 'success', 'Please check your email for your verification code', 'fas fa-sign-in-alt', false);
-        return res.render('auth/accountConfirmationCustomer', { code : code, name:Name , contact : Contact, email : Email, password : Password });
+        return res.render('auth/accountConfirmationCustomer', { code : code, email : Email });
 	}
 	catch (error) {
 		//	Else internal server error
@@ -368,10 +383,7 @@ async function account_confirmation_business_process(req, res) {
     let generatedCode = req.params.code;
     let { confirmationCode } = req.body;
 
-	let Name = req.params.name
 	let Email = req.params.email
-	let Contact = req.params.contact
-	let Password = req.params.password
 
 	try {
 		if (confirmationCode !== generatedCode) {
@@ -389,14 +401,7 @@ async function account_confirmation_business_process(req, res) {
 
 	//	Create new user, now that all the test above passed
 	try {
-        User.create({
-			"name": Name,
-			"email": Email,
-			"contact": Contact,
-			"password": Password,
-			"role": UserRole.Business
-		})
-		flashMessage(res, 'success', 'Successfully created an account. Please login', 'fas fa-sign-in-alt', false);
+		flashMessage(res, 'success', 'Successfully verified email. Please wait for document to be assessed', 'fas fa-sign-in-alt', false);
 		res.redirect("/auth/login");
 	}
 	catch (error) {
@@ -415,9 +420,6 @@ function account_confirmation_customer_process(req, res) {
     let errors = [];
     let generatedCode = req.params.code
 	let Email = req.params.email
-	let Name = req.params.name
-	let Contact = req.params.contact
-	let Password = req.params.password
     let { confirmationCode } = req.body;
 
 	try {
@@ -436,13 +438,13 @@ function account_confirmation_customer_process(req, res) {
 
 	//	Create new user, now that all the test above passed
 	try {
-		User.create({
-			"name":  Name,
-			"contact":  Contact,
-			"email":    Email,
-			"password":  Password,
-			"role": UserRole.Customer
-		})
+		User.update({
+			verified: "Yes"
+		}, {
+			where: {
+				email : Email
+			}
+			})
 		flashMessage(res, 'success', 'Successfully created an account. Please login', 'fas fa-sign-in-alt', false);
 		res.redirect("/auth/login");
 	}

@@ -6,6 +6,7 @@ import { DiscountSlot }                     from '../data/models/DiscountSlot.mj
 import { Outlets }                          from '../data/models/Outlets.mjs';
 import { Reservations } 	                from '../data/models/Reservations.mjs';
 import { Categories }                       from '../data/models/Categories.mjs';
+import { Favourites }                       from '../data/models/Favourites.mjs';
 import Hash             from 'hash.js';
 import { UploadFile, DeleteFilePath }       from '../utils/multer.mjs';
 import {  } from '../data/mail.mjs';
@@ -728,6 +729,8 @@ router.get("/c/delete/:user_email",                 delete_customer_user);
 router.post("c/create-reservation",                                                create_reservation_process);
 router.get("/c/my-reservations/upcoming/:user_email",                              view_upcoming_reservations_page);
 router.get("/c/my-reservations/historical/:user_email",                            view_historical_reservations_page);
+router.get("/c/my-favourites/:user_email",                                         view_favourite_restaurants_page)
+router.get("/c/delete-favourite/:id/:email",                                               delete_favourite_restaurant )
 
 router.get("/c/my-reservations/:user_email/edit-reservation/:reservation_id",      edit_reservation_page);
 router.put("/c/my-reservations/:user_email/save-reservation/:reservation_id",      save_edit_reservation);
@@ -1031,3 +1034,45 @@ function delete_reservation(req, res) {
 
 };
 
+async function view_favourite_restaurants_page(req,res){
+    let email = req.params.user_email
+	const favourites = await Favourites.findAll({
+        where: {
+            "email": {
+                [Op.eq]: email
+            },
+        }
+    });
+    var role = getRole(req.user.role);
+    var admin = role[0];
+    var business = role[1];
+    var customer = role[2];
+    return res.render('user/customer/retrieve_favourites', {
+        favourites: favourites ,
+        admin: admin,
+        business: business,
+        customer: customer
+    });
+}
+
+
+
+function delete_favourite_restaurant(req, res) {
+    Favourites.findOne({
+        where: {
+            "uuid": req.params.id,
+        },
+    }).then((favourite) => {
+        if (favourite!= null) {
+            Favourites.destroy({
+                where: {
+                    "uuid": req.params.id,
+                 },
+            }).then(() => {
+                res.redirect(`/c/my-favourites/${req.params.email}`);
+            }).catch( err => console.log(err));
+        } else {
+	    res.redirect('/404');
+    }
+    });
+};
