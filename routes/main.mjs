@@ -28,6 +28,7 @@ router.get("/categories",     						   view_categories_page);
 router.get("/category/:category",     				   view_category_page);
 router.get("/error",     							   view_error_page);
 router.get("/success",                                 view_success_page);
+router.get("/termsofservice",                          view_tos_page);
 
 // Contact routes
 router.get("/contact",     						       view_contact_page);
@@ -136,6 +137,11 @@ function view_about_page(req, res) {
 	});
 };
 
+
+function view_tos_page(req, res) {
+	return res.render('termsofservice');
+};
+
 async function view_categories_page(req, res) {
 	const category = await Categories.findAll({
         where: {
@@ -205,6 +211,8 @@ function view_contact_page(req, res) {
 		});
 	};
 }
+
+
 
 async function create_feedback_process(req,res) {
 	let { Name, Email, Phone, Message } = req.body;
