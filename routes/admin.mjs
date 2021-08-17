@@ -694,11 +694,20 @@ function view_admin_users_page(req, res) {
     var admin = role[0];
     var business = role[1];
     var customer = role[2];
-	return res.render('admin/retrieve_adminUsers', {
+    if (req.user.name == "root"){
+	return res.render('admin/retrieve_adminUsersRoot', {
         admin: admin,
         business: business,
         customer: customer,
     });
+    } 
+    else {
+    return res.render('admin/retrieve_adminUsers', {
+        admin: admin,
+        business: business,
+        customer: customer,
+    });
+    }
 };
 
 async function all_admin_data(req, res) {
