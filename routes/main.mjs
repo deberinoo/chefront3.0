@@ -224,7 +224,8 @@ async function view_restaurants_page(req, res) {
             "name": {
                 [Op.ne]:'null'
             }
-        }
+        },
+		raw: true,
 	});
 
 	if (req.user == undefined) {

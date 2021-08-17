@@ -437,7 +437,7 @@ async function create_outlet_page(req, res) {
 async function create_outlet_process(req, res) {
     let errors = [];
     
-    let { Name, Category, Location, Address, Postalcode, Price, Contact, Description } = req.body;
+    let { Name, Category, Location, Address, Postalcode, Price, Contact, Status, Description } = req.body;
     console.log(`${req.file.path}`);
     
     try{
@@ -478,6 +478,7 @@ async function create_outlet_process(req, res) {
         "postal_code":  Postalcode,
         "price":  Price,
         "contact":  Contact,
+        "status": Status,
         "description": Description,
         "thumbnail": req.file.path
     });
@@ -582,7 +583,7 @@ async function edit_outlet_page(req, res){
 };
 
 async function save_edit_outlet(req, res){
-    let { Name, Category, Location, Address, Postalcode, Price, Contact, Description } = req.body;
+    let { Name, Category, Location, Address, Postalcode, Price, Contact,Status, Description } = req.body;
     const category = await Categories.findAll();
     const outlet = await Outlets.findOne({
         where: {
@@ -629,6 +630,7 @@ async function save_edit_outlet(req, res){
         postal_code:  Postalcode,
         price:  Price,
         contact:  Contact,
+        status: Status,
         description: Description,
         thumbnail: req.path.file
     }, {
@@ -636,6 +638,7 @@ async function save_edit_outlet(req, res){
             postal_code : req.params.postal_code
         }
         }).then(() => {
+            
             res.redirect(`/u/b/${Name}/view-outlets`);
     }).catch(err => console.log(err)); 
 };
