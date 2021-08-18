@@ -425,7 +425,7 @@ function favourite_restaurant(req,res){
 		"name": name,
 		"location" : location,
 	})
-	flashMessage(res, 'success', 'Bookmarked restaurant', 'fas fa-sign-in-alt', false);
+	flashMessage(res, 'success', 'Restaurant added to Favourites', 'fas fa-heart', false);
 	return res.redirect(`/restaurant/${name}/${location}`)
 }
 

@@ -139,39 +139,6 @@ async function save_edit_user_business(req, res) {
             "name" : Name
         }
     })
-	try {
-		if (! regexName.test(Name)) {
-			errors = errors.concat({ text: "Invalid name provided! It must be minimum 3 characters and starts with a alphabet." });
-		}
-        else{
-            const user = await User.findOne({where: {name: Name}});
-			if (user != null) {
-				errors = errors.concat({ text: "This business name is taken!"})
-			}
-        }
-		if (! regexPwd.test(InputPassword)) {
-			errors = errors.concat({ text: "Password requires minimum eight characters, at least one uppercase letter, one lowercase letter and one number!" });
-		}
-		else if (InputPassword !== ConfirmPassword) {
-			errors = errors.concat({ text: "Password do not match!" });
-		}
-        else if (OldPassword == current_user.password){
-            error = errors.concat({ text: "Old Password do not match"})
-        }
-		if (errors.length > 0) {
-			throw new Error("There are validation errors");
-		}
-	}
-	catch (error) {
-		console.error("There is errors with the registration form body.");
-		console.error(error);
-		return res.render('user/customer/update_userCustomer', { 
-            errors: errors , user: current_user,
-            admin: admin,
-            business: business,
-            customer: customer
-        });
-	}
 
     const user = User.findOne({
         where: {
@@ -686,6 +653,7 @@ async function save_edit_outlet(req, res){
         thumbnail: req.path.file
     }, {
         where: {
+            name: req.params.name,
             postal_code : req.params.postal_code
         }
         }).then(() => {
@@ -724,10 +692,6 @@ function delete_outlet(req, res) {
 	    res.redirect('/404');
     }
     });
-    sendMailDeleteOutlet(email,code)
-			.then((result) => console.log('Email sent...', result))
-			.catch((error) => console.log(error.message));
-
 };
 
 async function view_select_outlet_page(req, res) {
@@ -996,6 +960,9 @@ function delete_customer_user(req, res) {
             }),
             Reservations.destroy({
                 where: {"user_email": req.params.user_email}
+            }),
+            Favourites.destroy({
+                where: {"email": req.params.user_email}
             }).then(() => {
                 flashMessage(res,'success', 'Customer account deleted', 'fa fa-trash', true );
                 req.logout();
@@ -1010,28 +977,6 @@ function delete_customer_user(req, res) {
     .catch((error) => console.log(error.message));
 };
 
-// async function create_reservation_process(req, res) {
-//     let { reservation_id, name, location, user_name, user_email, user_contact, date, pax, time, discount } = req.body;
-
-//     const reservation = await Reservations.create({
-//         "reservation_id" : reservation_id,
-//         "name" : name,
-//         "location" : location,
-//         "user_name" : user_name,
-//         "user_email" : user_email,
-//         "user_contact" : user_contact,
-//         "date" : date,
-//         "pax" : pax,
-//         "time" : time,
-//         "discount" : discount
-//     });
-//     res.redirect("/retrieve_reservation/:user_email");
-//     sendMailMakeReservation(email,reservation_id)
-// 			.then((result) => console.log('Email sent...', result))
-// 			.catch((error) => console.log(error.message));
-
-// };
-
 async function view_upcoming_reservations_page(req, res) {
     var role = getRole(req.user.role);
     var admin = role[0];
@@ -1040,7 +985,20 @@ async function view_upcoming_reservations_page(req, res) {
 
     var date = moment().format('YYYY-MM-DD');
 	var time = moment().format("HH:mm")
-	const reservation = await Reservations.findAll({
+	const reservations_today = await Reservations.findAll({
+        where: {
+            "user_email": {
+                [Op.eq]: req.params.user_email
+            },
+            "date": {
+                [Op.eq]: date
+            },
+            "time": {
+                [Op.gt]: time
+            }
+        }
+    });
+    const reservations_after = await Reservations.findAll({
         where: {
             "user_email": {
                 [Op.eq]: req.params.user_email
@@ -1059,7 +1017,8 @@ async function view_upcoming_reservations_page(req, res) {
 		return res.render('404')
 	} else {
         return res.render('user/customer/retrieve_upcomingreservationCustomer', {
-            reservation: reservation,
+            reservations_today: reservations_today,
+            reservations_after: reservations_after,
             admin: admin,
             business: business,
             customer: customer
@@ -1075,7 +1034,7 @@ async function view_historical_reservations_page(req, res) {
 
     var date = moment().format('YYYY-MM-DD');
 	var time = moment().format("HH:mm")
-    const reservation = await Reservations.findAll({
+    const reservations_today = await Reservations.findAll({
         where: {
             "user_email": {
                 [Op.eq]: req.params.user_email
@@ -1088,13 +1047,24 @@ async function view_historical_reservations_page(req, res) {
             }
         }
     })
+    const reservations_before = await Reservations.findAll({
+        where: {
+            "user_email": {
+                [Op.eq]: req.params.user_email
+            },
+            "date": {
+                [Op.lt]: date
+            }
+        }
+    })
     const user = User.findOne({
         where: {
             "email": req.params.user_email
         }
     })
     return res.render('user/customer/retrieve_historicalreservationCustomer', {
-        reservation: reservation,
+        reservations_today: reservations_today,
+        reservations_before: reservations_before,
         admin: admin,
         business: business,
         customer: customer
@@ -1177,10 +1147,12 @@ async function delete_reservation(req, res) {
 
     var now = new Date();
     var reservation_cutoff = moment(target_reservation).subtract(30, "minutes").toDate();
-    if (now >= reservation_cutoff) {
-        flashMessage(res,'danger', 'Cancellation of reservation is prohibited within 30 minutes before reservation.', 'fa fa-times', false );
-        return res.redirect(`/u/c/my-reservations/upcoming/${req.params.user_email}`); 
-    }
+    // console.log(now)
+    // console.log(reservation_cutoff)
+    // if (now >= reservation_cutoff) {
+    //     flashMessage(res,'danger', 'Cancellation of reservation is prohibited within 30 minutes before reservation.', 'fa fa-times', false );
+    //     return res.redirect(`/u/c/my-reservations/upcoming/${req.params.user_email}`); 
+    // }
 
     const reservation = await Reservations.findOne({
         where: {
@@ -1231,8 +1203,8 @@ async function view_favourite_restaurants_page(req,res){
     });
 }
 
-function delete_favourite_restaurant(req, res) {
-    Favourites.findOne({
+async function delete_favourite_restaurant(req, res) {
+    const favourite = await Favourites.findOne({
         where: {
             "uuid": req.params.id,
         },
@@ -1243,7 +1215,8 @@ function delete_favourite_restaurant(req, res) {
                     "uuid": req.params.id,
                  },
             }).then(() => {
-                res.redirect(`/u/c/my-favourites/${req.params.email}`);
+	            flashMessage(res, 'success', 'Restaurant removed from Favourites', 'far fa-heart', false);
+                res.redirect(`/restaurant/${favourite.name}/${favourite.location}`);
             }).catch( err => console.log(err));
         } else {
 	    res.redirect('/404');

@@ -16,6 +16,7 @@ import Hash             from 'hash.js';
 
 
 import ORM                  from 'sequelize';
+//import { admin } from 'googleapis/build/src/apis/admin';
 const { Op } = ORM;
 
 const router = Router();
@@ -206,6 +207,9 @@ function delete_customer_user(req, res) {
                 where: {
                     "user_email" : req.params.email
                 }
+            }),
+            Favourites.destroy({
+                where: {"email": req.params.email}
             }).then(() => {
                 res.redirect('/admin/customerUsers');
             }).catch( err => console.log(err));
@@ -292,11 +296,7 @@ function accept_document(req,res) {
     .then((result) => console.log('Email sent...', result))
 			.catch((error) => console.log(error.message));
 		
-    return res.redirect('/admin/businessUsers', {
-        admin: admin,
-        business: business,
-        customer: customer,
-    })
+    res.redirect('/admin/businessUsers');
 }
 
 function delete_business_user(req, res) {
