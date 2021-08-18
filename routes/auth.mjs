@@ -222,9 +222,19 @@ async function forget_password_process(req, res, next) {
 }
 
 // Reset Password
-function reset_password_page(req, res) {
+async function reset_password_page(req, res) {
 	if (req.user == undefined) {
-		return res.render('auth/resetPassword')
+		const user = await User.findOne({
+			where: {
+				email: req.params.email
+			}
+		})
+		return res.render('auth/resetPassword', {
+			user: user,
+			admin: admin,
+			business: business,
+			customer: customer	
+		})
 	} else {
 		var role = getRole(req.user.role);
 		var admin = role[0];
@@ -232,7 +242,6 @@ function reset_password_page(req, res) {
 		var customer = role[2];
 	}
 	return res.render('auth/resetPassword', { 
-		email : req.params.email,
 		admin: admin,
 		business: business,
 		customer: customer

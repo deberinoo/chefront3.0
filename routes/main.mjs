@@ -257,8 +257,6 @@ async function view_restaurants_page(req, res) {
 };
 
 async function view_individual_restaurant_page(req, res) {
-	var current_time = moment().format("HH:mm")
-
 	const restaurant = await Outlets.findOne({
 		where: {
             "name": req.params.name,
@@ -268,18 +266,20 @@ async function view_individual_restaurant_page(req, res) {
 	const discountslot = await DiscountSlot.findAll({
 		where: {
             "name": req.params.name,
-			"location": req.params.location,
-        }
-	});
-	const favourites = await Favourites.findAll({
-		where: {
-            "name": req.params.name,
-			"location": req.params.location,
+			"location": req.params.location
         }
 	});
 	if (req.user == undefined) {
 		return res.render('restaurant', {restaurant:restaurant, discountslot:discountslot})
 	} else {
+		const favourites = await Favourites.findOne({
+			where: {
+				"name": req.params.name,
+				"location": req.params.location,
+				"email": req.user.email
+			}
+		});
+
 		var role = getRole(req.user.role);
 		var admin = role[0];
 		var business = role[1];
@@ -291,8 +291,6 @@ async function view_individual_restaurant_page(req, res) {
 			restaurant:restaurant,
 			discountslot:discountslot,
 			favourites : favourites,
-			name:  req.params.name,
-			location: req.params.location
 		});
 	}
 };

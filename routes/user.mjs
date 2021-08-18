@@ -129,13 +129,17 @@ function edit_user_business_page(req, res) {
 
 async function save_edit_user_business(req, res) {
     let { Name, Contact, OldPassword, InputPassword, ConfirmPassword } = req.body;
-
+    let errors = [];
+    var role = getRole(req.user.role);
+    var admin = role[0];
+    var business = role[1];
+    var customer = role[2];
+    const current_user = await User.findOne({
+        where: {
+            "name" : Name
+        }
+    })
 	try {
-        const current_user = await User.findOne({
-            where: {
-                "name" : req.params.name
-            },
-        })
 		if (! regexName.test(Name)) {
 			errors = errors.concat({ text: "Invalid name provided! It must be minimum 3 characters and starts with a alphabet." });
 		}
@@ -161,7 +165,12 @@ async function save_edit_user_business(req, res) {
 	catch (error) {
 		console.error("There is errors with the registration form body.");
 		console.error(error);
-		return res.render('customer/update_userCustomer', { errors: errors , user: current_user});
+		return res.render('user/customer/update_userCustomer', { 
+            errors: errors , user: current_user,
+            admin: admin,
+            business: business,
+            customer: customer
+        });
 	}
 
     const user = User.findOne({
@@ -1222,8 +1231,6 @@ async function view_favourite_restaurants_page(req,res){
     });
 }
 
-
-
 function delete_favourite_restaurant(req, res) {
     Favourites.findOne({
         where: {
@@ -1236,7 +1243,7 @@ function delete_favourite_restaurant(req, res) {
                     "uuid": req.params.id,
                  },
             }).then(() => {
-                res.redirect(`/c/my-favourites/${req.params.email}`);
+                res.redirect(`/u/c/my-favourites/${req.params.email}`);
             }).catch( err => console.log(err));
         } else {
 	    res.redirect('/404');

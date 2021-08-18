@@ -279,7 +279,7 @@ async function all_business_data(req, res) {
     }
  }
 
-function accept_document(req,res){
+function accept_document(req,res) {
     let email = req.params.email
     User.update({
         verified: "Yes"
@@ -292,7 +292,11 @@ function accept_document(req,res){
     .then((result) => console.log('Email sent...', result))
 			.catch((error) => console.log(error.message));
 		
-    return res.redirect('/admin/businessUsers')
+    return res.redirect('/admin/businessUsers', {
+        admin: admin,
+        business: business,
+        customer: customer,
+    })
 }
 
 function delete_business_user(req, res) {
