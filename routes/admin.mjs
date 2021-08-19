@@ -40,7 +40,7 @@ router.use(ensure_admin)
 // User management routes
 router.get("/businessUsers",                        view_business_users_page);
 router.get("/all-business-data",                    all_business_data);
-router.post("/accept_document/:email",               accept_document);
+router.post("/accept_document/:email",              accept_document);
 router.get("/deleteBusinessUser/:name",             delete_business_user);
 router.get("/view_doc/:email",                      view_document)
 
@@ -122,14 +122,25 @@ function getRole(role) {
 }
 // ----------------
 
-async function view_document(req,res){
+async function view_document(req,res) {
+    var role = getRole(req.user.role);
+    var admin = role[0];
+    var business = role[1];
+    var customer = role[2];
     const user = await User.findOne({
         where: {
             "email" : req.params.email
         },
     })
     console.log( user.document)
-    return res.render('admin/view_doc', {email : req.params.email, document: user.document, verified : user.verified})
+    return res.render('admin/view_doc', {
+        admin: admin,
+        business: business,
+        customer: customer,
+        email : req.params.email, 
+        document: user.document, 
+        verified : user.verified
+    })
 }
 
 function view_customer_users_page(req, res) {

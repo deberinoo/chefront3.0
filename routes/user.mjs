@@ -1146,13 +1146,14 @@ async function delete_reservation(req, res) {
     });
 
     var now = new Date();
-    var reservation_cutoff = moment(target_reservation).subtract(30, "minutes").toDate();
-    // console.log(now)
-    // console.log(reservation_cutoff)
-    // if (now >= reservation_cutoff) {
-    //     flashMessage(res,'danger', 'Cancellation of reservation is prohibited within 30 minutes before reservation.', 'fa fa-times', false );
-    //     return res.redirect(`/u/c/my-reservations/upcoming/${req.params.user_email}`); 
-    // }
+    var date = target_reservation.date;
+    var time = target_reservation.time;
+    var reservation_datetime = moment(date + ' ' + time, 'YYYY-MM-DD HH:mm').format('YYYY-MM-DD HH:mm');
+    var reservation_cutoff = moment(reservation_datetime).subtract(30, "minutes").toDate();
+    if (now >= reservation_cutoff) {
+        flashMessage(res,'danger', 'Cancellation of reservation is prohibited within 30 minutes before reservation.', 'fa fa-times', false );
+        return res.redirect(`/u/c/my-reservations/upcoming/${req.params.user_email}`); 
+    }
 
     const reservation = await Reservations.findOne({
         where: {
